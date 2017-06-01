@@ -8,11 +8,12 @@ var bot = new TelegramBot(token, {polling: true});
 // Matches /echo [whatever]
 bot.onText(/\/sticazzi (.+)/, function (msg, match) {
   var fromId = msg.from.id;
-  var resp = match[1];
-  addic7edApi.search('South Park', 19, 6).then(function (subtitlesList) {
-    var subInfo = subtitlesList[0];
-    resp = subInfo;
-});
+  //   var resp = match[1];
+  //   addic7edApi.search('South Park', 19, 6).then(function (subtitlesList) {
+  //     var subInfo = subtitlesList[0];
+  //     resp = subInfo;
+  // });
+  var resp = "asd";
   bot.sendMessage(fromId, "camafari");
   bot.sendMessage(fromId, resp);
 
