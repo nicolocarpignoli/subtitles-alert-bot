@@ -1,14 +1,21 @@
 var TelegramBot = require('node-telegram-bot-api');
+var addic7edApi = require('addic7ed-api');
 
 var token = '398340624:AAH3rtCzaX9Y2fDU0ssRrK4vhRVh1PpZA0w';
 // Setup polling way
 var bot = new TelegramBot(token, {polling: true});
 
 // Matches /echo [whatever]
-bot.onText(/\/echo (.+)/, function (msg, match) {
+bot.onText(/\/sticazzi (.+)/, function (msg, match) {
   var fromId = msg.from.id;
   var resp = match[1];
+  addic7edApi.search('South Park', 19, 6).then(function (subtitlesList) {
+    var subInfo = subtitlesList[0];
+    resp = subInfo;
+});
+  bot.sendMessage(fromId, "camafari");
   bot.sendMessage(fromId, resp);
+
 });
 
 // Any kind of message
