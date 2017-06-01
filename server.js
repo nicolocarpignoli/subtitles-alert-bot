@@ -1,5 +1,17 @@
 var TelegramBot = require('node-telegram-bot-api');
 var addic7edApi = require('addic7ed-api');
+var http = require('http'), fs = require('fs');
+
+fs.readFile('./index.html', function (err, html) {
+    if (err) {
+        throw err; 
+    }       
+    http.createServer(function(request, response) {  
+        response.writeHeader(200, {"Content-Type": "text/html"});  
+        response.write(html);  
+        response.end();  
+    }).listen(8000);
+});
 
 var token = '398340624:AAH3rtCzaX9Y2fDU0ssRrK4vhRVh1PpZA0w';
 // Setup polling way
