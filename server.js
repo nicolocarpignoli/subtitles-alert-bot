@@ -1,40 +1,29 @@
 var TelegramBot = require('node-telegram-bot-api');
 var addic7edApi = require('addic7ed-api');
-var http = require('http'), fs = require('fs');
+var http = require('http');
 
-fs.readFile('./index.html', function (err, html) {
-    if (err) {
-        throw err; 
-    }       
-    http.createServer(function(request, response) {  
-        response.writeHeader(200, {"Content-Type": "text/html"});  
-        response.write(html);  
-        response.end();  
-    }).listen(8000);
-});
 
 var token = '398340624:AAH3rtCzaX9Y2fDU0ssRrK4vhRVh1PpZA0w';
 // Setup polling way
 var bot = new TelegramBot(token, {polling: true});
 
+console.log("Starting..");
+
 // Matches /echo [whatever]
-bot.onText(/\/sticazzi (.+)/, function (msg, match) {
-  var fromId = msg.from.id;
-  var resp = match[1];
-  console.log("hi");
-  addic7edApi.search('South Park', 1, 1).then(function (subtitlesList) {
-      console.log(subtitlesList);
-      var subInfo = subtitlesList[0];
-      resp = subInfo;
-  });
-  bot.sendMessage(fromId, resp);
+bot.onText(/\/echo (.+)/, (msg, match) => {
 
-});
+  const chatId = msg.chat.id;
+  var resp = "asf;";
 
-// Any kind of message
-bot.on('message', function (msg) {
-  var chatId = msg.chat.id;
-  // photo can be: a file path, a stream or a Telegram file_id
-  var photo = 'cats.png';
-  bot.sendPhoto(chatId, photo, {caption: 'Lovely kittens'});
+    addic7edApi.search('South Park', 19, 6).then(function (subtitlesList) {
+        console.log(subtitlesList);
+        var subInfo = subtitlesList[0];
+        if (subInfo) {
+            console.log(subInfo);
+            addic7edApi.download(subInfo, './South.Park.S19E06.srt').then(function () {
+                resp = subInfo;
+            });
+        }
+    });
+  bot.sendMessage(chatId, resp);
 });
