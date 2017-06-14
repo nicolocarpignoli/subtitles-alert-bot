@@ -9,9 +9,19 @@ var bot = new TelegramBot(token, {polling: true});
 
 console.log("Starting..");
 
-// Matches /echo [whatever]
-bot.onText(/\/charm (.+)/, (msg, match) => {
+var options = {
+  "parse_mode": "Markdown",
+  "reply_markup": {
+    "keyboard": [
+      [{ text: "Get" }, {text: "Start Alert"}],
+      [{ text: "Stop Alert" }, {text: "Show Alerts"}]
+    ]
+  }
+};
 
-    bot.sendMessage(msg.chat.id, 'Received your message coglione');
+// Matches /echo [whatever]
+bot.onText(/\/start/, (msg, match) => {
+
+    bot.sendMessage(msg.chat.id, "*Some* message here.", options);
 
 });
