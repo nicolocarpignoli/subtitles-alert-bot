@@ -2,13 +2,13 @@ class BotGui{
     constructor(){
         this.generalMenuOptions = {
             "parse_mode": "Markdown",
-            "reply_markup": {
+            "reply_markup": JSON.stringify({
                 "keyboard": [
-                [{ text: "Get"}, {text: "Start Alert"},
-                { text: "Stop Alert" }, {text: "Show Alerts"}]
+                [{ text: "Get" }, {text: "Start Alert"}],
+                [{ text: "Stop Alert" }, {text: "Show Alerts"}]
                 ]
-            }
+            })
         };
-    } 
+    }
 
 }
