@@ -1,5 +1,6 @@
 var TelegramBot = require('node-telegram-bot-api');
 var addic7edApi = require('addic7ed-api');
+var BotGui = require('./gui/keyboards.js');
 var http = require('http');
 
 
@@ -9,19 +10,10 @@ var bot = new TelegramBot(token, {polling: true});
 
 console.log("Starting..");
 
-var options = {
-  "parse_mode": "Markdown",
-  "reply_markup": {
-    "keyboard": [
-      [{ text: "Get" }, {text: "Start Alert"}],
-      [{ text: "Stop Alert" }, {text: "Show Alerts"}]
-    ]
-  }
-};
 
 // Matches /echo [whatever]
 bot.onText(/\/start/, (msg, match) => {
 
-    bot.sendMessage(msg.chat.id, "*Some* message here.", options);
+    bot.sendMessage(msg.chat.id, "*Some* message here.", BotGui.generalMenuOptions);
 
 });
