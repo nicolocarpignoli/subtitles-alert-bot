@@ -13,9 +13,8 @@ var whichEpisodeMessage = "Ok! Which episode?";
 var bot = new TelegramBot(telegramBotToken, {polling: true});
 
 console.log("Starting bot..");
-
 bot.onText(/\/start/, (msg, match) => {
-    bot.sendMessage(msg.chat.id, instructionsMessage, BotGui.generalMenuOptions)
+    bot.sendMessage(msg.chat.id, instructionsMessage, BotGui.generateKeyboardOptions())
     //TODO Handle callback message
 });
 
