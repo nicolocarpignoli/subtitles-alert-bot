@@ -1,12 +1,13 @@
+var Common = require('./../common.js');
 
 exports.generateKeyboardOptions = function () {
     return  {
         "parse_mode": "Markdown",
         "reply_markup": {
             "keyboard": [
-            [{ text: "Get \uD83D\uDCE5"}],
-            [{text: "Start Alert \uD83D\uDCE2"},{ text: "Stop Alert \uD83D\uDEAB" }, {text: "Show Alerts \uD83D\uDCC5"}],
-        
+            [{ text: Common.getCommand}],
+            [{text: Common.startAlertCommand},{ text:Common.stopAlertCommand}, 
+            {text: Common.showAlertsCommand}],
             ],
             "resize_keyboard": true
         }
