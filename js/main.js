@@ -25,7 +25,7 @@ bot.onText(/(.*?)/, (msg, match) => {
     if (userInput != Common.getCommand && choosingSeries) {
         choosingSeries = false;
         console.log("Ok you just choose ", userInput);
-        TvMaze.searchSeries(userInput);
+        TvMaze.checkSeriesValidity(userInput);
         //TODO qui facciamo partire le api di TvMaze per vedere se la serie esiste, ecc.
         // quindi il flusso di dialogo fra utente/bot per la Get (tramite inlineKeyboards)
     }
