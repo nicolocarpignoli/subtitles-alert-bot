@@ -40,7 +40,6 @@ function TVMazeSearch(url) {
         res.on('end', () => {
             try {
                 const parsedData = JSON.parse(rawData);
-                // console.log(parsedData);
                 return parsedData;
             } catch (e) {
                 console.error(e.message);
@@ -55,11 +54,11 @@ function TVMazeSearch(url) {
 //se non trova niente ritorna array vuoto
 //se il primo risultato coincide ritorna l'oggetto di quella serie
 //se il primo risultato non coincide ritorna i primi 6 (o meno) risultati per far scegliere all'utente
-//TODO: vedere se c'è bisogno di refactoring splittando in più funzioni
+
 exports.checkSeriesValidity = function(seriesName) {
     var foundSeries = [];
     var resultMatchesQuery = false;
-    foundSeries = TVMazeSearch(buildSeriesUrl(seriesName));
+    foundSeries= TVMazeSearch(buildSeriesUrl(seriesName));
     console.log(foundSeries);
     if (foundSeries.length == 0)
         return foundSeries;

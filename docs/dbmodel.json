@@ -10,9 +10,10 @@
 // - Ho dimenticato campi utili/indispensabili?
 // - Quali sono le cardinalità, in ottica di scalabilità massima, di: Users e Alerts
 // - Capire che cardinalità può avere una relazione Users/alerts (es. gli utenti in media
-// quanti alerts avranno ciascuno? Una serie 'x' quanti alerts avra? Quante serie 
+// quanti alerts avranno ciascuno? Quanti alerts in generale (serie/linguaggi)? Quante serie 
 // in Running ci sono sul mercato rispetto al numero, potenziale, di users?)
 // - Capire se Languages va come array o se definire un alert diverso per ogni linguaggio diverso
+// come impostato ora
 // (la difficoltà nell'avere l'array starebbe nel gestire le notifiche per quegli alert
 // per la stessa serie-tv ma su piu linguaggi - quando mando la notifica?)
 
