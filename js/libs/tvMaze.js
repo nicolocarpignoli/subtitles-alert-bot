@@ -1,13 +1,20 @@
 var http = require('http');
-var tvMazeSearchUrl = "http://api.tvmaze.com/search/shows?q="
+
+function buildSeriesUrl(seriesName) {
+    return "http://api.tvmaze.com/search/shows?q=" + seriesName;
+}
+
+function buildSeasonsUrl(seriesId) {
+    return "http://api.tvmaze.com/shows/" + seriesId + "/seasons";
+}
 
 function ResultMatchesQuery(firstSeries, query) {
     var foundSeriesName = firstSeries.show.name;
-    return query.toLowerCase() === firstSeries.toLowerCase();
+    return query.trim().toLowerCase() === firstSeries.trim().toLowerCase();
 }
 
-exports.searchSeries = function (query) {
-    http.get(tvMazeSearchUrl + query, (res) => {
+function TVMazeSearch(url) {
+    http.get(url, (res) => {
         const { statusCode } = res;
         const contentType = res.headers['content-type'];
 
@@ -33,7 +40,7 @@ exports.searchSeries = function (query) {
         res.on('end', () => {
             try {
                 const parsedData = JSON.parse(rawData);
-                console.log(parsedData);
+                // console.log(parsedData);
                 return parsedData;
             } catch (e) {
                 console.error(e.message);
@@ -42,4 +49,33 @@ exports.searchSeries = function (query) {
     }).on('error', (e) => {
         console.error('Got error: ${e.message}');
     });
+}
+
+//prende l'input dell'utente e cerca una serie con quel nome.
+//se non trova niente ritorna array vuoto
+//se il primo risultato coincide ritorna l'oggetto di quella serie
+//se il primo risultato non coincide ritorna i primi 6 (o meno) risultati per far scegliere all'utente
+//TODO: vedere se c'è bisogno di refactoring splittando in più funzioni
+exports.checkSeriesValidity = function(seriesName) {
+    var foundSeries = [];
+    var resultMatchesQuery = false;
+    foundSeries = TVMazeSearch(buildSeriesUrl(seriesName));
+    console.log(foundSeries);
+    if (foundSeries.length == 0)
+        return foundSeries;
+    else {
+        resultMatchesQuery = ResultMatchesQuery(foundSeries[0], seriesName);
+        if (resultMatchesQuery)
+            return foundSeries[0];
+        else
+        {
+            var firstSix = foundSeries.slice(0, 7);
+            return firstSix;
+        }
+    }
+}
+
+function checkSeasonValidity(seriesId, seasonRequest) {
+    var seasons = TVMazeSearch(buildSeasonsUrl(seriesId));
+    return seasons ? seasonRequest <= seasons.length : false;
 }
