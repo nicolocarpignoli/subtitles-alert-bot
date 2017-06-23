@@ -26,7 +26,7 @@ bot.onText(/(.*?)/, (msg, match) => {
         choosingSeries = false;
         console.log("Ok you just choose ", userInput);
         var result = TvMaze.checkSeriesValidity(userInput);
-        if (result) {
+        if (result)
             result.then(function (response) {
                 // console.log('------RESULT------: ', response);
                 switch (response.length) {
@@ -37,10 +37,9 @@ bot.onText(/(.*?)/, (msg, match) => {
                         bot.sendMessage(msg.chat.id, "Good! Wich season?");
                         break;
                     default:
-                        bot.sendMessage(msg.chat.id, "Mmh ambigous! Which of these?", BotGui.generateSeriesInlineKeyboard(response));
+                        bot.sendMessage(msg.chat.id, "Mmh ambiguous! Which of these?", BotGui.generateSeriesInlineKeyboard(response));
                         break;
                 }
-            })
-        }
+            });
     }
 })
