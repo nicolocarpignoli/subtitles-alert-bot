@@ -1,81 +1,51 @@
 var http = require('http');
-
-function buildSeriesUrl(seriesName) {
-    return "http://api.tvmaze.com/search/shows?q=" + seriesName;
-}
+var rp = require('request-promise');
 
 function buildSeasonsUrl(seriesId) {
     return "http://api.tvmaze.com/shows/" + seriesId + "/seasons";
 }
 
+function buildSeriesRequestOptions(seriesName) {
+    const options = {
+        uri: "http://api.tvmaze.com/search/shows",
+        qs: { q: seriesName },
+        headers: { 'User-Agent': 'Request-Promise' },
+        json: true // Automatically parses the JSON string in the response
+    }
+    return options;
+}
+
 function ResultMatchesQuery(firstSeries, query) {
     var foundSeriesName = firstSeries.show.name;
-    return query.trim().toLowerCase() === firstSeries.trim().toLowerCase();
-}
-
-function TVMazeSearch(url) {
-    http.get(url, (res) => {
-        const { statusCode } = res;
-        const contentType = res.headers['content-type'];
-
-        let error;
-        if (statusCode !== 200) {
-            error = new Error('Request Failed.\n Status Code: ${statusCode}');
-        } else if (!/^application\/json/.test(contentType)) {
-            error = new Error('Invalid content-type.\n Expected application/json but received ${contentType}');
-        }
-
-        if (error) {
-            console.error(error.message);
-            // consume response data to free up memory
-            res.resume();
-            return;
-        }
-
-        res.setEncoding('utf8');
-
-        let rawData = '';
-
-        res.on('data', (chunk) => { rawData += chunk; });
-        res.on('end', () => {
-            try {
-                const parsedData = JSON.parse(rawData);
-                // console.log(parsedData);
-                return parsedData;
-            } catch (e) {
-                console.error(e.message);
-            }
-        });
-    }).on('error', (e) => {
-        console.error('Got error: ${e.message}');
-    });
-}
-
-//prende l'input dell'utente e cerca una serie con quel nome.
-//se non trova niente ritorna array vuoto
-//se il primo risultato coincide ritorna l'oggetto di quella serie
-//se il primo risultato non coincide ritorna i primi 6 (o meno) risultati per far scegliere all'utente
-//TODO: vedere se c'è bisogno di refactoring splittando in più funzioni
-exports.checkSeriesValidity = function(seriesName) {
-    var foundSeries = [];
-    var resultMatchesQuery = false;
-    foundSeries = TVMazeSearch(buildSeriesUrl(seriesName));
-    console.log(foundSeries);
-    if (foundSeries.length == 0)
-        return foundSeries;
-    else {
-        resultMatchesQuery = ResultMatchesQuery(foundSeries[0], seriesName);
-        if (resultMatchesQuery)
-            return foundSeries[0];
-        else
-        {
-            var firstSix = foundSeries.slice(0, 7);
-            return firstSix;
-        }
-    }
+    return query.trim().toLowerCase() === foundSeriesName.trim().toLowerCase();
 }
 
 function checkSeasonValidity(seriesId, seasonRequest) {
     var seasons = TVMazeSearch(buildSeasonsUrl(seriesId));
     return seasons ? seasonRequest <= seasons.length : false;
+}
+
+exports.checkSeriesValidity = function (seriesName) {
+    var resultMatchesQuery = false;
+
+    var options = buildSeriesRequestOptions(seriesName);
+
+    return rp(options)
+        .then(function (foundSeries) {
+            // console.log("FOUND SERIES: ", foundSeries);
+            if (foundSeries && foundSeries.length == 0)
+                return [];
+            else {
+                resultMatchesQuery = ResultMatchesQuery(foundSeries[0], seriesName);
+                if (resultMatchesQuery)
+                    return [foundSeries[0]];
+                else {
+                    var firstSix = foundSeries.slice(0, 7);
+                    return firstSix;
+                }
+            }
+        })
+        .catch(function (err) {
+            console.log("Oh noes! :( Got an error fetching data...");
+        });
 }
