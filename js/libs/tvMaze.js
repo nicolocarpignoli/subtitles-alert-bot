@@ -50,22 +50,18 @@ function TVMazeSearch(url) {
     });
 }
 
-//prende l'input dell'utente e cerca una serie con quel nome.
-//se non trova niente ritorna array vuoto
-//se il primo risultato coincide ritorna l'oggetto di quella serie
-//se il primo risultato non coincide ritorna i primi 6 (o meno) risultati per far scegliere all'utente
-
+// returns an array with one element, six elements or empty array
 exports.checkSeriesValidity = function(seriesName) {
     var foundSeries = [];
     var resultMatchesQuery = false;
-    foundSeries= TVMazeSearch(buildSeriesUrl(seriesName));
+    foundSeries = TVMazeSearch(buildSeriesUrl(seriesName));
     console.log(foundSeries);
     if (foundSeries.length == 0)
         return foundSeries;
     else {
         resultMatchesQuery = ResultMatchesQuery(foundSeries[0], seriesName);
         if (resultMatchesQuery)
-            return foundSeries[0];
+            return [foundSeries[0]];
         else
         {
             var firstSix = foundSeries.slice(0, 7);
