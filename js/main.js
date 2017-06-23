@@ -25,7 +25,10 @@ bot.onText(/(.*?)/, (msg, match) => {
     if (userInput != Common.getCommand && choosingSeries) {
         choosingSeries = false;
         console.log("Ok you just choose ", userInput);
-        TvMaze.checkSeriesValidity(userInput);
+        let seriesSearched = tvMaze.checkSeriesValidity(userInput);
+        if(seriesSearched.length > 1){
+            bot.sendMessage(msg.chat.id, "Mmh ambigous! Which of these?", BotGui.generateSeriesInlineKeyboard(seriesSearched));
+        }
         //TODO qui facciamo partire le api di TvMaze per vedere se la serie esiste, ecc.
         // quindi il flusso di dialogo fra utente/bot per la Get (tramite inlineKeyboards)
     }
