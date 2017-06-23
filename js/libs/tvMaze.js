@@ -25,6 +25,7 @@ function checkSeasonValidity(seriesId, seasonRequest) {
     return seasons ? seasonRequest <= seasons.length : false;
 }
 
+// returns an array with one element, six elements or empty array
 exports.checkSeriesValidity = function (seriesName) {
     var resultMatchesQuery = false;
 

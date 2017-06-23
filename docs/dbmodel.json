@@ -1,0 +1,49 @@
+//prima idea di modello
+
+// Di sicuro avendo document con pochi campi, possiamo ridondare tranquillamente,
+// quindi incorporare i document in altri.
+// Quello che segue è solo una bozza PER MOSTRARE I CAMPI UTILI.
+// In realtà se incorporare Alert in Users o viceversa e gestire Languages
+// come array o no è da valutare.
+
+// Domande a cui rispondere per definire il modello:
+// - Ho dimenticato campi utili/indispensabili?
+// - Quali sono le cardinalità, in ottica di scalabilità massima, di: Users e Alerts
+// - Capire che cardinalità può avere una relazione Users/alerts (es. gli utenti in media
+// quanti alerts avranno ciascuno? Quanti alerts in generale (serie/linguaggi)? Quante serie 
+// in Running ci sono sul mercato rispetto al numero, potenziale, di users?)
+// - Capire se Languages va come array o se definire un alert diverso per ogni linguaggio diverso
+// come impostato ora
+// (la difficoltà nell'avere l'array starebbe nel gestire le notifiche per quegli alert
+// per la stessa serie-tv ma su piu linguaggi - quando mando la notifica?)
+
+
+// Users (document)
+
+{
+    "id" : "",
+    "chat_id" : "",
+    "first_name" : "",
+    "alerts": 
+        [
+            {
+                "id": "",
+                "show_name": "",
+                "show_id": "",
+                "language" : 
+                    {
+                        "id" : "",
+                        "description": "",
+                        "code" : ""
+                    },
+                "nextepisode_airdate": "",
+                "nextepisode_season": "",
+                "nextepisode_episode": ""
+            }
+        ]
+}
+
+
+
+
+
