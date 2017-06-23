@@ -20,16 +20,29 @@ function ResultMatchesQuery(firstSeries, query) {
     return query.trim().toLowerCase() === foundSeriesName.trim().toLowerCase();
 }
 
-function checkSeasonValidity(seriesId, seasonRequest) {
-    var seasons = TVMazeSearch(buildSeasonsUrl(seriesId));
-    return seasons ? seasonRequest <= seasons.length : false;
+exports.checkSeasonValidity = function (seriesId, seasonRequest) {
+    const options = {
+        uri: buildSeasonsUrl(seriesId),
+        headers: { 'User-Agent': 'Request-Promise' },
+        json: true // Automatically parses the JSON string in the response
+    }
+
+    return rp(options)
+        .then(function (seasons) {
+            return seasons ? 
+            seasonRequest <= seasons.length && new Date(seasons[seasonRequest-1].premiereDate) <= new Date() : 
+            false;
+        })
+        .catch(function (err) {
+            console.log("Oh noes! :( Got an error fetching seasons... ", err);
+        });
 }
 
 // returns an array with one element, six elements or empty array
 exports.checkSeriesValidity = function (seriesName) {
     var resultMatchesQuery = false;
 
-    var options = buildSeriesRequestOptions(seriesName);
+    let options = buildSeriesRequestOptions(seriesName);
 
     return rp(options)
         .then(function (foundSeries) {
@@ -41,12 +54,12 @@ exports.checkSeriesValidity = function (seriesName) {
                 if (resultMatchesQuery)
                     return [foundSeries[0]];
                 else {
-                    var firstSix = foundSeries.slice(0, 7);
+                    var firstSix = foundSeries.slice(0, 6);
                     return firstSix;
                 }
             }
         })
         .catch(function (err) {
-            console.log("Oh noes! :( Got an error fetching data...");
+            console.log("Oh noes! :( Got an error fetching series... ", err);
         });
 }
