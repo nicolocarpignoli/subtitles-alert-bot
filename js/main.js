@@ -31,13 +31,13 @@ bot.onText(/(.*?)/, (msg, match) => {
                 // console.log('------RESULT------: ', response);
                 switch (response.length) {
                     case 0:
-                        bot.sendMessage(msg.chat.id, "serie non trovata DISP :(");
+                        bot.sendMessage(msg.chat.id, "Sorry, no series found with that name :(");
                         break;
                     case 1:
-                        bot.sendMessage(msg.chat.id, "serie trovata :D");
+                        bot.sendMessage(msg.chat.id, "Good! Wich season?");
                         break;
                     default:
-                        bot.sendMessage(msg.chat.id, "più serie trovate, scegli tra queste 6");
+                        bot.sendMessage(msg.chat.id, "Mmh ambigous! Which of these?", BotGui.generateSeriesInlineKeyboard(response));
                         break;
                 }
             })
