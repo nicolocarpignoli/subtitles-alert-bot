@@ -9,6 +9,7 @@ var choosingSeason = false;
 var choosingEpisode = false;
 var choosenSeries = {};
 var choosenSeason;
+var choosenEpisode;
 
 function resetFlags() {
     choosingSeries = false;
@@ -58,13 +59,11 @@ bot.onText(/(.*?)/, (msg, match) => {
     }
 
     else if (Common.notACommand(userInput) && choosingSeason) {
-        console.log("xxxxx choosen series is: ", choosenSeries.show.name);
         if (isNaN(userInput)) {
-            bot.sendMessage(msg.chat.id, "This doesn't seem to be a valid season number, dude... retry!");
+            bot.sendMessage(msg.chat.id, "This doesn't seem to be a valid number, dude... retry!");
             return;
         }
         else {
-            console.log("Ok you just choose season number: ", userInput);
             let promise = TvMaze.checkSeasonValidity(choosenSeries.show.id, userInput);
             promise.then(function (response) {
                 if (response === false)
@@ -74,6 +73,24 @@ bot.onText(/(.*?)/, (msg, match) => {
                     resetFlags();
                     choosingEpisode = true;
                     bot.sendMessage(msg.chat.id, "Great! Wich episode?");
+                }
+            });
+        }
+    }
+    else if (Common.notACommand(userInput) && choosingEpisode) {
+        if (isNaN(userInput)) {
+            bot.sendMessage(msg.chat.id, "This doesn't seem to be a valid number, dude... retry!");
+            return;
+        }
+        else {
+            let promise = TvMaze.checkEpisodeValidity(choosenSeries.show.id, choosenSeason, userInput);
+            promise.then(function (response) {
+                if (response !== true)
+                    bot.sendMessage(msg.chat.id, "Episode doesn't exist or not found. Retry or restart GET!");
+                else {
+                    choosenEpisode = userInput;
+                    resetFlags();
+                    bot.sendMessage(msg.chat.id, "Great! I'll search your subtitles ;)"); //e invece deve scegliere la lingua e poi si può chiamare addic7ed
                 }
             });
         }
