@@ -33,14 +33,26 @@ function buildEpisodeRequestOptions(seriesId, seasonNumber, episodeNumber) {
     return options;
 }
 
-function ResultMatchesQuery(firstSeries, query) {
+function resultMatchesQuery(firstSeries, query) {
     var foundSeriesName = firstSeries.show.name;
     return query.trim().toLowerCase() === foundSeriesName.trim().toLowerCase();
 }
 
+// checks if tvMaze's results contains the required season 
+function checkCorrectResults(list, token){
+    let regExp = new RegExp('\\b' + token + '\\b', 'i');
+    var filteredList = [];
+    list.forEach(function(element) {
+        if(regExp.test(element.show.name)) filteredList.push(element);
+    }, this);
+    console.log(filteredList);
+    return filteredList;
+}
+
+
 // returns an array with one element, six elements or empty array
 exports.checkSeriesValidity = function (seriesName) {
-    var resultMatchesQuery = false;
+    var resultsMatchesQuery = false;
 
     let options = buildSeriesRequestOptions(seriesName);
 
@@ -50,11 +62,12 @@ exports.checkSeriesValidity = function (seriesName) {
             if (foundSeries && foundSeries.length == 0)
                 return [];
             else {
-                resultMatchesQuery = ResultMatchesQuery(foundSeries[0], seriesName);
-                if (resultMatchesQuery)
+                resultsMatchesQuery = resultMatchesQuery(foundSeries[0], seriesName);
+                if (resultsMatchesQuery)
                     return [foundSeries[0]];
                 else {
                     var firstSix = foundSeries.slice(0, 6);
+                    firstSix = checkCorrectResults(firstSix, seriesName);
                     return firstSix;
                 }
             }
