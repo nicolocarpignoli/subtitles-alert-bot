@@ -10,17 +10,26 @@ var choosingEpisode = false;
 var choosenSeries = {};
 var choosenSeason;
 var choosenEpisode;
+var ambiguousSeries = {};
 
-function resetFlags() {
+function resetValues() {
     choosingSeries = false;
     choosingSeason = false;
     choosingEpisode = false;
+    ambiguousSeries = {};
 }
 
-// Setup polling way
 var bot = new TelegramBot(telegramBotToken, { polling: true });
 
 console.log("Starting bot...");
+
+function handleChosenSeries(chosenSeriesFromMenu){
+    ambiguousSeries.forEach(function(element) {
+        if(element.show.name == chosenSeriesFromMenu) choosenSeries = element;
+    }, this);
+    resetValues();
+    choosingSeason = true;
+}
 
 bot.onText(/\/start/, (msg, match) => {
     if (!choosingSeries) bot.sendMessage(msg.chat.id, Common.instructionsMessage, BotGui.generateKeyboardOptions());
@@ -28,15 +37,22 @@ bot.onText(/\/start/, (msg, match) => {
 
 bot.onText(Common.GETregExp, (msg, match) => {
     bot.sendMessage(msg.chat.id, Common.whichSeriesMessage);
-    resetFlags();
+    resetValues();
     choosingSeries = true;
 })
+
+bot.on('callback_query', (msg) => {
+    var userInput = msg.data;
+    if (Common.notACommand(userInput) && choosingSeries){
+        handleChosenSeries(userInput);
+        bot.sendMessage(msg.from.id, "Good! Wich season?");
+    }
+});
 
 bot.onText(/(.*?)/, (msg, match) => {
     var userInput = match.input;
 
     if (Common.notACommand(userInput) && choosingSeries) {
-        choosingSeries = false;
         console.log("Ok you just choose ", userInput);
         let promise = TvMaze.checkSeriesValidity(userInput);
         promise.then(function (response) {
@@ -44,15 +60,17 @@ bot.onText(/(.*?)/, (msg, match) => {
             switch (response.length) {
                 case 0:
                     bot.sendMessage(msg.chat.id, "Sorry, no series found with that name :(");
+                    choosingSeries = false;
                     break;
                 case 1:
                     bot.sendMessage(msg.chat.id, "Good! Wich season?");
-                    choosenSeries = response[0];
-                    resetFlags();
-                    choosingSeason = true;
+                    handleChosenSeries(response[0]);
                     break;
                 default:
-                    bot.sendMessage(msg.chat.id, "Mmh ambiguous! Which of these? (if none of these is the series you are looking for, try GET again with a more precise name)", BotGui.generateSeriesInlineKeyboard(response));
+                    ambiguousSeries = response;
+                    bot.sendMessage(msg.chat.id, "Mmh ambiguous! Which of these? (if none of these is " +
+                        + "the series you are looking for, try GET again with a more precise name)", 
+                        BotGui.generateSeriesInlineKeyboard(response));
                     break;
             }
         });
@@ -70,7 +88,7 @@ bot.onText(/(.*?)/, (msg, match) => {
                     bot.sendMessage(msg.chat.id, "Season not found or not out yet. Retry or restart GET!");
                 else {
                     choosenSeason = userInput;
-                    resetFlags();
+                    resetValues();
                     choosingEpisode = true;
                     bot.sendMessage(msg.chat.id, "Great! Wich episode?");
                 }
@@ -89,8 +107,9 @@ bot.onText(/(.*?)/, (msg, match) => {
                     bot.sendMessage(msg.chat.id, "Episode doesn't exist or not found. Retry or restart GET!");
                 else {
                     choosenEpisode = userInput;
-                    resetFlags();
-                    bot.sendMessage(msg.chat.id, "Great! I'll search your subtitles ;)"); //e invece deve scegliere la lingua e poi si può chiamare addic7ed
+                    resetValues();
+                    bot.sendMessage(msg.chat.id, "Great! I'll search your subtitles ;)"); 
+                    //e invece deve scegliere la lingua e poi si può chiamare addic7ed
                 }
             });
         }
