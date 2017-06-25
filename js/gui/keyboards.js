@@ -17,7 +17,12 @@ exports.generateKeyboardOptions = function () {
 exports.generateSeriesInlineKeyboard = function (options){
     let inlineOptions = [];
     options.forEach(function(element) {
-        inlineOptions.push([{text: element.show.name, callback_data: element.show.name}]);
+        inlineOptions.push([
+                {
+                    text: element.show.name, 
+                    callback_data: element.show.name
+                }
+            ]);
     }, this);
     return {
         "parse_mode": "Markdown",
@@ -26,18 +31,4 @@ exports.generateSeriesInlineKeyboard = function (options){
         }
     };
 };
-
-// exports.generateSeasonInlineKeyboard = function (options){
-//     let inlineOptions = [];
-//     options.forEach(function(element) {
-//         inlineOptions.push([{text: element.show.name}]);
-//     }, this);
-//     return {
-//         "reply_markup": {
-//             "inline_keyboard": inlineOptions
-//         }
-//     };
-// };
-
-
 
