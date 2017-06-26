@@ -1,12 +1,14 @@
 var TelegramBot = require('node-telegram-bot-api');
-var addic7edApi = require('addic7ed-api');
+var Addic7ed = require('./libs/addic7ed.js');
 var BotGui = require('./gui/keyboards.js');
 var Common = require('./common.js');
 var TvMaze = require('./libs/tvMaze.js');
+var Model = require('./models/languages.js');
 var telegramBotToken = '398340624:AAH3rtCzaX9Y2fDU0ssRrK4vhRVh1PpZA0w';
 var choosingSeries = false;
 var choosingSeason = false;
 var choosingEpisode = false;
+var choosingLanguage = false;
 var choosenSeries = {};
 var choosenSeason;
 var choosenEpisode;
@@ -24,9 +26,13 @@ var bot = new TelegramBot(telegramBotToken, { polling: true });
 console.log("Starting bot...");
 
 function handleChosenSeries(chosenSeriesFromMenu){
-    ambiguousSeries.forEach(function(element) {
-        if(element.show.name == chosenSeriesFromMenu) choosenSeries = element;
-    }, this);
+    if(!Common.isEmpty(ambiguousSeries)){
+        ambiguousSeries.forEach(function(element) {
+            if(element.show.name == chosenSeriesFromMenu) choosenSeries = element;
+        }, this);
+    }else{
+        choosenSeries = chosenSeriesFromMenu;
+    }
     resetValues();
     choosingSeason = true;
 }
@@ -108,10 +114,25 @@ bot.onText(/(.*?)/, (msg, match) => {
                 else {
                     choosenEpisode = userInput;
                     resetValues();
-                    bot.sendMessage(msg.chat.id, "Great! I'll search your subtitles ;)"); 
-                    //e invece deve scegliere la lingua e poi si può chiamare addic7ed
+                    choosingLanguage = true;
+                    bot.sendMessage(msg.chat.id, "Great! Which language do I have to search for?"); 
                 }
             });
         }
+    }
+    else if(Common.notACommand(userInput) && choosingLanguage){
+        resetValues();
+        var chosenLanguage = "";
+        Object.keys(Model.languages).forEach(function(key,index) {
+            // accepted "native" version and 3 chars version (e.g. "english" or "eng")
+            if((key.length == 3 && Model.languages[key]["native"][0].toUpperCase() === userInput.toUpperCase())
+                || (key.length == 3 && key.toUpperCase() == userInput.toUpperCase())){
+                chosenLanguage = key;
+                return;
+            }
+        }, this);
+        // da gestire se l'utente inserisce un language errato
+        Addic7ed.addic7edSearch(choosenSeries.show.name, choosenSeason, choosenEpisode, chosenLanguage);
+        resetValues();
     }
 })
