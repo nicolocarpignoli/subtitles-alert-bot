@@ -19,3 +19,11 @@ exports.notACommand = function (userInput) {
         userInput != this.stopAlertCommand &&
         userInput != this.showAlertsCommand;
 }
+
+exports.isEmpty = function (obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
