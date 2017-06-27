@@ -132,7 +132,7 @@ bot.onText(/(.*?)/, (msg, match) => {
             }
         }, this);
         // da gestire se l'utente inserisce un language errato
-        Addic7ed.addic7edSearch(choosenSeries.show.name, choosenSeason, choosenEpisode, chosenLanguage);
+        Addic7ed.addic7edGetSubtitle(choosenSeries.show.name, choosenSeason, choosenEpisode, chosenLanguage, bot, msg.chat.id);
         resetValues();
     }
 })

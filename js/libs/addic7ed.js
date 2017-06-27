@@ -1,13 +1,14 @@
 var addic7edApi = require('addic7ed-api');
 
-exports.addic7edSearch = function(series, season, episode, languages = []){
+exports.addic7edGetSubtitle = function(series, season, episode, languages = [], bot, chat){
     addic7edApi.search(series, season, episode, languages).then(function (subtitlesList) {
         var subInfo = subtitlesList[0];
         if (subInfo) {
-            addic7edApi.download(subInfo, 
-                './' + series + '_S' + season + '_E' + episode + '.srt'
-                ).then(function () {
+            var filename = './download/' + series + '_S' + season + '_E' + episode + '.srt';
+            addic7edApi.download(subInfo, filename)
+                .then(function () {
                     console.log('Subtitles file saved.');
+                    bot.sendDocument(chat, filename);
             });
         }
     });
