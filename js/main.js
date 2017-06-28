@@ -57,7 +57,6 @@ bot.on('callback_query', (msg) => {
 
 bot.onText(/(.*?)/, (msg, match) => {
     var userInput = match.input;
-
     if (Common.notACommand(userInput) && choosingSeries) {
         let promise = TvMaze.checkSeriesValidity(userInput);
         promise.then(function (response) {
@@ -88,31 +87,31 @@ bot.onText(/(.*?)/, (msg, match) => {
             let promise = TvMaze.checkSeasonValidity(choosenSeries.show.id, userInput);
             promise.then(function (response) {
                 if (response === false)
-                    bot.sendMessage(msg.chat.id, "Season not found or not out yet. Retry or restart GET!");
+                    bot.sendMessage(msg.chat.id, Common.seasonNotFoundMessage);
                 else {
                     choosenSeason = userInput;
                     resetValues();
                     choosingEpisode = true;
-                    bot.sendMessage(msg.chat.id, "Great! Wich episode?");
+                    bot.sendMessage(msg.chat.id, Common.whichEpisodeMessage);
                 }
             });
         }
     }
     else if (Common.notACommand(userInput) && choosingEpisode) {
         if (isNaN(userInput)) {
-            bot.sendMessage(msg.chat.id, "This doesn't seem to be a valid number, dude... retry!");
+            bot.sendMessage(msg.chat.id, Common.notANumberMessage);
             return;
         }
         else {
             let promise = TvMaze.checkEpisodeValidity(choosenSeries.show.id, choosenSeason, userInput);
             promise.then(function (response) {
                 if (response !== true)
-                    bot.sendMessage(msg.chat.id, "Episode doesn't exist or not found. Retry or restart GET!");
+                    bot.sendMessage(msg.chat.id, Common.episodeNotFoundMessage);
                 else {
                     choosenEpisode = userInput;
                     resetValues();
                     choosingLanguage = true;
-                    bot.sendMessage(msg.chat.id, "Great! Which language do I have to search for?"); 
+                    bot.sendMessage(msg.chat.id, Common.whichLanguageMessage); 
                 }
             });
         }
