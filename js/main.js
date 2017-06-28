@@ -51,7 +51,7 @@ bot.on('callback_query', (msg) => {
     var userInput = msg.data;
     if (Common.notACommand(userInput) && choosingSeries){
         handleChosenSeries(userInput);
-        bot.sendMessage(msg.from.id, "Good! Wich season?");
+        bot.sendMessage(msg.from.id, Common.whichSeasonMessage);
     }
 });
 
@@ -59,23 +59,20 @@ bot.onText(/(.*?)/, (msg, match) => {
     var userInput = match.input;
 
     if (Common.notACommand(userInput) && choosingSeries) {
-        console.log("Ok you just choose ", userInput);
         let promise = TvMaze.checkSeriesValidity(userInput);
         promise.then(function (response) {
-            // console.log('------RESULT------: ', response);
             switch (response.length) {
                 case 0:
-                    bot.sendMessage(msg.chat.id, "Sorry, no series found with that name :(");
+                    bot.sendMessage(msg.chat.id, Common.seasonNotFoundMessage);
                     choosingSeries = false;
                     break;
                 case 1:
-                    bot.sendMessage(msg.chat.id, "Good! Wich season?");
+                    bot.sendMessage(msg.chat.id, Common.whichSeasonMessage);
                     handleChosenSeries(response[0]);
                     break;
                 default:
                     ambiguousSeries = response;
-                    bot.sendMessage(msg.chat.id, "Mmh ambiguous! Which of these? (if none of these is " +
-                        + "the series you are looking for, try GET again with a more precise name)", 
+                    bot.sendMessage(msg.chat.id, Common.ambiguousSeriesMessage, 
                         BotGui.generateSeriesInlineKeyboard(response));
                     break;
             }
@@ -84,38 +81,38 @@ bot.onText(/(.*?)/, (msg, match) => {
 
     else if (Common.notACommand(userInput) && choosingSeason) {
         if (isNaN(userInput)) {
-            bot.sendMessage(msg.chat.id, "This doesn't seem to be a valid number, dude... retry!");
+            bot.sendMessage(msg.chat.id, Common.notANumberMessage);
             return;
         }
         else {
             let promise = TvMaze.checkSeasonValidity(choosenSeries.show.id, userInput);
             promise.then(function (response) {
                 if (response === false)
-                    bot.sendMessage(msg.chat.id, "Season not found or not out yet. Retry or restart GET!");
+                    bot.sendMessage(msg.chat.id, Common.seasonNotFoundMessage);
                 else {
                     choosenSeason = userInput;
                     resetValues();
                     choosingEpisode = true;
-                    bot.sendMessage(msg.chat.id, "Great! Wich episode?");
+                    bot.sendMessage(msg.chat.id, Common.whichEpisodeMessage);
                 }
             });
         }
     }
     else if (Common.notACommand(userInput) && choosingEpisode) {
         if (isNaN(userInput)) {
-            bot.sendMessage(msg.chat.id, "This doesn't seem to be a valid number, dude... retry!");
+            bot.sendMessage(msg.chat.id, Common.notANumberMessage);
             return;
         }
         else {
             let promise = TvMaze.checkEpisodeValidity(choosenSeries.show.id, choosenSeason, userInput);
             promise.then(function (response) {
                 if (response !== true)
-                    bot.sendMessage(msg.chat.id, "Episode doesn't exist or not found. Retry or restart GET!");
+                    bot.sendMessage(msg.chat.id, Common.episodeNotFoundMessage);
                 else {
                     choosenEpisode = userInput;
                     resetValues();
                     choosingLanguage = true;
-                    bot.sendMessage(msg.chat.id, "Great! Which language do I have to search for?"); 
+                    bot.sendMessage(msg.chat.id, Common.whichLanguageMessage); 
                 }
             });
         }
