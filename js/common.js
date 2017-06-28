@@ -1,7 +1,11 @@
 exports.instructionsMessage = "Welcome, my tv-addicted friend! What you want me to do today?"
 exports.whichSeriesMessage = "Ok great! Which series do you want?";
-exports.whichSeasonMessage = "Ok! Which season?"
+exports.whichSeasonMessage = "Good! Which season?"
 exports.whichEpisodeMessage = "Ok! Which episode?";
+exports.failedSeriesMessage = "Sorry, no series found with that name :(";
+exports.ambiguousSeriesMessage = "Mmh ambiguous! Which of these? (if none of these is " +
+                        + "the series you are looking for, try GET again with a more precise name)"
+exports.notANumberMessage = "This doesn't seem to be a valid number, dude... retry!";
 
 exports.getCommand = "Get \uD83D\uDCE5";
 exports.startAlertCommand = "Start Alert \uD83D\uDCE2";
