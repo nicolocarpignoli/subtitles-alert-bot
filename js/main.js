@@ -57,13 +57,12 @@ bot.on('callback_query', (msg) => {
 
 bot.onText(/(.*?)/, (msg, match) => {
     var userInput = match.input;
-
     if (Common.notACommand(userInput) && choosingSeries) {
         let promise = TvMaze.checkSeriesValidity(userInput);
         promise.then(function (response) {
             switch (response.length) {
                 case 0:
-                    bot.sendMessage(msg.chat.id, Common.seasonNotFoundMessage);
+                    bot.sendMessage(msg.chat.id, Common.failedSeriesMessage);
                     choosingSeries = false;
                     break;
                 case 1:
