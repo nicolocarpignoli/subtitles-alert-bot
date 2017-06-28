@@ -51,7 +51,7 @@ bot.on('callback_query', (msg) => {
     var userInput = msg.data;
     if (Common.notACommand(userInput) && choosingSeries){
         handleChosenSeries(userInput);
-        bot.sendMessage(msg.from.id, "Good! Wich season?");
+        bot.sendMessage(msg.from.id, Common.whichSeasonMessage);
     }
 });
 
@@ -59,23 +59,20 @@ bot.onText(/(.*?)/, (msg, match) => {
     var userInput = match.input;
 
     if (Common.notACommand(userInput) && choosingSeries) {
-        console.log("Ok you just choose ", userInput);
         let promise = TvMaze.checkSeriesValidity(userInput);
         promise.then(function (response) {
-            // console.log('------RESULT------: ', response);
             switch (response.length) {
                 case 0:
-                    bot.sendMessage(msg.chat.id, "Sorry, no series found with that name :(");
+                    bot.sendMessage(msg.chat.id, Common.failedSeriesMessage);
                     choosingSeries = false;
                     break;
                 case 1:
-                    bot.sendMessage(msg.chat.id, "Good! Wich season?");
+                    bot.sendMessage(msg.chat.id, Common.whichSeasonMessage);
                     handleChosenSeries(response[0]);
                     break;
                 default:
                     ambiguousSeries = response;
-                    bot.sendMessage(msg.chat.id, "Mmh ambiguous! Which of these? (if none of these is " +
-                        + "the series you are looking for, try GET again with a more precise name)", 
+                    bot.sendMessage(msg.chat.id, Common.ambiguousSeriesMessage, 
                         BotGui.generateSeriesInlineKeyboard(response));
                     break;
             }
@@ -84,7 +81,7 @@ bot.onText(/(.*?)/, (msg, match) => {
 
     else if (Common.notACommand(userInput) && choosingSeason) {
         if (isNaN(userInput)) {
-            bot.sendMessage(msg.chat.id, "This doesn't seem to be a valid number, dude... retry!");
+            bot.sendMessage(msg.chat.id, Common.notANumberMessage);
             return;
         }
         else {
