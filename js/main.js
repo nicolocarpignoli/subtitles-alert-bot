@@ -13,12 +13,14 @@ var choosenSeries = {};
 var choosenSeason;
 var choosenEpisode;
 var ambiguousSeries = {};
+var counterLanguage = 0;
 
 function resetValues() {
     choosingSeries = false;
     choosingSeason = false;
     choosingEpisode = false;
     ambiguousSeries = {};
+    counterLanguage = 0;
 }
 
 var bot = new TelegramBot(telegramBotToken, { polling: true });
@@ -117,18 +119,21 @@ bot.onText(/(.*?)/, (msg, match) => {
         }
     }
     else if(Common.notACommand(userInput) && choosingLanguage){
-        resetValues();
         var chosenLanguage = "";
         Object.keys(Model.languages).forEach(function(key,index) {
             // accepted "native" version and 3 chars version (e.g. "english" or "eng")
             if((key.length == 3 && Model.languages[key]["native"][0].toUpperCase() === userInput.toUpperCase())
                 || (key.length == 3 && key.toUpperCase() == userInput.toUpperCase())){
                 chosenLanguage = key;
+                resetValues();
+                Addic7ed.addic7edGetSubtitle(choosenSeries.show.name, choosenSeason, choosenEpisode, chosenLanguage, bot, msg.chat.id);
                 return;
             }
+            counterLanguage++;
         }, this);
-        // da gestire se l'utente inserisce un language errato
-        Addic7ed.addic7edGetSubtitle(choosenSeries.show.name, choosenSeason, choosenEpisode, chosenLanguage, bot, msg.chat.id);
-        resetValues();
+        if(counterLanguage == Object.keys(Model.languages).length){
+            bot.sendMessage(msg.chat.id, Common.languageNotFoundMessage);
+            counterLanguage = 0; 
+        }
     }
 })
