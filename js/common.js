@@ -35,3 +35,7 @@ exports.isEmpty = function (obj) {
     }
     return true;
 }
+
+exports.buildLinkMessage = function(link) {
+    return 'There it is! If you want more subtitles of this episode please visit: www.addic7ed.com' + link;
+}
