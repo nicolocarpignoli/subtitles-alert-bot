@@ -10,6 +10,7 @@ exports.notANumberMessage = "This doesn't seem to be a valid number, dude... ret
 exports.seasonNotFoundMessage = "Season not found or not out yet. Retry or restart GET!";
 exports.episodeNotFoundMessage = "Episode doesn't exist or not found. Retry or restart GET!";
 exports.languageNotFoundMessage = "Sorry, language not found! Try typing your language as three-letter code or in extended form!"
+exports.subtitleNofFoundInAddic7edMessage = "Oh noes! We can't find your subtitles in our magic system! I guess nobody has subbed this yet... try again with a different language or request!"
 
 exports.getCommand = "Get \uD83D\uDCE5";
 exports.startAlertCommand = "Start Alert \uD83D\uDCE2";
