@@ -5,22 +5,17 @@ var Common = require('./common.js');
 var TvMaze = require('./libs/tvMaze.js');
 var Model = require('./models/languages.js');
 var telegramBotToken = '398340624:AAH3rtCzaX9Y2fDU0ssRrK4vhRVh1PpZA0w';
-var choosingSeries = false;
-var choosingSeason = false;
-var choosingEpisode = false;
-var choosingLanguage = false;
-var choosenSeries = {};
-var choosenSeason;
-var choosenEpisode;
-var ambiguousSeries = {};
-var counterLanguage = 0;
+var Session = require('./models/session.js');
 
-function resetValues() {
-    choosingSeries = false;
-    choosingSeason = false;
-    choosingEpisode = false;
-    ambiguousSeries = {};
-    counterLanguage = 0;
+var sessions = [];
+
+
+function resetValues(session) {
+    session.choosingSeries = false;
+    session.choosingSeason = false;
+    session.choosingEpisode = false;
+    session.ambiguousSeries = {};
+    session.counterLanguage = 0;
 }
 
 var bot = new TelegramBot(telegramBotToken, { polling: true });
