@@ -1,3 +1,5 @@
+var Session = require('./models/session.js');
+
 exports.instructionsMessage = "Welcome, my tv-addicted friend! What you want me to do today?"
 exports.whichSeriesMessage = "Ok great! Which series do you want?";
 exports.whichSeasonMessage = "Good! Which season?"
@@ -39,4 +41,41 @@ exports.isEmpty = function (obj) {
 
 exports.buildLinkMessage = function(link) {
     return 'There it is! If you want more subtitles of this episode please visit: www.addic7ed.com' + link;
+}
+
+exports.checkSessions = function(sessions, id){
+    var sessionToReturn = null;
+    var counter = 0;
+    sessions.forEach(function(session) {
+        counter++;
+        if(session.chatId == id) sessionToReturn = session;
+    });
+    if (sessions.length == counter){
+        sessionToReturn = new Session();
+        sessionToReturn.chatId = id;
+        sessions.push(sessionToReturn);
+    }
+    return sessionToReturn;
+}
+
+exports.pushInSessions = function(sessions, session){
+    var counter = 0;
+    if(sessions.length ==  0) sessions.push(session);
+    sessions.forEach(function(element) {
+        if (session.chatId == element.chatId){
+            sessions.splice(counter, 1);
+            sessions.push(session);
+        }
+        counter++;
+    });
+}
+
+exports.removeSessions = function(sessions, session){
+    var counter = 0;
+    sessions.forEach(function(element) {
+        if (session.chatId == element.chatId){
+            sessions.splice(counter, 1);
+        }
+        counter++;
+    });
 }

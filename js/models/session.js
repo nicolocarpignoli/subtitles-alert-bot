@@ -1,12 +1,15 @@
 
-exports.Session = {
-    choosingSeries : false,
-    choosingSeason : false,
-    choosingEpisode : false,
-    choosingLanguage : false,
-    choosenSeries : {},
-    choosenSeason,
-    choosenEpisode,
-    ambiguousSeries : {},
-    counterLanguage : 0
+function Session() {
+    this.chatId = "",
+    this.choosingSeries = false,
+    this.choosingSeason = false,
+    this.choosingEpisode = false,
+    this.choosingLanguage = false,
+    this.choosenSeries = {},
+    this.choosenSeason,
+    this.choosenEpisode,
+    this.ambiguousSeries = {},
+    this.counterLanguage = 0
 }
+
+module.exports = Session;

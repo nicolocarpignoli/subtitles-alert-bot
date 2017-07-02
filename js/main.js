@@ -6,7 +6,6 @@ var TvMaze = require('./libs/tvMaze.js');
 var Model = require('./models/languages.js');
 var telegramBotToken = '398340624:AAH3rtCzaX9Y2fDU0ssRrK4vhRVh1PpZA0w';
 var Session = require('./models/session.js');
-
 var sessions = [];
 
 
@@ -25,28 +24,35 @@ console.log("Starting bot...");
 function handleChosenSeries(chosenSeriesFromMenu){
     if(!Common.isEmpty(ambiguousSeries)){
         ambiguousSeries.forEach(function(element) {
-            if(element.show.name == chosenSeriesFromMenu) choosenSeries = element;
+            if(element.show.name == chosenSeriesFromMenu) session.choosenSeries = element;
         }, this);
     }else{
-        choosenSeries = chosenSeriesFromMenu;
+        session.choosenSeries = chosenSeriesFromMenu;
     }
-    resetValues();
-    choosingSeason = true;
+    resetValues(session);
+    session.choosingSeason = true;
+    //Common.pushInSessions(sessions,session);
+
 }
 
 bot.onText(/\/start/, (msg, match) => {
-    if (!choosingSeries) bot.sendMessage(msg.chat.id, Common.instructionsMessage, BotGui.generateKeyboardOptions());
+    var session = Common.checkSessions(sessions,msg.chat.id);
+    if (!session.choosingSeries) bot.sendMessage(msg.chat.id, Common.instructionsMessage, 
+        BotGui.generateKeyboardOptions());
 });
 
 bot.onText(Common.GETregExp, (msg, match) => {
+    var session = Common.checkSessions(sessions, msg.chat.id);
     bot.sendMessage(msg.chat.id, Common.whichSeriesMessage);
-    resetValues();
-    choosingSeries = true;
+    resetValues(session);
+    session.choosingSeries = true;
+    Common.pushInSessions(sessions,session);
 })
 
 bot.on('callback_query', (msg) => {
+    var session = Common.checkSessions(sessions, msg.chat.id);
     var userInput = msg.data;
-    if (Common.notACommand(userInput) && choosingSeries){
+    if (Common.notACommand(userInput) && session.choosingSeries){
         handleChosenSeries(userInput);
         bot.sendMessage(msg.from.id, Common.whichSeasonMessage);
     }
@@ -54,13 +60,15 @@ bot.on('callback_query', (msg) => {
 
 bot.onText(/(.*?)/, (msg, match) => {
     var userInput = match.input;
-    if (Common.notACommand(userInput) && choosingSeries) {
+    var session = Common.checkSessions(sessions, msg.chat.id);
+    if (Common.notACommand(userInput) && session.choosingSeries) {
         let promise = TvMaze.checkSeriesValidity(userInput);
         promise.then(function (response) {
             switch (response.length) {
                 case 0:
                     bot.sendMessage(msg.chat.id, Common.failedSeriesMessage);
-                    choosingSeries = false;
+                    session.choosingSeries = false;
+                    //Common.pushInSessions(sessions,session);
                     break;
                 case 1:
                     bot.sendMessage(msg.chat.id, Common.whichSeasonMessage);
@@ -75,53 +83,57 @@ bot.onText(/(.*?)/, (msg, match) => {
         });
     }
 
-    else if (Common.notACommand(userInput) && choosingSeason) {
+    else if (Common.notACommand(userInput) && session.choosingSeason) {
         if (isNaN(userInput)) {
             bot.sendMessage(msg.chat.id, Common.notANumberMessage);
             return;
         }
         else {
-            let promise = TvMaze.checkSeasonValidity(choosenSeries.show.id, userInput);
+            let promise = TvMaze.checkSeasonValidity(session.choosenSeries.show.id, userInput);
             promise.then(function (response) {
                 if (response === false)
                     bot.sendMessage(msg.chat.id, Common.seasonNotFoundMessage);
                 else {
-                    choosenSeason = userInput;
-                    resetValues();
-                    choosingEpisode = true;
+                    session.choosenSeason = userInput;
+                    resetValues(session);
+                    session.choosingEpisode = true;
+                    //Common.pushInSessions(sessions,session);
                     bot.sendMessage(msg.chat.id, Common.whichEpisodeMessage);
                 }
             });
         }
     }
-    else if (Common.notACommand(userInput) && choosingEpisode) {
+    else if (Common.notACommand(userInput) && session.choosingEpisode) {
         if (isNaN(userInput)) {
             bot.sendMessage(msg.chat.id, Common.notANumberMessage);
             return;
         }
         else {
-            let promise = TvMaze.checkEpisodeValidity(choosenSeries.show.id, choosenSeason, userInput);
+            let promise = TvMaze.checkEpisodeValidity(choosenSeries.show.id, session.choosenSeason, userInput);
             promise.then(function (response) {
                 if (response !== true)
                     bot.sendMessage(msg.chat.id, Common.episodeNotFoundMessage);
                 else {
-                    choosenEpisode = userInput;
-                    resetValues();
-                    choosingLanguage = true;
+                    session.choosenEpisode = userInput;
+                    resetValues(session);
+                    session.choosingLanguage = true;
+                    //Common.pushInSessions(sessions,session);
                     bot.sendMessage(msg.chat.id, Common.whichLanguageMessage); 
                 }
             });
         }
     }
-    else if(Common.notACommand(userInput) && choosingLanguage){
+    else if(Common.notACommand(userInput) && session.choosingLanguage){
         var chosenLanguage = "";
         Object.keys(Model.languages).forEach(function(key,index) {
             // accepted "native" version and 3 chars version (e.g. "english" or "eng")
             if((key.length == 3 && Model.languages[key]["native"][0].toUpperCase() === userInput.toUpperCase())
                 || (key.length == 3 && key.toUpperCase() == userInput.toUpperCase())){
-                chosenLanguage = key;
-                resetValues();
-                Addic7ed.addic7edGetSubtitle(choosenSeries.show.name, choosenSeason, choosenEpisode, chosenLanguage, bot, msg.chat.id);
+                session.chosenLanguage = key;
+                resetValues(session);
+                Addic7ed.addic7edGetSubtitle(session.choosenSeries.show.name, session.choosenSeason, 
+                    session.choosenEpisode, session.chosenLanguage, bot, msg.chat.id);
+                Common.removeSessions(sessions,session);
                 return;
             }
             counterLanguage++;
