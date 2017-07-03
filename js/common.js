@@ -6,13 +6,13 @@ exports.whichSeasonMessage = "Good! Which season?"
 exports.whichEpisodeMessage = "Great! Which episode?";
 exports.whichLanguageMessage = "Great! Which language do I have to search for?";
 
-exports.failedSeriesMessage = "Sorry, no series found with that name :(";
-exports.ambiguousSeriesMessage = "Mmh ambiguous! Which of these? (if none of these is the series you are looking for, try GET again with a more precise name)"
+exports.failedSeriesMessage = "Sorry, no series found with that name \u2639\uFE0F";
+exports.ambiguousSeriesMessage = "Mmh ambiguous! \uD83E\uDD14 Which of these? (if none of these is the series you are looking for, try GET again with a more precise name)"
 exports.notANumberMessage = "This doesn't seem to be a valid number, dude... retry!";
 exports.seasonNotFoundMessage = "Season not found or not out yet. Retry or restart GET!";
 exports.episodeNotFoundMessage = "Episode doesn't exist or not found. Retry or restart GET!";
 exports.languageNotFoundMessage = "Sorry, language not found! Try typing your language as three-letter code or in extended form!"
-exports.subtitleNofFoundInAddic7edMessage = "Oh noes! We can't find your subtitles in our magic system! I guess nobody has subbed this yet... try again with a different language or request!"
+exports.subtitleNofFoundInAddic7edMessage = "Oh noes! We can't find your subtitles in our magic system! I guess nobody has subbed this yet... try again with a different language or a new request!"
 
 exports.getCommand = "Get \uD83D\uDCE5";
 exports.startAlertCommand = "Start Alert \uD83D\uDCE2";
@@ -45,12 +45,15 @@ exports.buildLinkMessage = function(link) {
 
 exports.checkSessions = function(sessions, id){
     var sessionToReturn = null;
-    var counter = 0;
+    let contat = 0;
     sessions.forEach(function(session) {
-        counter++;
-        if(session.chatId == id) sessionToReturn = session;
+        if(session.chatId == id){
+             sessionToReturn = session;
+             return;
+        }
+        contat++;
     });
-    if (sessions.length == counter){
+    if (sessions.length == contat){
         sessionToReturn = new Session();
         sessionToReturn.chatId = id;
         sessions.push(sessionToReturn);
@@ -59,23 +62,25 @@ exports.checkSessions = function(sessions, id){
 }
 
 exports.pushInSessions = function(sessions, session){
-    var counter = 0;
+    let counter = 0;
     if(sessions.length ==  0) sessions.push(session);
     sessions.forEach(function(element) {
         if (session.chatId == element.chatId){
             sessions.splice(counter, 1);
             sessions.push(session);
+            return;
         }
         counter++;
     });
 }
 
 exports.removeSessions = function(sessions, session){
-    var counter = 0;
+    let cont = 0;
     sessions.forEach(function(element) {
         if (session.chatId == element.chatId){
-            sessions.splice(counter, 1);
+            sessions.splice(cont, 1);
+            return;
         }
-        counter++;
+        cont++;
     });
 }
