@@ -43,48 +43,6 @@ exports.buildLinkMessage = function (link) {
     return 'There it is! If you want more subtitles of this episode please visit: www.addic7ed.com' + link;
 }
 
-// exports.checkSessions = function (sessions, id) {
-//     var sessionToReturn = null;
-//     let contat = 0;
-//     sessions.forEach(function (session) {
-//         if (session.chatId == id) {
-//             sessionToReturn = session;
-//             return;
-//         }
-//         contat++;
-//     });
-//     if (sessions.length == contat) {
-//         sessionToReturn = new Session();
-//         sessionToReturn.chatId = id;
-//         sessions.push(sessionToReturn);
-//     }
-//     return sessionToReturn;
-// }
-
-// exports.pushInSessions = function (sessions, session) {
-//     let counter = 0;
-//     if (sessions.length == 0) sessions.push(session);
-//     sessions.forEach(function (element) {
-//         if (session.chatId == element.chatId) {
-//             sessions.splice(counter, 1);
-//             sessions.push(session);
-//             return;
-//         }
-//         counter++;
-//     });
-// }
-
-// exports.removeSessions = function (sessions, session) {
-//     let cont = 0;
-//     sessions.forEach(function (element) {
-//         if (session.chatId == element.chatId) {
-//             sessions.splice(cont, 1);
-//             return;
-//         }
-//         cont++;
-//     });
-// }
-
 exports.checkSessions = function (sessions, id) {
     let userSession = sessions.find(function (session) {
         return session.chatId === id;
