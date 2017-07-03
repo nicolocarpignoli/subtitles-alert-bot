@@ -32,55 +32,81 @@ exports.notACommand = function (userInput) {
 }
 
 exports.isEmpty = function (obj) {
-    for(var key in obj) {
-        if(obj.hasOwnProperty(key))
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key))
             return false;
     }
     return true;
 }
 
-exports.buildLinkMessage = function(link) {
+exports.buildLinkMessage = function (link) {
     return 'There it is! If you want more subtitles of this episode please visit: www.addic7ed.com' + link;
 }
 
-exports.checkSessions = function(sessions, id){
-    var sessionToReturn = null;
-    let contat = 0;
-    sessions.forEach(function(session) {
-        if(session.chatId == id){
-             sessionToReturn = session;
-             return;
-        }
-        contat++;
-    });
-    if (sessions.length == contat){
-        sessionToReturn = new Session();
-        sessionToReturn.chatId = id;
-        sessions.push(sessionToReturn);
+// exports.checkSessions = function (sessions, id) {
+//     var sessionToReturn = null;
+//     let contat = 0;
+//     sessions.forEach(function (session) {
+//         if (session.chatId == id) {
+//             sessionToReturn = session;
+//             return;
+//         }
+//         contat++;
+//     });
+//     if (sessions.length == contat) {
+//         sessionToReturn = new Session();
+//         sessionToReturn.chatId = id;
+//         sessions.push(sessionToReturn);
+//     }
+//     return sessionToReturn;
+// }
+
+// exports.pushInSessions = function (sessions, session) {
+//     let counter = 0;
+//     if (sessions.length == 0) sessions.push(session);
+//     sessions.forEach(function (element) {
+//         if (session.chatId == element.chatId) {
+//             sessions.splice(counter, 1);
+//             sessions.push(session);
+//             return;
+//         }
+//         counter++;
+//     });
+// }
+
+// exports.removeSessions = function (sessions, session) {
+//     let cont = 0;
+//     sessions.forEach(function (element) {
+//         if (session.chatId == element.chatId) {
+//             sessions.splice(cont, 1);
+//             return;
+//         }
+//         cont++;
+//     });
+// }
+
+exports.checkSessions = function (sessions, id) {
+    let userSession = sessions.find(function (session) {
+        return session.chatId === id;
+    }) || new Session();
+    userSession.chatId = id;
+    return userSession;
+}
+
+exports.pushInSessions = function (sessions, session) {
+    if (sessions.length == 0) sessions.push(session);
+    else {
+        var sessionIdx = sessions.findIndex(function (element) {
+            return session.chatId == element.chatId;
+        });
+        sessions[sessionIdx] = session;
     }
-    return sessionToReturn;
 }
 
-exports.pushInSessions = function(sessions, session){
-    let counter = 0;
-    if(sessions.length ==  0) sessions.push(session);
-    sessions.forEach(function(element) {
-        if (session.chatId == element.chatId){
-            sessions.splice(counter, 1);
-            sessions.push(session);
-            return;
-        }
-        counter++;
+exports.removeSessions = function (sessions, session) {
+    if (sessions.length == 0) return;
+    var sessionIdx = sessions.findIndex(function (element) {
+        return session.chatId == element.chatId;
     });
-}
-
-exports.removeSessions = function(sessions, session){
-    let cont = 0;
-    sessions.forEach(function(element) {
-        if (session.chatId == element.chatId){
-            sessions.splice(cont, 1);
-            return;
-        }
-        cont++;
-    });
+    sessions.splice(sessionIdx, 1);
 }
