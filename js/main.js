@@ -21,22 +21,22 @@ var bot = new TelegramBot(telegramBotToken, { polling: true });
 
 console.log("Starting bot...");
 
-function handleChosenSeries(chosenSeriesFromMenu, session){
-    if(!Common.isEmpty(session.ambiguousSeries)){
-        session.ambiguousSeries.forEach(function(element) {
-            if(element.show.name == chosenSeriesFromMenu) session.choosenSeries = element;
+function handleChosenSeries(chosenSeriesFromMenu, session) {
+    if (!Common.isEmpty(session.ambiguousSeries))
+        session.ambiguousSeries.forEach(function (element) {
+            if (element.show.name == chosenSeriesFromMenu) session.choosenSeries = element;
         }, this);
-    }else{
+    else
         session.choosenSeries = chosenSeriesFromMenu;
-    }
+
     resetValues(session);
     session.choosingSeason = true;
-    Common.pushInSessions(sessions,session);
+    Common.pushInSessions(sessions, session);
 }
 
 bot.onText(/\/start/, (msg, match) => {
-    var session = Common.checkSessions(sessions,msg.chat.id);
-    if (!session.choosingSeries) bot.sendMessage(msg.chat.id, Common.instructionsMessage, 
+    var session = Common.checkSessions(sessions, msg.chat.id);
+    if (!session.choosingSeries) bot.sendMessage(msg.chat.id, Common.instructionsMessage,
         BotGui.generateKeyboardOptions());
 });
 
@@ -45,13 +45,13 @@ bot.onText(Common.GETregExp, (msg, match) => {
     bot.sendMessage(msg.chat.id, Common.whichSeriesMessage);
     resetValues(session);
     session.choosingSeries = true;
-    Common.pushInSessions(sessions,session);
+    Common.pushInSessions(sessions, session);
 })
 
 bot.on('callback_query', (msg) => {
     var session = Common.checkSessions(sessions, msg.from.id);
     var userInput = msg.data;
-    if (Common.notACommand(userInput) && session.choosingSeries){
+    if (Common.notACommand(userInput) && session.choosingSeries) {
         handleChosenSeries(userInput, session);
         bot.sendMessage(msg.from.id, Common.whichSeasonMessage);
     }
@@ -67,7 +67,7 @@ bot.onText(/(.*?)/, (msg, match) => {
                 case 0:
                     bot.sendMessage(msg.chat.id, Common.failedSeriesMessage);
                     session.choosingSeries = false;
-                    Common.pushInSessions(sessions,session);
+                    Common.pushInSessions(sessions, session);
                     break;
                 case 1:
                     bot.sendMessage(msg.chat.id, Common.whichSeasonMessage);
@@ -75,7 +75,7 @@ bot.onText(/(.*?)/, (msg, match) => {
                     break;
                 default:
                     session.ambiguousSeries = response;
-                    bot.sendMessage(msg.chat.id, Common.ambiguousSeriesMessage, 
+                    bot.sendMessage(msg.chat.id, Common.ambiguousSeriesMessage,
                         BotGui.generateSeriesInlineKeyboard(response));
                     break;
             }
@@ -96,7 +96,7 @@ bot.onText(/(.*?)/, (msg, match) => {
                     session.choosenSeason = userInput;
                     resetValues(session);
                     session.choosingEpisode = true;
-                    Common.pushInSessions(sessions,session);
+                    Common.pushInSessions(sessions, session);
                     bot.sendMessage(msg.chat.id, Common.whichEpisodeMessage);
                 }
             });
@@ -116,30 +116,30 @@ bot.onText(/(.*?)/, (msg, match) => {
                     session.choosenEpisode = userInput;
                     resetValues(session);
                     session.choosingLanguage = true;
-                    Common.pushInSessions(sessions,session);
-                    bot.sendMessage(msg.chat.id, Common.whichLanguageMessage); 
+                    Common.pushInSessions(sessions, session);
+                    bot.sendMessage(msg.chat.id, Common.whichLanguageMessage);
                 }
             });
         }
     }
-    else if(Common.notACommand(userInput) && session.choosingLanguage){
+    else if (Common.notACommand(userInput) && session.choosingLanguage) {
         var chosenLanguage = "";
-        Object.keys(Model.languages).forEach(function(key,index) {
+        Object.keys(Model.languages).forEach(function (key, index) {
             // accepted "native" version and 3 chars version (e.g. "english" or "eng")
-            if((key.length == 3 && Model.languages[key]["native"][0].toUpperCase() === userInput.toUpperCase())
-                || (key.length == 3 && key.toUpperCase() == userInput.toUpperCase())){
+            if ((key.length == 3 && Model.languages[key]["native"][0].toUpperCase() === userInput.toUpperCase())
+                || (key.length == 3 && key.toUpperCase() == userInput.toUpperCase())) {
                 session.chosenLanguage = key;
                 resetValues(session);
-                Addic7ed.addic7edGetSubtitle(session.choosenSeries.show.name, session.choosenSeason, 
+                Addic7ed.addic7edGetSubtitle(session.choosenSeries.show.name, session.choosenSeason,
                     session.choosenEpisode, session.chosenLanguage, bot, msg.chat.id);
-                Common.removeSessions(sessions,session);
+                Common.removeSessions(sessions, session);
                 return;
             }
             session.counterLanguage++;
         }, this);
-        if(session.counterLanguage == Object.keys(Model.languages).length){
+        if (session.counterLanguage == Object.keys(Model.languages).length) {
             bot.sendMessage(msg.chat.id, Common.languageNotFoundMessage);
-            session.counterLanguage = 0; 
+            session.counterLanguage = 0;
         }
     }
 })
