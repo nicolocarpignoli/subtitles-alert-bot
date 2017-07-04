@@ -11,7 +11,7 @@ exports.ambiguousSeriesMessage = "Mmh ambiguous! \uD83E\uDD14 Which of these? (i
 exports.notANumberMessage = "This doesn't seem to be a valid number, dude... retry!";
 exports.seasonNotFoundMessage = "Season not found or not out yet. Retry or restart GET!";
 exports.episodeNotFoundMessage = "Episode doesn't exist or not found. Retry or restart GET!";
-exports.languageNotFoundMessage = "Sorry, language not found! Try typing your language as three-letter code or in extended form!"
+exports.languageNotFoundMessage = "Sorry, language not found! Try typing your language as three-letter code, international form or native form!"
 exports.subtitleNofFoundInAddic7edMessage = "Oh noes! We can't find your subtitles in our magic system! I guess nobody has subbed this yet... try again with a different language or a new request!"
 
 exports.getCommand = "Get \uD83D\uDCE5";
