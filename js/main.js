@@ -21,14 +21,8 @@ var bot = new TelegramBot(telegramBotToken, { polling: true });
 
 console.log("Starting bot...");
 
-function handleChosenSeries(chosenSeriesFromMenu, session) {
-    if (!Common.isEmpty(session.ambiguousSeries))
-        session.ambiguousSeries.forEach(function (element) {
-            if (element.show.name == chosenSeriesFromMenu) session.choosenSeries = element;
-        }, this);
-    else
-        session.choosenSeries = chosenSeriesFromMenu;
-
+function handleChosenSeries(chosenSeries, session) {
+    session.choosenSeries = chosenSeries;
     resetValues(session);
     session.choosingSeason = true;
     Common.pushInSessions(sessions, session);
@@ -51,8 +45,10 @@ bot.onText(Common.GETregExp, (msg, match) => {
 bot.on('callback_query', (msg) => {
     var session = Common.checkSessions(sessions, msg.from.id);
     var userInput = msg.data;
-    if (Common.notACommand(userInput) && session.choosingSeries) {
-        handleChosenSeries(userInput, session);
+    if (Common.notACommand(userInput) && session.choosingSeries && !Common.isEmpty(session.ambiguousSeries)) {
+        var seriesObj = session.ambiguousSeries.find(function (elem) { return elem.show.name === userInput; });
+        
+        handleChosenSeries(seriesObj, session);
         bot.sendMessage(msg.from.id, Common.whichSeasonMessage);
     }
 });
