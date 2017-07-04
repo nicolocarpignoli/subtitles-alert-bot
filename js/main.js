@@ -47,7 +47,7 @@ bot.on('callback_query', (msg) => {
     var userInput = msg.data;
     if (Common.notACommand(userInput) && session.choosingSeries && !Common.isEmpty(session.ambiguousSeries)) {
         var seriesObj = session.ambiguousSeries.find(function (elem) { return elem.show.name === userInput; });
-        
+
         handleChosenSeries(seriesObj, session);
         bot.sendMessage(msg.from.id, Common.whichSeasonMessage);
     }
@@ -119,23 +119,23 @@ bot.onText(/(.*?)/, (msg, match) => {
         }
     }
     else if (Common.notACommand(userInput) && session.choosingLanguage) {
-        var chosenLanguage = "";
-        Object.keys(Model.languages).forEach(function (key, index) {
-            // accepted "native" version and 3 chars version (e.g. "english" or "eng")
-            if ((key.length == 3 && Model.languages[key]["native"][0].toUpperCase() === userInput.toUpperCase())
-                || (key.length == 3 && key.toUpperCase() == userInput.toUpperCase())) {
-                session.chosenLanguage = key;
-                resetValues(session);
-                Addic7ed.addic7edGetSubtitle(session.choosenSeries.show.name, session.choosenSeason,
-                    session.choosenEpisode, session.chosenLanguage, bot, msg.chat.id);
-                Common.removeSessions(sessions, session);
-                return;
-            }
-            session.counterLanguage++;
-        }, this);
-        if (session.counterLanguage == Object.keys(Model.languages).length) {
-            bot.sendMessage(msg.chat.id, Common.languageNotFoundMessage);
-            session.counterLanguage = 0;
+        // accepted "native" version, "int" version and 3 chars version (e.g. "italiano", "italian" or "ita")
+        var languageKey = Object.keys(Model.languages).find(function (key) {
+            return key.length == 3 && (key.toUpperCase() === userInput.toUpperCase() ||
+                Model.languages[key]["native"][0].toUpperCase() === userInput.toUpperCase() ||
+                Model.languages[key]["int"][0].toUpperCase() === userInput.toUpperCase())
+        })
+
+        if (languageKey) {
+            session.chosenLanguage = languageKey;
+            resetValues(session);
+            Addic7ed.addic7edGetSubtitle(session.choosenSeries.show.name, session.choosenSeason,
+                session.choosenEpisode, session.chosenLanguage, bot, msg.chat.id);
+
+            Common.removeSessions(sessions, session);
+            return;
         }
+        else
+            bot.sendMessage(msg.chat.id, Common.languageNotFoundMessage);
     }
 })
