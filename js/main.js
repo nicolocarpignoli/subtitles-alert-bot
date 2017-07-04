@@ -6,6 +6,7 @@ var TvMaze = require('./libs/tvMaze.js');
 var Model = require('./models/languages.js');
 var telegramBotToken = '398340624:AAH3rtCzaX9Y2fDU0ssRrK4vhRVh1PpZA0w';
 var Session = require('./models/session.js');
+var Mongo = require('./db/mongo.js');
 var sessions = [];
 
 
@@ -20,6 +21,8 @@ function resetValues(session) {
 var bot = new TelegramBot(telegramBotToken, { polling: true });
 
 console.log("Starting bot...");
+Mongo.connectToDatabase();
+
 
 function handleChosenSeries(chosenSeries, session) {
     session.choosenSeries = chosenSeries;

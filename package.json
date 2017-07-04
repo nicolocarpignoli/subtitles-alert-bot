@@ -6,6 +6,7 @@
   "dependencies": {
     "addic7ed-api": "^1.3.2",
     "file-system": "^2.2.2",
+    "mongodb": "^2.2.29",
     "node-telegram-bot-api": "^0.27.1",
     "request": "^2.81.0",
     "request-promise": "^4.2.1"
