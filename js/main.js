@@ -128,12 +128,13 @@ bot.onText(/(.*?)/, (msg, match) => {
 
         if (languageKey) {
             session.chosenLanguage = languageKey;
-            resetValues(session);
-            Addic7ed.addic7edGetSubtitle(session.choosenSeries.show.name, session.choosenSeason,
+            let response = Addic7ed.addic7edGetSubtitle(session.choosenSeries.show.name, session.choosenSeason,
                 session.choosenEpisode, session.chosenLanguage, bot, msg.chat.id);
-
-            Common.removeSessions(sessions, session);
-            return;
+            if(response){
+                resetValues(session);
+                Common.removeSessions(sessions, session); 
+            }
+            
         }
         else
             bot.sendMessage(msg.chat.id, Common.languageNotFoundMessage);
