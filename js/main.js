@@ -10,14 +10,6 @@ var Mongo = require('./db/mongo.js');
 var sessions = [];
 
 
-function resetValues(session) {
-    session.choosingSeries = false;
-    session.choosingSeason = false;
-    session.choosingEpisode = false;
-    session.ambiguousSeries = {};
-    session.counterLanguage = 0;
-}
-
 var bot = new TelegramBot(telegramBotToken, { polling: true });
 
 console.log("Starting bot...");
@@ -26,7 +18,7 @@ Mongo.connectToDatabase();
 
 function handleChosenSeries(chosenSeries, session) {
     session.choosenSeries = chosenSeries;
-    resetValues(session);
+    Common.resetValues(session);
     session.choosingSeason = true;
     Common.pushInSessions(sessions, session);
 }
@@ -40,7 +32,7 @@ bot.onText(/\/start/, (msg, match) => {
 bot.onText(Common.GETregExp, (msg, match) => {
     var session = Common.checkSessions(sessions, msg.chat.id);
     bot.sendMessage(msg.chat.id, Common.whichSeriesMessage);
-    resetValues(session);
+    Common.resetValues(session);
     session.choosingSeries = true;
     Common.pushInSessions(sessions, session);
 })
@@ -93,7 +85,7 @@ bot.onText(/(.*?)/, (msg, match) => {
                     bot.sendMessage(msg.chat.id, Common.seasonNotFoundMessage);
                 else {
                     session.choosenSeason = userInput;
-                    resetValues(session);
+                    Common.resetValues(session);
                     session.choosingEpisode = true;
                     Common.pushInSessions(sessions, session);
                     bot.sendMessage(msg.chat.id, Common.whichEpisodeMessage);
@@ -113,7 +105,7 @@ bot.onText(/(.*?)/, (msg, match) => {
                     bot.sendMessage(msg.chat.id, Common.episodeNotFoundMessage);
                 else {
                     session.choosenEpisode = userInput;
-                    resetValues(session);
+                    Common.resetValues(session);
                     session.choosingLanguage = true;
                     Common.pushInSessions(sessions, session);
                     bot.sendMessage(msg.chat.id, Common.whichLanguageMessage);
@@ -131,13 +123,7 @@ bot.onText(/(.*?)/, (msg, match) => {
 
         if (languageKey) {
             session.chosenLanguage = languageKey;
-            let response = Addic7ed.addic7edGetSubtitle(session.choosenSeries.show.name, session.choosenSeason,
-                session.choosenEpisode, session.chosenLanguage, bot, msg.chat.id);
-            if(response){
-                resetValues(session);
-                Common.removeSessions(sessions, session); 
-            }
-            
+            Addic7ed.addic7edGetSubtitle(session, session.chosenLanguage, bot, msg.chat.id, sessions);         
         }
         else
             bot.sendMessage(msg.chat.id, Common.languageNotFoundMessage);
