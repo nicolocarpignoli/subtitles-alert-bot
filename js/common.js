@@ -68,3 +68,11 @@ exports.removeSessions = function (sessions, session) {
     });
     sessions.splice(sessionIdx, 1);
 }
+
+exports.resetValues = function(session) {
+    session.choosingSeries = false;
+    session.choosingSeason = false;
+    session.choosingEpisode = false;
+    session.ambiguousSeries = {};
+    session.counterLanguage = 0;
+}
