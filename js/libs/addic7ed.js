@@ -4,11 +4,11 @@ var Common = require('../common.js');
 
 
 exports.addic7edGetSubtitle = function(session, languages = [], bot, chat, sessionsList){
-    addic7edApi.search(session.choosenSeries.show.name, session.choosenSeason, 
+	addic7edApi.search(session.choosenSeries.show.name, session.choosenSeason, 
         session.choosenEpisode, languages).then(function (subtitlesList) {
         var subInfo = subtitlesList[0];
         if (subInfo != undefined) {
-            var filename = './download/' + session.choosenSeries.show.name + '_S' + session.choosenSeason + '_E' + session.choosenEpisode + '.srt';
+            var filename =  session.choosenSeries.show.name + '_S' + session.choosenSeason + '_E' + session.choosenEpisode + '.srt';
             addic7edApi.download(subInfo, filename)
                 .then(function () {
                     fs.exists(filename, function(exists){
