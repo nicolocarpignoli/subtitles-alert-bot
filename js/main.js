@@ -59,6 +59,7 @@ bot.onText(/(.*?)/, (msg, match) => {
         promise.then(function (response) {
             switch (response.length) {
                 case 0:
+			console.log("error series");
                     bot.sendMessage(msg.chat.id, Common.failedSeriesMessage);
                     Common.pushInSessions(sessions, session);
                     break;
