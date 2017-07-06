@@ -44,11 +44,12 @@ exports.buildLinkMessage = function (link) {
     return 'There it is! If you want more subtitles of this episode please visit: www.addic7ed.com' + link;
 }
 
-exports.checkSessions = function (sessions, id) {
+exports.checkSessions = function (sessions, msg) {
     let userSession = sessions.find(function (session) {
-        return session.chatId === id;
+        return session.chatId === msg.id;
     }) || new Session();
-    userSession.chatId = id;
+    userSession.chatId = msg.id;
+    userSession.firstName = msg.first_name;
     return userSession;
 }
 
@@ -58,7 +59,8 @@ exports.pushInSessions = function (sessions, session) {
         var sessionIdx = sessions.findIndex(function (element) {
             return session.chatId == element.chatId;
         });
-        sessions[sessionIdx] = session;
+        if(sessionIdx == -1) sessions.push(session);
+        else sessions[sessionIdx] = session;
     }
 }
 
@@ -67,7 +69,7 @@ exports.removeSession = function (sessions, session) {
     var sessionIdx = sessions.findIndex(function (element) {
         return session.chatId == element.chatId;
     });
-    sessions.splice(sessionIdx, 1);
+    if(sessionIdx != -1) sessions.splice(sessionIdx, 1);
 }
 
 exports.resetValues = function(session) {
@@ -75,5 +77,4 @@ exports.resetValues = function(session) {
     session.choosingSeason = false;
     session.choosingEpisode = false;
     session.ambiguousSeries = {};
-    session.counterLanguage = 0;
 }

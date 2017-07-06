@@ -14,7 +14,6 @@ exports.addic7edGetSubtitle = function(session, languages = [], bot, chat, sessi
                     fs.exists(filename, function(exists){
                         if(exists) {
                             console.log('Subtitles file saved.');
-                            Common.resetValues(session);
                             Common.removeSession(sessionsList, session); 
                             bot.sendMessage(chat, Common.buildLinkMessage(subInfo.link));
                             bot.sendDocument(chat, filename).then(function(){
