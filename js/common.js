@@ -1,7 +1,7 @@
 var Session = require('./models/session.js');
 
 exports.instructionsMessage = "Welcome, my tv-addicted friend! What you want me to do today?"
-exports.whichSeriesMessage = function(firstName) { return "Ok " + firstName + " ! Which series do you want?";}
+exports.whichSeriesMessage = function (firstName) { return "Ok " + firstName + "! Which series do you want?"; }
 exports.whichSeasonMessage = "Good! Which season?"
 exports.whichEpisodeMessage = "Great! Which episode?";
 exports.whichLanguageMessage = "Great! Which language do I have to search for?";
@@ -59,7 +59,7 @@ exports.pushInSessions = function (sessions, session) {
         var sessionIdx = sessions.findIndex(function (element) {
             return session.chatId == element.chatId;
         });
-        if(sessionIdx == -1) sessions.push(session);
+        if (sessionIdx == -1) sessions.push(session);
         else sessions[sessionIdx] = session;
     }
 }
@@ -69,12 +69,16 @@ exports.removeSession = function (sessions, session) {
     var sessionIdx = sessions.findIndex(function (element) {
         return session.chatId == element.chatId;
     });
-    if(sessionIdx != -1) sessions.splice(sessionIdx, 1);
+    if (sessionIdx != -1) sessions.splice(sessionIdx, 1);
 }
 
-exports.resetValues = function(session) {
+exports.resetValues = function (session) {
     session.choosingSeries = false;
     session.choosingSeason = false;
     session.choosingEpisode = false;
+    session.choosingLanguage = false;
+    session.chosenSeries = {};
+    session.chosenSeason = undefined;
+    session.chosenEpisode = undefined;
     session.ambiguousSeries = {};
 }
