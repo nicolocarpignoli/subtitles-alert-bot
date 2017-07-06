@@ -6,7 +6,7 @@ exports.whichSeasonMessage = "Good! Which season?"
 exports.whichEpisodeMessage = "Great! Which episode?";
 exports.whichLanguageMessage = "Great! Which language do I have to search for?";
 
-exports.failedSeriesMessage = "Sorry, no series found with that name \u2639\uFE0F";
+exports.failedSeriesMessage = "Sorry, no series found with that name \u2639\uFE0F Please try with another great tv-series title";
 exports.ambiguousSeriesMessage = "Mmh ambiguous! \uD83E\uDD14 Which of these? (if none of these is the series you are looking for, try GET again with a more precise name)"
 exports.notANumberMessage = "This doesn't seem to be a valid number, dude... retry!";
 exports.seasonNotFoundMessage = "Season not found or not out yet. Retry or restart GET!";

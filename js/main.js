@@ -60,7 +60,6 @@ bot.onText(/(.*?)/, (msg, match) => {
             switch (response.length) {
                 case 0:
                     bot.sendMessage(msg.chat.id, Common.failedSeriesMessage);
-                    session.choosingSeries = false;
                     Common.pushInSessions(sessions, session);
                     break;
                 case 1:
