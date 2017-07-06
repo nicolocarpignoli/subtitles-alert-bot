@@ -45,7 +45,7 @@ function checkCorrectResults(list, token){
     list.forEach(function(element) {
         if(regExp.test(element.show.name)) filteredList.push(element);
     }, this);
-    console.log(filteredList);
+    //console.log(filteredList);
     return filteredList;
 }
 
@@ -73,7 +73,7 @@ exports.checkSeriesValidity = function (seriesName) {
             }
         })
         .catch(function (err) {
-            console.log("Oh noes! :( Got an error fetching series... ", err);
+            console.log("Oh noes! :( Got an error fetching series... ");
         });
 }
 
@@ -86,7 +86,7 @@ exports.checkSeasonValidity = function (seriesId, seasonRequest) {
                 false;
         })
         .catch(function (err) {
-            console.log("Oh noes! :( Got an error fetching seasons... ", err);
+            console.log("Oh noes! :( Got an error fetching seasons... ");
         });
 }
 
@@ -96,7 +96,7 @@ exports.checkEpisodeValidity = function (seriesId, seasonNumber, episodeRequest)
             return episode.status !== "404";
         })
         .catch(function (err) {
-            console.log("Oh noes! :( Got an error fetching episode... ", err);
+            console.log("Oh noes! :( Got an error fetching episode... ");
             return err.error;
         });
 }

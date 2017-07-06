@@ -32,8 +32,9 @@ bot.onText(/\/start/, (msg, match) => {
 
 bot.onText(Common.GETregExp, (msg, match) => {
     var session = Common.checkSessions(sessions, msg.chat.id);
+    console.log("sessions",sessions);
     Common.resetValues(session);
-    bot.sendMessage(msg.chat.id, Common.whichSeriesMessage);
+    bot.sendMessage(msg.chat.id, Common.whichSeriesMessage(msg.chat.first_name));
     Common.resetValues(session);
     session.choosingSeries = true;
     Common.pushInSessions(sessions, session);
@@ -51,6 +52,7 @@ bot.on('callback_query', (msg) => {
 });
 
 bot.onText(/(.*?)/, (msg, match) => {
+    console.log("sessions",sessions);
     var userInput = match.input;
     var session = Common.checkSessions(sessions, msg.chat.id);
     if (Common.notACommand(userInput) && session.choosingSeries) {
@@ -125,6 +127,7 @@ bot.onText(/(.*?)/, (msg, match) => {
 
         if (languageKey) {
             session.chosenLanguage = languageKey;
+            bot.sendMessage(msg.chat.id, Common.LoadingSubtitleMessage);
             Addic7ed.addic7edGetSubtitle(session, session.chosenLanguage, bot, msg.chat.id, sessions);         
         }
         else
