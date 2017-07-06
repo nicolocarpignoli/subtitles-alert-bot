@@ -1,5 +1,6 @@
 
 function Session() {
+    this.firstName = "";
     this.chatId = "",
     this.choosingSeries = false,
     this.choosingSeason = false,
@@ -8,8 +9,7 @@ function Session() {
     this.choosenSeries = {},
     this.choosenSeason,
     this.choosenEpisode,
-    this.ambiguousSeries = {},
-    this.counterLanguage = 0
+    this.ambiguousSeries = {}
 }
 
 module.exports = Session;
