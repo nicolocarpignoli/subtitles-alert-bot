@@ -25,12 +25,14 @@ function handleChosenSeries(chosenSeries, session) {
 
 bot.onText(/\/start/, (msg, match) => {
     var session = Common.checkSessions(sessions, msg.chat.id);
+    Common.resetValues(session);
     if (!session.choosingSeries) bot.sendMessage(msg.chat.id, Common.instructionsMessage,
         BotGui.generateKeyboardOptions());
 });
 
 bot.onText(Common.GETregExp, (msg, match) => {
     var session = Common.checkSessions(sessions, msg.chat.id);
+    Common.resetValues(session);
     bot.sendMessage(msg.chat.id, Common.whichSeriesMessage);
     Common.resetValues(session);
     session.choosingSeries = true;
