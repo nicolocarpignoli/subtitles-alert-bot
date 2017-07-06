@@ -1,7 +1,7 @@
 var Session = require('./models/session.js');
 
 exports.instructionsMessage = "Welcome, my tv-addicted friend! What you want me to do today?"
-exports.whichSeriesMessage = "Ok great! Which series do you want?";
+exports.whichSeriesMessage = function(firstName) { return "Ok " + firstName + " ! Which series do you want?";}
 exports.whichSeasonMessage = "Good! Which season?"
 exports.whichEpisodeMessage = "Great! Which episode?";
 exports.whichLanguageMessage = "Great! Which language do I have to search for?";
@@ -13,6 +13,7 @@ exports.seasonNotFoundMessage = "Season not found or not out yet. Retry or resta
 exports.episodeNotFoundMessage = "Episode doesn't exist or not found. Retry or restart GET!";
 exports.languageNotFoundMessage = "Sorry, language not found! Try typing your language as three-letter code, international form or native form!"
 exports.subtitleNofFoundInAddic7edMessage = "Oh noes! We can't find your subtitles in our magic system! I guess nobody has subbed this yet... try again with a different language or a new request!"
+exports.LoadingSubtitleMessage = "Great! I'm fetching for your subtitle now mate \uD83D\uDCE5";
 
 exports.getCommand = "Get \uD83D\uDCE5";
 exports.startAlertCommand = "Start Alert \uD83D\uDCE2";
@@ -61,7 +62,7 @@ exports.pushInSessions = function (sessions, session) {
     }
 }
 
-exports.removeSessions = function (sessions, session) {
+exports.removeSession = function (sessions, session) {
     if (sessions.length == 0) return;
     var sessionIdx = sessions.findIndex(function (element) {
         return session.chatId == element.chatId;
