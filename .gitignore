@@ -4,3 +4,5 @@ js/\.vscode/
 js/download/
 
 node_modules/
+
+*.srt
