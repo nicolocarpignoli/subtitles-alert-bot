@@ -3,6 +3,7 @@ var Session = require('./models/session.js');
 exports.instructionsMessage = "Welcome, my tv-addicted friend! What you want me to do today?"
 exports.whichSeriesMessage = function (firstName) { return "Ok " + firstName + "! Which series do you want?"; }
 exports.whichSeasonMessage = "Good! Which season?"
+exports.whichAmbigousSeasonMessage = function (series) {return "Great choice! Which season of " + series + " do you want?"}
 exports.whichEpisodeMessage = "Great! Which episode?";
 exports.whichLanguageMessage = "Great! Which language do I have to search for?";
 
@@ -30,6 +31,11 @@ exports.notACommand = function (userInput) {
         userInput != this.startAlertCommand &&
         userInput != this.stopAlertCommand &&
         userInput != this.showAlertsCommand;
+}
+
+exports.isValidNumber = function(str){
+    var number = Math.floor(Number(str));
+    return String(number) === str && number > 0;
 }
 
 exports.isEmpty = function (obj) {
@@ -81,4 +87,11 @@ exports.resetValues = function (session) {
     session.chosenSeason = undefined;
     session.chosenEpisode = undefined;
     session.ambiguousSeries = {};
+}
+
+exports.handleChosenSeries = function(chosenSeries, session, sessions) {
+    session.choosenSeries = chosenSeries;
+    this.resetValues(session);
+    session.choosingSeason = true;
+    this.pushInSessions(sessions, session);
 }
