@@ -67,6 +67,11 @@ exports.checkSeriesValidity = function (seriesName) {
                     return [foundSeries[0]];
                 else {
                     var firstSix = foundSeries.slice(0, 6);
+                    var valueArr = firstSix.map(function(item){ return item.show.name });
+                    var isDuplicateIndex = valueArr.some(function(item, idx){ 
+                        if(valueArr.indexOf(item) == idx) return valueArr.indexOf(item); 
+                    });
+                    valueArr[isDuplicateIndex].show.name += " (" + valueArr[isDuplicateIndex].show.premiered.slice(0,4) + ")";
                     firstSix = checkCorrectResults(firstSix, seriesName);
                     return firstSix;
                 }
