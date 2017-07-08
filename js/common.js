@@ -15,6 +15,7 @@ exports.episodeNotFoundMessage = "Episode doesn't exist or not found. Retry or r
 exports.languageNotFoundMessage = "Sorry, language not found! Try typing your language as three-letter code, international form or native form!"
 exports.subtitleNofFoundInAddic7edMessage = "Oh noes! We can't find your subtitles in our magic system! I guess nobody has subbed this yet... try again with a different language or a new request!"
 exports.LoadingSubtitleMessage = "Great! I'm fetching for your subtitle now mate \uD83D\uDCE5";
+exports.ambigousSubtitleMessage = "Hey, watch out! It's possible that you choose a very ambiguous series and our system find the only match it has!"
 
 exports.getCommand = "Get \uD83D\uDCE5";
 exports.startAlertCommand = "Start Alert \uD83D\uDCE2";
