@@ -49,6 +49,31 @@ function checkCorrectResults(list, token){
     return filteredList;
 }
 
+function checkDuplicates(list){
+    var foundSeries = list;
+    var list = list.map(function(item){ return item.show.name });
+    var duplicates = {};
+    var hasDuplicates;
+    for (var i = 0; i < list.length; i++) {
+        if(duplicates.hasOwnProperty(list[i])) {
+            duplicates[list[i]].push(i);
+            hasDuplicates = true;
+        } else if (list.lastIndexOf(list[i]) !== i) {
+            duplicates[list[i]] = [i];
+        }
+    }
+    Object.keys(duplicates).forEach(function(element) {
+        for(var i = 0; i < duplicates[element].length; i++){
+            var index = duplicates[element][i];
+            foundSeries[index].show.name += " (" + foundSeries[index].show.premiered.slice(0,4) + ")";
+        }
+    });
+    return {
+        "foundSeries" : foundSeries,
+        "hasDuplicates": hasDuplicates
+    }
+}
+
 
 // returns an array with one element, six elements or empty array
 exports.checkSeriesValidity = function (seriesName) {
@@ -58,22 +83,16 @@ exports.checkSeriesValidity = function (seriesName) {
 
     return rp(options)
         .then(function (foundSeries) {
-            // console.log("FOUND SERIES: ", foundSeries);
             if (foundSeries && foundSeries.length == 0)
                 return [];
             else {
                 resultsMatchesQuery = resultMatchesQuery(foundSeries[0], seriesName);
                 if (resultsMatchesQuery)
                     return [foundSeries[0]];
-                else {
-                    var firstSix = foundSeries.slice(0, 6);
-                    var valueArr = firstSix.map(function(item){ return item.show.name });
-                    var isDuplicateIndex = valueArr.some(function(item, idx){ 
-                        if(valueArr.indexOf(item) == idx) return valueArr.indexOf(item); 
-                    });
-                    valueArr[isDuplicateIndex].show.name += " (" + valueArr[isDuplicateIndex].show.premiered.slice(0,4) + ")";
-                    firstSix = checkCorrectResults(firstSix, seriesName);
-                    return firstSix;
+                else {     
+                    foundSeries = checkDuplicates(foundSeries);           
+                    if(!foundSeries["hasDuplicates"]) return foundSeries = foundSeries["foundSeries"].slice(0, 6);
+                    return foundSeries["foundSeries"];
                 }
             }
         })
