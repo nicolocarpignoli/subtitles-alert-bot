@@ -7,6 +7,12 @@ exports.whichAmbigousSeasonMessage = function (series) {return "Great choice! Wh
 exports.whichEpisodeMessage = "Great! Which episode?";
 exports.whichLanguageMessage = "Great! Which language do I have to search for?";
 
+exports.whichSeriesAlertMessage = function (firstName) { return "Ok " + firstName + "! Which series do you want to subscribe to?"; }
+exports.seriesNotRunningMessage = function (series) 
+    {return "Hey man I really think " + series + " is ended! If you want to get subtitles of it please try the GET functionality!"}
+exports.whichLanguagesAlertMessage = function (series) 
+    {return "Ok you choose " + series + "! Please type a language for your subtitles. You can choose more than one language clicking on 'Add language' button";}
+
 exports.failedSeriesMessage = "Sorry, no series found with that name \u2639\uFE0F Please try with another great tv-series title";
 exports.ambiguousSeriesMessage = "Mmh ambiguous! \uD83E\uDD14 Which of these? (if none of these is the series you are looking for, try GET again with a more precise name)"
 exports.notANumberMessage = "This doesn't seem to be a valid number, dude... retry!";
@@ -88,11 +94,24 @@ exports.resetValues = function (session) {
     session.chosenSeason = undefined;
     session.chosenEpisode = undefined;
     session.ambiguousSeries = {};
+    
+    session.choosingSeriesAlert = false,
+    session.choosingLanguageAlert = false,
+    session.choosenSeriesAlert = {},
+    session.ambiguousSeriesAlert = {}
+    session.chosenLanguagesAlert = []
 }
 
 exports.handleChosenSeries = function(chosenSeries, session, sessions) {
     session.choosenSeries = chosenSeries;
     this.resetValues(session);
     session.choosingSeason = true;
+    this.pushInSessions(sessions, session);
+}
+
+exports.handleChosenSeriesAlert = function(chosenSeries, session, sessions) {
+    session.choosenSeriesAlert = chosenSeries;
+    this.resetValues(session);
+    session.choosingLanguageAlert = true;
     this.pushInSessions(sessions, session);
 }
