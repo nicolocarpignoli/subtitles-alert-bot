@@ -35,7 +35,9 @@ bot.on('callback_query', (msg) => {
     var session = Common.checkSessions(sessions, msg.from);
     var userInput = msg.data;
     if (Common.notACommand(userInput) && session.choosingSeries && !Common.isEmpty(session.ambiguousSeries)) {
-        var seriesObj = session.ambiguousSeries.find(function (elem) { return elem.show.name === userInput; });
+        var seriesObj = session.ambiguousSeries.find(function (elem) { 
+            return elem.show.name === userInput; 
+        });
         Common.handleChosenSeries(seriesObj, session, sessions);
         bot.sendMessage(msg.from.id, Common.whichAmbigousSeasonMessage(userInput));
     }

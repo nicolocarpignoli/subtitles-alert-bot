@@ -19,6 +19,9 @@ exports.addic7edGetSubtitle = function(session, languages = [], bot, chat, sessi
                             bot.sendDocument(chat, filename).then(function(){
                                 fs.unlinkSync(filename);
                             });
+                            if(session.choosenSeries.show.name.indexOf("(") > -1 && session.choosenSeries.show.name.indexOf(")") > -1){
+                                bot.sendMessage(chat, Common.ambigousSubtitleMessage);
+                            }
                         }
                     });
             });
