@@ -55,10 +55,11 @@ bot.on('callback_query', (msg) => {
             return elem.show.name === userInput; 
         });
         Common.handleChosenSeriesAlert(seriesObj, session, sessions);
-        if(seriesObj.show.status !== 'Running'){
+        if(seriesObj.show.status !== Common.runningState){
             bot.sendMessage(msg.from.id, Common.seriesNotRunningMessage(seriesObj.show.name));
         }else{
-            bot.sendMessage(msg.from.id, Common.whichLanguagesAlertMessage(seriesObj.show.name));
+            bot.sendMessage(msg.from.id, Common.whichLanguagesAlertMessage(seriesObj.show.name),
+                BotGui.generatesLanguageInlineKeyboard());
             Common.resetValues(session);
             session.choosingLanguageAlert = true;
             session.choosenSeriesAlert = seriesObj;

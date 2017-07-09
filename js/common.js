@@ -6,6 +6,7 @@ exports.whichSeasonMessage = "Good! Which season?"
 exports.whichAmbigousSeasonMessage = function (series) {return "Great choice! Which season of " + series + " do you want?"}
 exports.whichEpisodeMessage = "Great! Which episode?";
 exports.whichLanguageMessage = "Great! Which language do I have to search for?";
+exports.runningState = 'Running';
 
 exports.whichSeriesAlertMessage = function (firstName) { return "Ok " + firstName + "! Which series do you want to subscribe to?"; }
 exports.seriesNotRunningMessage = function (series) 
