@@ -99,7 +99,7 @@ exports.handleStartAlertLogic = function(userInput, session, sessions, msg, matc
                     Common.pushInSessions(sessions, session);
                     break;
                 case 1:
-                    bot.sendMessage(msg.chat.id, Common.whichSeasonMessage);
+                    bot.sendMessage(msg.chat.id, Common.whichLanguagesAlertMessage(response[0].show.name));
                     Common.handleChosenSeriesAlert(response[0], session, sessions);
                     break;
                 default:
