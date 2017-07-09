@@ -55,10 +55,14 @@ bot.on('callback_query', (msg) => {
             return elem.show.name === userInput; 
         });
         Common.handleChosenSeriesAlert(seriesObj, session, sessions);
-        if(seriesObj.status !== 'Running'){
-            bot.sendMessage(msg.chat.id, Common.seriesNotRunningMessage(seriesObj.show.name));
+        if(seriesObj.show.status !== 'Running'){
+            bot.sendMessage(msg.from.id, Common.seriesNotRunningMessage(seriesObj.show.name));
         }else{
-            bot.sendMessage(msg.from.id, Common.whichLanguagesAlertMessage(seriesObj.show.name)); 
+            bot.sendMessage(msg.from.id, Common.whichLanguagesAlertMessage(seriesObj.show.name));
+            Common.resetValues(session);
+            session.choosingLanguageAlert = true;
+            session.choosenSeriesAlert = seriesObj;
+            Common.pushInSessions(sessions,session);
         }
     }
 

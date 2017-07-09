@@ -99,8 +99,15 @@ exports.handleStartAlertLogic = function(userInput, session, sessions, msg, matc
                     Common.pushInSessions(sessions, session);
                     break;
                 case 1:
-                    bot.sendMessage(msg.chat.id, Common.whichLanguagesAlertMessage(response[0].show.name));
-                    Common.handleChosenSeriesAlert(response[0], session, sessions);
+                    if(response[0].show.status !== 'Running'){
+                        bot.sendMessage(msg.chat.id, Common.seriesNotRunningMessage(response[0].show.name));
+                    }else{
+                        bot.sendMessage(msg.chat.id, Common.whichLanguagesAlertMessage(response[0].show.name));
+                        Common.resetValues(session);
+                        session.choosingLanguageAlert = true;
+                        session.choosenSeriesAlert = response[0];
+                        Common.pushInSessions(sessions,session);
+                    }
                     break;
                 default:
                     session.ambiguousSeriesAlert = response;

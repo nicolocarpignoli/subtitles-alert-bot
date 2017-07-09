@@ -9,7 +9,7 @@ exports.whichLanguageMessage = "Great! Which language do I have to search for?";
 
 exports.whichSeriesAlertMessage = function (firstName) { return "Ok " + firstName + "! Which series do you want to subscribe to?"; }
 exports.seriesNotRunningMessage = function (series) 
-    {return "Hey man I really think " + series + " is ended! If you want to get subtitles of it please try the GET functionality!"}
+    {return "Hey man I really think " + series + " is ended! If you want to get subtitles of it please try the GET functionality or try another series for ALERT!"}
 exports.whichLanguagesAlertMessage = function (series) 
     {return "Ok you choose " + series + "! Please type a language for your subtitles. You can choose more than one language clicking on 'Add language' button";}
 
