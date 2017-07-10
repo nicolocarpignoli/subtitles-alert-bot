@@ -8,3 +8,8 @@ exports.connectToDatabase = function(){
     //     database.close();
     // });
 }
+
+exports.subscribe = function(session, bot, chatId){
+    console.log("TODO subscribe");
+    bot.sendMessage(chatId, "Hey have patience I can't do this ...at least for now \uD83E\uDD14 \uD83E\uDD14");
+}

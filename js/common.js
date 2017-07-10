@@ -12,7 +12,7 @@ exports.whichSeriesAlertMessage = function (firstName) { return "Ok " + firstNam
 exports.seriesNotRunningMessage = function (series) 
     {return "Hey man I really think " + series + " is ended! If you want to get subtitles of it please try the GET functionality or try another series for ALERT!"}
 exports.whichLanguagesAlertMessage = function (series) 
-    {return "Ok you choose " + series + "! Please type a language for your subtitles. You can choose more than one language clicking on 'Add language' button";}
+    {return "Ok you choose " + series + "! Please send me a language for your subtitles. You can send more than one language and click 'Done' at the end!";}
 
 exports.failedSeriesMessage = "Sorry, no series found with that name \u2639\uFE0F Please try with another great tv-series title";
 exports.ambiguousSeriesMessage = "Mmh ambiguous! \uD83E\uDD14 Which of these? (if none of these is the series you are looking for, try GET again with a more precise name)"
@@ -22,12 +22,17 @@ exports.episodeNotFoundMessage = "Episode doesn't exist or not found. Retry or r
 exports.languageNotFoundMessage = "Sorry, language not found! Try typing your language as three-letter code, international form or native form!"
 exports.subtitleNofFoundInAddic7edMessage = "Oh noes! We can't find your subtitles in our magic system! I guess nobody has subbed this yet... try again with a different language or a new request!"
 exports.LoadingSubtitleMessage = "Great! I'm fetching for your subtitle now mate \uD83D\uDCE5";
-exports.ambigousSubtitleMessage = "Hey, watch out! It's possible that you choose a very ambiguous series and our system find the only match it has!"
+exports.ambigousSubtitleMessage = "Hey, watch out! It's possible that you choose a very ambiguous series and our system find the only match it has!";
+exports.chooseAtLeastALanguageMessage = "Hey, you have to choose at least one language for your subscription! Try again sending me a valid language!";
+exports.subscribingToMessage = "Ok, I'm gonna subscribe you! Please wait a sec \u270F\uFE0F \uD83D\uDDD3";
+exports.addLanguageMessage = "Ok gotcha! Send me another language or click on 'Done' to subscribe";
 
-exports.getCommand = "Get \uD83D\uDCE5";
-exports.startAlertCommand = "Start Alert \uD83D\uDCE2";
-exports.stopAlertCommand = "Stop Alert \uD83D\uDEAB";
-exports.showAlertsCommand = "Show Alerts \uD83D\uDCC5";
+exports.getCommand = "Get subtitles \uD83D\uDCE5";
+exports.startAlertCommand = "Subscribe \uD83D\uDCE2";
+exports.stopAlertCommand = "Unsubscribe \uD83D\uDEAB";
+exports.showAlertsCommand = "Show Subscriptions \uD83D\uDCC5";
+
+exports.doneLanguageCallback = "doneLanguageCallback";
 
 exports.GETregExp = new RegExp(this.getCommand);
 exports.STARTregExp = new RegExp(this.startAlertCommand);

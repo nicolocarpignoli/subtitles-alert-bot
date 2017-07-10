@@ -117,5 +117,19 @@ exports.handleStartAlertLogic = function(userInput, session, sessions, msg, matc
                     break;
             }
         });
+    }
+    if (Common.notACommand(userInput) && session.choosingLanguageAlert){
+       var languageKey = Object.keys(Model.languages).find(function (key) {
+            return key.length == 3 && (key.toUpperCase() === userInput.toUpperCase() ||
+                Model.languages[key]["native"][0].toUpperCase() === userInput.toUpperCase() ||
+                Model.languages[key]["int"][0].toUpperCase() === userInput.toUpperCase())
+        })
+
+        if (languageKey) {
+            session.chosenLanguagesAlert.push(languageKey);
+            bot.sendMessage(msg.chat.id, Common.addLanguageMessage, BotGui.generatesLanguageInlineKeyboard());
+        }
+        else
+            bot.sendMessage(msg.chat.id, Common.languageNotFoundMessage, BotGui.generatesLanguageInlineKeyboard()); 
     } 
 }

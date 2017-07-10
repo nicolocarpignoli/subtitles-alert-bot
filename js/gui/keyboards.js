@@ -34,13 +34,10 @@ exports.generateSeriesInlineKeyboard = function (options){
 
 exports.generatesLanguageInlineKeyboard = function (options){
     let inlineOptions = [
-        [{
-            text: "Add Language", 
-            callback_data: "addLanguageCallback"
-        },
+        [
         {
             text: "Done", 
-            callback_data: "doneLanguageCallback"
+            callback_data: Common.doneLanguageCallback
         }]
     ];
     return {
