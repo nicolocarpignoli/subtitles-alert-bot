@@ -6,3 +6,5 @@ js/download/
 node_modules/
 
 *.srt
+
+js/conf.js
