@@ -1,9 +1,9 @@
 var MongoClient = require('mongodb').MongoClient;
+var Resources = require('../conf.js');
 
 // fake, to test connection to mongo on rasp
 exports.connectToDatabase = function(){
-    // var connectionString = 'mongodb://localhost:27017/subtitlesAlertBot';
-    // MongoClient.connect(connectionString, function(err, database) {
+    // MongoClient.connect(Resources.mongoDbConnectionString, function(err, database) {
     //     console.log("Connected correctly to server.");
     //     database.close();
     // });
