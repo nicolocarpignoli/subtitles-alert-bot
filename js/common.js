@@ -13,7 +13,7 @@ exports.seriesNotRunningMessage = function (series)
     {return "Hey man I really think " + series + " is ended! If you want to get subtitles of it please try the GET functionality or try another series for ALERT!"}
 exports.whichLanguagesAlertMessage = function (series) 
     {return "Ok you choose " + series + "! Please send me a language for your subtitles. You can send more than one language and click 'Done' at the end!";}
-exports.languageAlreadyPresentMessage = "It seems you have already inserted this language, dude!";
+exports.languageAlreadyPresentMessage = "It seems you have already inserted this language, dude! Try with another one!";
 
 exports.failedSeriesMessage = "Sorry, no series found with that name \u2639\uFE0F Please try with another great tv-series title";
 exports.ambiguousSeriesMessage = "Mmh ambiguous! \uD83E\uDD14 Which of these? (if none of these is the series you are looking for, try GET again with a more precise name)"
