@@ -70,6 +70,7 @@ bot.on('callback_query', (msg) => {
         if(session.chosenLanguagesAlert.length == 0){
             bot.sendMessage(msg.from.id, Common.chooseAtLeastALanguageMessage, BotGui.generatesLanguageInlineKeyboard());
         }else{
+            session.choosingLanguageAlert = false;
             bot.sendMessage(msg.from.id, Common.subscribingToMessage);
             Mongo.subscribe(session, bot, msg.from.id);
         }

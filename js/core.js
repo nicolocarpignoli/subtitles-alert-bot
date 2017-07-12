@@ -126,8 +126,12 @@ exports.handleStartAlertLogic = function(userInput, session, sessions, msg, matc
         })
 
         if (languageKey) {
-            session.chosenLanguagesAlert.push(languageKey);
-            bot.sendMessage(msg.chat.id, Common.addLanguageMessage, BotGui.generatesLanguageInlineKeyboard());
+            if(!Common.languageAlreadyPresent(session.chosenLanguagesAlert, languageKey)){
+                session.chosenLanguagesAlert.push(languageKey);
+                bot.sendMessage(msg.chat.id, Common.addLanguageMessage, BotGui.generatesLanguageInlineKeyboard());
+            }else{
+                bot.sendMessage(msg.chat.id, Common.languageAlreadyPresentMessage, BotGui.generatesLanguageInlineKeyboard()); 
+            }
         }
         else
             bot.sendMessage(msg.chat.id, Common.languageNotFoundMessage, BotGui.generatesLanguageInlineKeyboard()); 
