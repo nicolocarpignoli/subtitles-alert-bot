@@ -5,4 +5,4 @@ function User() {
     this.alerts= []
 }
 
-module.exports = Session;
+module.exports = User;

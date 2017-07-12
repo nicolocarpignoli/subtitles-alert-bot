@@ -72,7 +72,7 @@ bot.on('callback_query', (msg) => {
         }else{
             session.choosingLanguageAlert = false;
             bot.sendMessage(msg.from.id, Common.subscribingToMessage);
-            Mongo.subscribe(session, bot, msg.from.id);
+            Mongo.subscribe(session, bot, msg.from);
         }
     }
 

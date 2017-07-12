@@ -1,1 +1,1 @@
-exports.mongoDbConnectionString = "mongodb://2.234.125.63:6666/subtitlesAlertBot";
+exports.mongoDbConnectionString = "mongodb://localhost:6666/subtitlesAlertBot";
