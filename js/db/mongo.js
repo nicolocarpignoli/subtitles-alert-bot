@@ -1,25 +1,35 @@
-var MongoClient = require('mongodb').MongoClient;
 var Resources = require('../conf.js');
 var Alert = require('../models/alert.js');
 var Language = require('../models/alert.js');
 var User = require('../models/user.js');
+var Mongoose = require('mongoose');
+var Tunnel = require('tunnel-ssh');
+var Conf = require('../conf.js');
 
 
 
 exports.connectToDatabase = function(){
-    console.log("TRYING TO CONNECT TO ", Resources.mongoDbConnectionString);
-    // MongoClient.connect(Resources.mongoDbConnectionString, function(err, database) {
-    //     console.log(err);
-    //     console.log("Connected correctly to server.");
-    //     database.close();
+    // var server = Tunnel(Conf.mongoConfig, function (error, server) {
+    //     if (error) {
+    //         console.log("SSH connection error: " + error);
+    //     }
+    //     Mongoose.connect(Conf.mongoConfig.dstHost);
+    //     var db = Mongoose.connection;
+    //     db.on('error', console.error.bind(console, 'DB connection error:'));
+    //     db.once('open', function () {
+    //         // we're connected!
+    //         console.log("DB connection successful");
+    //         // console.log(server);
+    //     });
     // });
+
 }
 
 exports.subscribe = function(session, bot, from){
     console.log("TODO subscribe");
     bot.sendMessage(from.id, "Hey have patience I can't do this ...at least for now \uD83E\uDD14 \uD83E\uDD14");
     var alertsToStore = [];
-    console.log(session.choosenSeriesAlert.show._links.nextexpisode.href);
+    console.log(session.choosenSeriesAlert.show._links.nextepisode.href);
     session.chosenLanguagesAlert.forEach(function(language) {
         alertsToStore.push(new Alert({
             show_name : session.choosenSeriesAlert.show.name,
