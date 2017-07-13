@@ -2,7 +2,7 @@ var Session = require('./models/session.js');
 
 exports.instructionsMessage = "Welcome, my tv-addicted friend! What you want me to do today?"
 exports.whichSeriesMessage = function (firstName) { return "Ok " + firstName + "! Which series do you want?"; }
-exports.whichSeasonMessage = "Good! Which season?"
+exports.whichSeasonMessage = function (series) {return "Good you choose " + series + "! Which season?";}
 exports.whichAmbigousSeasonMessage = function (series) {return "Great choice! Which season of " + series + " do you want?"}
 exports.whichEpisodeMessage = "Great! Which episode?";
 exports.whichLanguageMessage = "Great! Which language do I have to search for?";
