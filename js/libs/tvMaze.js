@@ -6,16 +6,16 @@ function buildSeriesRequestOptions(seriesName) {
         uri: "http://api.tvmaze.com/search/shows",
         qs: { q: seriesName },
         headers: { 'User-Agent': 'Request-Promise' },
-        json: true // Automatically parses the JSON string in the response
+        json: true
     }
     return options;
 }
 
-function buildSeasonsRequestOptions(seriesId) {    
+function buildSeasonsRequestOptions(seriesId) {
     const options = {
         uri: "http://api.tvmaze.com/shows/" + seriesId + "/seasons",
         headers: { 'User-Agent': 'Request-Promise' },
-        json: true // Automatically parses the JSON string in the response
+        json: true
     }
     return options;
 }
@@ -28,7 +28,16 @@ function buildEpisodeRequestOptions(seriesId, seasonNumber, episodeNumber) {
             number: episodeNumber
         },
         headers: { 'User-Agent': 'Request-Promise' },
-        json: true // Automatically parses the JSON string in the response
+        json: true
+    }
+    return options;
+}
+
+function buildGenericOptions(link) {
+    const options = {
+        uri: link,
+        headers: { 'User-Agent': 'Request-Promise' },
+        json: true
     }
     return options;
 }
@@ -39,37 +48,37 @@ function resultMatchesQuery(firstSeries, query) {
 }
 
 // checks if tvMaze's results contains the required season 
-function checkCorrectResults(list, token){
+function checkCorrectResults(list, token) {
     let regExp = new RegExp('\\b' + token + '\\b', 'i');
     var filteredList = [];
-    list.forEach(function(element) {
-        if(regExp.test(element.show.name)) filteredList.push(element);
+    list.forEach(function (element) {
+        if (regExp.test(element.show.name)) filteredList.push(element);
     }, this);
     //console.log(filteredList);
     return filteredList;
 }
 
-function checkDuplicates(list){
+function checkDuplicates(list) {
     var foundSeries = list;
-    var list = list.map(function(item){ return item.show.name });
+    var list = list.map(function (item) { return item.show.name });
     var duplicates = {};
     var hasDuplicates;
     for (var i = 0; i < list.length; i++) {
-        if(duplicates.hasOwnProperty(list[i])) {
+        if (duplicates.hasOwnProperty(list[i])) {
             duplicates[list[i]].push(i);
             hasDuplicates = true;
         } else if (list.lastIndexOf(list[i]) !== i) {
             duplicates[list[i]] = [i];
         }
     }
-    Object.keys(duplicates).forEach(function(element) {
-        for(var i = 0; i < duplicates[element].length; i++){
+    Object.keys(duplicates).forEach(function (element) {
+        for (var i = 0; i < duplicates[element].length; i++) {
             var index = duplicates[element][i];
-            foundSeries[index].show.name += " (" + foundSeries[index].show.premiered.slice(0,4) + ")";
+            foundSeries[index].show.name += " (" + foundSeries[index].show.premiered.slice(0, 4) + ")";
         }
     });
     return {
-        "foundSeries" : foundSeries,
+        "foundSeries": foundSeries,
         "hasDuplicates": hasDuplicates
     }
 }
@@ -89,9 +98,9 @@ exports.checkSeriesValidity = function (seriesName) {
                 resultsMatchesQuery = resultMatchesQuery(foundSeries[0], seriesName);
                 if (resultsMatchesQuery)
                     return [foundSeries[0]];
-                else {     
-                    foundSeries = checkDuplicates(foundSeries);           
-                    if(!foundSeries["hasDuplicates"]) return foundSeries = foundSeries["foundSeries"].slice(0, 6);
+                else {
+                    foundSeries = checkDuplicates(foundSeries);
+                    if (!foundSeries["hasDuplicates"]) return foundSeries = foundSeries["foundSeries"].slice(0, 6);
                     return foundSeries["foundSeries"];
                 }
             }
@@ -121,6 +130,16 @@ exports.checkEpisodeValidity = function (seriesId, seasonNumber, episodeRequest)
         })
         .catch(function (err) {
             console.log("Oh noes! :( Got an error fetching episode... ");
+            return err.error;
+        });
+}
+
+exports.getNextEpisodeInformation = function (link) {
+    return rp(buildGenericOptions(link))
+        .then(function (nextEpisode) {
+            return nextEpisode;
+        }).catch(function (err) {
+            console.log("Oh noes! :( Got an error fetching next episode... ");
             return err.error;
         });
 }
