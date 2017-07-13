@@ -7,6 +7,7 @@ var Model = require('./models/languages.js');
 var telegramBotToken = '398340624:AAH3rtCzaX9Y2fDU0ssRrK4vhRVh1PpZA0w';
 var Session = require('./models/session.js');
 var Mongo = require('./db/mongo.js');
+var scheduleManager = require('./schedule/scheduleManager.js')
 var sessions = [];
 
 
@@ -15,7 +16,18 @@ var bot = new TelegramBot(telegramBotToken, { polling: true });
 console.log("Starting bot...");
 Mongo.connectToDatabase();
 
-
+scheduleManager.setConnectionString('mongodb://localhost')
+scheduleManager.scheduleFunctionGivenTime('prova', 'today at 11:27pm', function (job, done) {
+    console.log('ok');
+    scheduleManager.scheduleFunctionInterval('ziiiii2', '*/5 * * * * * ', function (job1, done1) {
+        console.log('zzzzzzzzzzzzzzzzzzzzzzzzzz');
+        job1.attrs.data.count = job1.attrs.data.count - 1;
+        console.log(job1.attrs.data.count);
+        done1();
+    }, { count: 3 })
+    console.log('yooo');
+    done();
+});
 bot.onText(/\/start/, (msg, match) => {
     var session = Common.checkSessions(sessions, msg.chat);
     Common.resetValues(session);
@@ -35,8 +47,8 @@ bot.on('callback_query', (msg) => {
     var session = Common.checkSessions(sessions, msg.from);
     var userInput = msg.data;
     if (Common.notACommand(userInput) && session.choosingSeries && !Common.isEmpty(session.ambiguousSeries)) {
-        var seriesObj = session.ambiguousSeries.find(function (elem) { 
-            return elem.show.name === userInput; 
+        var seriesObj = session.ambiguousSeries.find(function (elem) {
+            return elem.show.name === userInput;
         });
         Common.handleChosenSeries(seriesObj, session, sessions);
         bot.sendMessage(msg.from.id, Common.whichAmbigousSeasonMessage(userInput));
@@ -118,7 +130,7 @@ bot.onText(/(.*?)/, (msg, match) => {
         if (languageKey) {
             session.chosenLanguage = languageKey;
             bot.sendMessage(msg.chat.id, Common.LoadingSubtitleMessage);
-            Addic7ed.addic7edGetSubtitle(session, session.chosenLanguage, bot, msg.chat.id, sessions);         
+            Addic7ed.addic7edGetSubtitle(session, session.chosenLanguage, bot, msg.chat.id, sessions);
         }
         else
             bot.sendMessage(msg.chat.id, Common.languageNotFoundMessage);
