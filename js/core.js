@@ -19,7 +19,7 @@ exports.handleGetLogic = function(userInput, session, sessions, msg, match, bot)
                     Common.pushInSessions(sessions, session);
                     break;
                 case 1:
-                    bot.sendMessage(msg.chat.id, Common.whichSeasonMessage);
+                    bot.sendMessage(msg.chat.id, Common.whichSeasonMessage(response[0].show.name));
                     Common.handleChosenSeries(response[0], session, sessions);
                     break;
                 default:
