@@ -3,17 +3,17 @@ var Languages = require('./models/languages.js');
 
 exports.instructionsMessage = "Welcome, my tv-addicted friend! What you want me to do today?"
 exports.whichSeriesMessage = function (firstName) { return "Ok " + firstName + "! Which series do you want?"; }
-exports.whichSeasonMessage = function (series) {return "Good you choose " + series + "! Which season?";}
-exports.whichAmbigousSeasonMessage = function (series) {return "Great choice! Which season of " + series + " do you want?"}
+exports.whichSeasonMessage = function (series) { return "Good you choose " + series + "! Which season?"; }
+exports.whichAmbigousSeasonMessage = function (series) { return "Great choice! Which season of " + series + " do you want?" }
 exports.whichEpisodeMessage = "Great! Which episode?";
 exports.whichLanguageMessage = "Great! Which language do I have to search for?";
 exports.runningState = 'Running';
 
 exports.whichSeriesAlertMessage = function (firstName) { return "Ok " + firstName + "! Which series do you want to subscribe to?"; }
-exports.seriesNotRunningMessage = function (series) 
-    {return "Hey man I really think " + series + " is ended! If you want to get subtitles of it please try the GET functionality or try another series for ALERT!"}
-exports.whichLanguagesAlertMessage = function (series) 
-    {return "Ok you choose " + series + "! Please send me a language for your subtitles. You can send more than one language and click 'Done' at the end!";}
+exports.seriesNotRunningMessage = function (series)
+{ return "Hey man I really think " + series + " is ended! If you want to get subtitles of it please try the GET functionality or try another series for ALERT!" }
+exports.whichLanguagesAlertMessage = function (series)
+{ return "Ok you choose " + series + "! Please send me a language for your subtitles. You can send more than one language and click 'Done' at the end!"; }
 exports.languageAlreadyPresentMessage = "It seems you have already inserted this language, dude! Try with another one!";
 
 exports.failedSeriesMessage = "Sorry, no series found with that name \u2639\uFE0F Please try with another great tv-series title";
@@ -28,6 +28,7 @@ exports.ambigousSubtitleMessage = "Hey, watch out! It's possible that you choose
 exports.chooseAtLeastALanguageMessage = "Hey, you have to choose at least one language for your subscription! Try again sending me a valid language!";
 exports.subscribingToMessage = "Ok, I'm gonna subscribe you! Please wait a sec \u270F\uFE0F \uD83D\uDDD3";
 exports.addLanguageMessage = "Ok gotcha! Send me another language or click on 'Done' to subscribe";
+exports.nextEpisodeNotAvailableMessage = "Too early for a subscription for this series. We haven't got enough informations yet! Try again on the next weeks!";
 
 exports.getCommand = "Get subtitles \uD83D\uDCE5";
 exports.startAlertCommand = "Subscribe \uD83D\uDCE2";
@@ -48,7 +49,7 @@ exports.notACommand = function (userInput) {
         userInput != this.showAlertsCommand;
 }
 
-exports.isValidNumber = function(str){
+exports.isValidNumber = function (str) {
     var number = Math.floor(Number(str));
     return String(number) === str && number > 0;
 }
@@ -102,37 +103,37 @@ exports.resetValues = function (session) {
     session.chosenSeason = undefined;
     session.chosenEpisode = undefined;
     session.ambiguousSeries = {};
-    
+
     session.choosingSeriesAlert = false,
-    session.choosingLanguageAlert = false,
-    session.choosenSeriesAlert = {},
-    session.ambiguousSeriesAlert = {}
+        session.choosingLanguageAlert = false,
+        session.choosenSeriesAlert = {},
+        session.ambiguousSeriesAlert = {}
     session.chosenLanguagesAlert = []
 }
 
-exports.handleChosenSeries = function(chosenSeries, session, sessions) {
+exports.handleChosenSeries = function (chosenSeries, session, sessions) {
     session.choosenSeries = chosenSeries;
     this.resetValues(session);
     session.choosingSeason = true;
     this.pushInSessions(sessions, session);
 }
 
-exports.handleChosenSeriesAlert = function(chosenSeries, session, sessions) {
+exports.handleChosenSeriesAlert = function (chosenSeries, session, sessions) {
     session.choosenSeriesAlert = chosenSeries;
     this.resetValues(session);
     session.choosingLanguageAlert = true;
     this.pushInSessions(sessions, session);
 }
 
-exports.languageAlreadyPresent = function(list, language){
+exports.languageAlreadyPresent = function (list, language) {
     return list.indexOf(language) > -1;
 }
 
-exports.getLanguageFromKey = function(key){
+exports.getLanguageFromKey = function (key) {
     var language = Languages[key];
     return new Languages({
-        code : key,
-        int : language.int[0],
-        native : language.native[0]
+        code: key,
+        int: language.int[0],
+        native: language.native[0]
     });
 }
