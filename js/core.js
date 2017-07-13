@@ -127,6 +127,7 @@ exports.handleStartAlertLogic = function(userInput, session, sessions, msg, matc
 
         if (languageKey) {
             if(!Common.languageAlreadyPresent(session.chosenLanguagesAlert, languageKey)){
+                Common.getLanguageFromKey(languageKey);
                 session.chosenLanguagesAlert.push(languageKey);
                 bot.sendMessage(msg.chat.id, Common.addLanguageMessage, BotGui.generatesLanguageInlineKeyboard());
             }else{
