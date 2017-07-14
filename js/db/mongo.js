@@ -5,8 +5,8 @@ var User = require('../models/user.js');
 var Mongoose = require('mongoose');
 var Tunnel = require('tunnel-ssh');
 var Conf = require('../conf.js');
-var TvMaze = require('./libs/tvMaze.js');
-var Common = require('./common.js');
+var TvMaze = require('../libs/tvMaze.js');
+var Common = require('../common.js');
 
 exports.connectToDatabase = function () {
     var server = Tunnel(Conf.mongoConfig, function (error, server) {
@@ -20,12 +20,12 @@ exports.connectToDatabase = function () {
             console.log("DB connection successful");
         });
     });
-    createModelsForMongoose();
+    this.createModelsForMongoose();
 }
 
 exports.createModelsForMongoose = function () {
-    var Schema = mongoose.Schema;
-    var AlertModel = mongoose.model('Alert', new Schema({
+    var Schema = Mongoose.Schema;
+    var AlertModel = Mongoose.model('Alert', new Schema({
         id: String,
         show_name: String,
         show_id: Number,
@@ -34,13 +34,13 @@ exports.createModelsForMongoose = function () {
         nextepisode_season: Number,
         nextepisode_episode: Number
     }));
-    var UserModel = mongoose.model('User', new Schema({
+    var UserModel = Mongoose.model('User', new Schema({
         id: String,
         chat_id: Number,
         first_name: String,
         alerts: Array
     }));
-    var LanguageModel = mongoose.model('Language', new Schema({
+    var LanguageModel = Mongoose.model('Language', new Schema({
         code: String,
         int: String,
         native: String
