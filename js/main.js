@@ -17,18 +17,19 @@ var bot = new TelegramBot(telegramBotToken, { polling: true });
 console.log("Starting bot...");
 Mongo.connectToDatabase();
 
-scheduleManager.setConnectionString('mongodb://localhost')
-scheduleManager.scheduleFunctionGivenTime('prova', 'today at 11:27pm', function (job, done) {
-    console.log('ok');
-    scheduleManager.scheduleFunctionInterval('ziiiii2', '*/5 * * * * * ', function (job1, done1) {
-        console.log('zzzzzzzzzzzzzzzzzzzzzzzzzz');
-        job1.attrs.data.count = job1.attrs.data.count - 1;
-        console.log(job1.attrs.data.count);
-        done1();
-    }, { count: 3 })
-    console.log('yooo');
-    done();
-});
+// scheduleManager.setConnectionString('mongodb://localhost')
+// scheduleManager.scheduleFunctionGivenTime('prova', 'today at 11:27pm', function (job, done) {
+//     console.log('ok');
+//     scheduleManager.scheduleFunctionInterval('ziiiii2', '*/5 * * * * * ', function (job1, done1) {
+//         console.log('zzzzzzzzzzzzzzzzzzzzzzzzzz');
+//         job1.attrs.data.count = job1.attrs.data.count - 1;
+//         console.log(job1.attrs.data.count);
+//         done1();
+//     }, { count: 3 })
+//     console.log('yooo');
+//     done();
+// });
+
 bot.onText(/\/start/, (msg, match) => {
     var session = Common.checkSessions(sessions, msg.chat);
     Common.resetValues(session);
