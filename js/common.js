@@ -1,5 +1,6 @@
 var Session = require('./models/session.js');
 var Languages = require('./models/languages.js');
+var Language = require('./models/alert.js');
 
 exports.instructionsMessage = "Welcome, my tv-addicted friend! What you want me to do today?"
 exports.whichSeriesMessage = function (firstName) { return "Ok " + firstName + "! Which series do you want?"; }
@@ -130,8 +131,9 @@ exports.languageAlreadyPresent = function (list, language) {
 }
 
 exports.getLanguageFromKey = function (key) {
-    var language = Languages[key];
-    return new Languages({
+    var lan = Languages.languages;
+    var language = Languages.languages[key];
+    return new Language({
         code: key,
         int: language.int[0],
         native: language.native[0]
