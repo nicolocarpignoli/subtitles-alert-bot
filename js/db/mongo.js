@@ -59,12 +59,16 @@ exports.subscribe = function (session, bot, from) {
                 nextepisode_season: nextepisode.season,
                 nextepisode_episode: nextepisode.number
             });
+            
             alertToStore.save(function (err, storedAlert){
-                if (err) return console.log("ERROR IN SAVE MONGO", err);
-                else idAlertList.push(storedAlert._id);
+                if (err) console.log("ERROR IN SAVE MONGO", err);
+                console.log("STORED", storedAlert._id);
+                idAlertList.push(storedAlert._id);
             });
 
         });
+        // TODO fix idAlertList vuota perche?
+        //TODO controllo che non si inserisca due volte lo stesso alert, ora lo fa e non lo deve fare
         User.find({ 'chat_id': from.id }, function (err, user) {
             if(user != undefined){
                 var alertsToAdd = user.alerts;
@@ -85,7 +89,6 @@ exports.subscribe = function (session, bot, from) {
                 });
             }
         });
-        Mongoose.connection.close()  //TODO  TO REMOVE
     }
     else
         bot.sendMessage(from.id, nextEpisodeNotAvailableMessage);
