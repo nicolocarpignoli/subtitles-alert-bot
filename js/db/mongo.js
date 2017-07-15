@@ -44,7 +44,6 @@ exports.connectToDatabase = function () {
 
 
 exports.subscribe = function (session, bot, from) {
-    console.log("TODO subscribe");
     bot.sendMessage(from.id, "Hey have patience I can't do this ...at least for now \uD83E\uDD14 \uD83E\uDD14");
     var alertsToStore = [];
     var idAlertList = [];
@@ -59,39 +58,44 @@ exports.subscribe = function (session, bot, from) {
                 nextepisode_season: nextepisode.season,
                 nextepisode_episode: nextepisode.number
             });
-            
+            //TODO controllo che non si inserisca due volte lo stesso alert, ora lo fa e non lo deve fare
+            // il controllo va qua
             alertToStore.save(function (err, storedAlert){
                 if (err) console.log("ERROR IN SAVE MONGO", err);
-                console.log("STORED", storedAlert._id);
                 idAlertList.push(storedAlert._id);
             });
 
         });
-        // TODO fix idAlertList vuota perche?
-        //TODO controllo che non si inserisca due volte lo stesso alert, ora lo fa e non lo deve fare
-        User.find({ 'chat_id': from.id }, function (err, user) {
-            if(user != undefined){
-                var alertsToAdd = user.alerts;
-                idAlertList.forEach(function(idAlert) {
-                    if(user.alerts.indexOf(idAlert) == -1 ) alertsToAdd.push(idAlert);
-                });
-                User.update({ _id: user.id }, { $set: { alerts: alertsToAdd }}, function(err, user){
-                    if(err) console.log("ERROR UPDATING IN MONGO");
-                });
-            }else{
-                var userToStore = new User({
-                    chat_id: from.id,
-                    first_name: from.first_name,
-                    alerts: idAlertList
-                });  
-                userToStore.save(function (err, storedUser){
-                    if (err) return console.log("ERROR IN SAVE MONGO", err);
-                });
-            }
-        });
+        //TODO fix problema della asincronicita, quando passo idAlertList è sempre vuoto
+        // perche la save è asincrona
+        subscribeUser(idAlertList, session, bot, from);
     }
     else
         bot.sendMessage(from.id, nextEpisodeNotAvailableMessage);
 
     Common.resetValues(session);
+}
+
+subscribeUser = function(idAlertList, session, bot, from){
+    console.log(idAlertList);
+    User.find({ 'chat_id': from.id }, function (err, user) {
+        if(user != undefined){
+            var alertsToAdd = user.alerts;
+            idAlertList.forEach(function(idAlert) {
+                if(user.alerts.indexOf(idAlert) == -1 ) alertsToAdd.push(idAlert);
+            });
+            User.update({ _id: user.id }, { $set: { alerts: alertsToAdd }}, function(err, user){
+                if(err) console.log("ERROR UPDATING IN MONGO");
+            });
+        }else{
+            var userToStore = new User({
+                chat_id: from.id,
+                first_name: from.first_name,
+                alerts: idAlertList
+            });  
+            userToStore.save(function (err, storedUser){
+                if (err) return console.log("ERROR IN SAVE MONGO", err);
+            });
+        }
+    });
 }
