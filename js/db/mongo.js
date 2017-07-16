@@ -9,7 +9,7 @@ var ScheduleManager = require('../schedule/scheduleManager.js');
 var db = undefined;
 var Schema = Mongoose.Schema;
 
-exports.Alert = Mongoose.model('Alert', new Schema({
+var Alert = Mongoose.model('Alert', new Schema({
     id: String,
     show_name: String,
     show_id: Number,
@@ -18,17 +18,22 @@ exports.Alert = Mongoose.model('Alert', new Schema({
     nextepisode_season: Number,
     nextepisode_episode: Number
 }));
-exports.User = Mongoose.model('User', new Schema({
+var User = Mongoose.model('User', new Schema({
     id: String,
     chat_id: Number,
     first_name: String,
     alerts: Array
 }));
-exports.Language = Mongoose.model('Language', new Schema({
+var Language = Mongoose.model('Language', new Schema({
     code: String,
     int: String,
     native: String
 }));
+
+exports.Alert = Alert;
+exports.User = User;
+exports.Language = Language;
+
 
 exports.connectToDatabase = function () {
     var server = Tunnel(Conf.mongoConfig, function (error, server) {
@@ -37,7 +42,7 @@ exports.connectToDatabase = function () {
         }
         Mongoose.connect('mongodb://127.0.0.1:' + Conf.mongoConfig.localPort + '/' + Conf.dbName);
         db = Mongoose.connection;
-        db.on('error', () => {console.log('DB connection error:')});
+        db.on('error', () => { console.log('DB connection error:') });
         db.once('open', function () {
             console.log("DB connection successful");
         });
@@ -48,59 +53,61 @@ exports.connectToDatabase = function () {
 exports.subscribe = function (session, bot, from) {
     bot.sendMessage(from.id, "Hey have patience I can't do this ...at least for now \uD83E\uDD14 \uD83E\uDD14");
     var alertsToStore = [];
-    var idAlertList = [];
+    var alertsIdList = [];
     if (session.choosenSeriesAlert.show._links.nextepisode) {
-        var nextepisode = TvMaze.getNextEpisodeInformation(session.choosenSeriesAlert.show._links.nextepisode.href);
-        session.chosenLanguagesAlert.forEach(function (languageElement) {
-            var alertToStore = new Alert({
-                show_name: session.choosenSeriesAlert.show.name,
-                show_id: session.choosenSeriesAlert.show.id,
-                language: languageElement,
-                nextepisode_airdate: nextepisode.airdate,
-                nextepisode_season: nextepisode.season,
-                nextepisode_episode: nextepisode.number
-            });
-            //TODO controllo che non si inserisca due volte lo stesso alert, ora lo fa e non lo deve fare
-            // il controllo va qua
-            alertToStore.save(function (err, storedAlert){
-                if (err) console.log("ERROR IN SAVE MONGO", err);
-                idAlertList.push(storedAlert._id);
-                ScheduleManager.activeStoredSchedules(storedAlert);
-            });
+        var nextepisodePromise = TvMaze.getNextEpisodeInformation(session.choosenSeriesAlert.show._links.nextepisode.href);
 
+        nextepisodePromise.then(function (nextepisode) {
+            session.chosenLanguagesAlert.forEach(function (languageElement) {
+                var alertToStore = new Alert({
+                    show_name: session.choosenSeriesAlert.show.name,
+                    show_id: session.choosenSeriesAlert.show.id,
+                    language: languageElement,
+                    nextepisode_airdate: nextepisode.airdate,
+                    nextepisode_season: nextepisode.season,
+                    nextepisode_episode: nextepisode.number
+                });
+
+                //TODO controllo che non si inserisca due volte lo stesso alert, ora lo fa e non lo deve fare
+
+                alertToStore.save(function (err, storedAlert) {
+                    if (err) console.log("ERROR IN SAVE MONGO", err);
+
+                    console.log('storedAlert:\t', storedAlert)
+                    alertsIdList.push(storedAlert._id);
+                    ScheduleManager.activeStoredSchedules(storedAlert);
+                });
+            });
+            subscribeUser(alertsIdList, session, bot, from);
+            Common.resetValues(session);
         });
-        //TODO fix problema della asincronicita, quando passo idAlertList è sempre vuoto
-        // perche la save è asincrona
-        subscribeUser(idAlertList, session, bot, from);
-        
     }
-    else
+    else {
         bot.sendMessage(from.id, nextEpisodeNotAvailableMessage);
-
-    Common.resetValues(session);
+        Common.resetValues(session);
+    }
 }
 
-subscribeUser = function(idAlertList, session, bot, from){
-    console.log(idAlertList);
+function subscribeUser(alertsIdList, session, bot, from) {
+    console.log('alertsIdList ', alertsIdList);
     User.find({ 'chat_id': from.id }, function (err, user) {
-        if(user != undefined){
+        if (user) {
             var alertsToAdd = user.alerts;
-            idAlertList.forEach(function(idAlert) {
-                if(user.alerts.indexOf(idAlert) == -1 ) alertsToAdd.push(idAlert);
+            alertsIdList.forEach(function (alertId) {
+                if (user.alerts.indexOf(alertId) == -1) alertsToAdd.push(alertId);
             });
-            User.update({ _id: user.id }, { $set: { alerts: alertsToAdd }}, function(err, user){
-                if(err) console.log("ERROR UPDATING IN MONGO");
+            User.update({ _id: user.id }, { $set: { alerts: alertsToAdd } }, function (err, user) {
+                if (err) console.log("ERROR UPDATING USER IN MONGO");
             });
-        }else{
+        } else {
             var userToStore = new User({
                 chat_id: from.id,
                 first_name: from.first_name,
-                alerts: idAlertList
-            });  
-            userToStore.save(function (err, storedUser){
-                if (err) return console.log("ERROR IN SAVE MONGO", err);
+                alerts: alertsIdList
+            });
+            userToStore.save(function (err, storedUser) {
+                if (err) return console.log("ERROR SAVING USER IN MONGO", err);
             });
         }
     });
-
 }
