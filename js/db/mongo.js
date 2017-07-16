@@ -67,11 +67,17 @@ exports.subscribe = function (session, bot, from) {
                     nextepisode_season: nextepisode.season,
                     nextepisode_episode: nextepisode.number
                 });
+                if (alertToStore._id === undefined) {
+                    delete alertToStore._id;
+                }
                 Alert.findOneAndUpdate({ showId: alertToStore.showId, language: languageElement },
                     alertToStore, { new: true, upsert: true }, function (err, storedAlert) {
                         if (err) console.log("ERROR IN SAVE MONGO", err);
                         ScheduleManager.activateStoredSchedules(storedAlert);
                         alertsIdList.push(storedAlert._id);
+                        // TODO FIX il problema è qua. storedAlert se stampato ha _id, ma in realtà essa è undefined
+                        // pohcè la console.log non è 'sincrona' diciamo. bisognerebbe 'aspettare' e andare avanti
+                        // con il flusso solo quando ho gli _id del nuovo oggetto creato
                         if (index == session.chosenLanguagesAlert.length - 1) {
                             subscribeUser(alertsIdList, session, bot, from);
                             Common.resetValues(session);
@@ -86,14 +92,16 @@ exports.subscribe = function (session, bot, from) {
     }
 }
 
-function subscribeUser(alertsIdList, session, bot, from) {
-    console.log('SUBSCRIBE USER - alertsIdList ', alertsIdList);
-    User.findOneAndUpdate({ chatId: from.id}, new User({chatId: from.id, first_name: from.first_name, alerts: alertsIdList }), 
+function subscribeUser(alertsList, session, bot, from) {
+    var alertsToAdd = [];
+    console.log("LAERTLIST", alertsList);
+    User.findOneAndUpdate({ chatId: from.id}, new User({chatId: from.id, first_name: from.first_name, alerts: alertsList }), 
         { new: true, upsert: true }, function (err, storedUser) {
-            alertsIdList.forEach(function (alertId) {
+            alertsToAdd = storedUser.alerts;
+            alertsList.forEach(function (alertId) {
                 if (storedUser.alerts.indexOf(alertId) == -1) alertsToAdd.push(alertId);
             });
-            User.update({ _id: storedUser.id }, { $set: { alerts: alertsToAdd } }, function (err, user) {
+            User.update({ _id: storedUser._id }, { $set: { alerts: alertsToAdd } }, function (err, user) {
                 if (err) console.log("ERROR UPDATING USER IN MONGO");
             });
         });
