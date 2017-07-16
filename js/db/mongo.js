@@ -58,7 +58,7 @@ exports.subscribe = function (session, bot, from) {
         var nextepisodePromise = TvMaze.getNextEpisodeInformation(session.choosenSeriesAlert.show._links.nextepisode.href);
 
         nextepisodePromise.then(function (nextepisode) {
-            session.chosenLanguagesAlert.forEach(function (languageElement) {
+            session.chosenLanguagesAlert.forEach(function (languageElement, index) {
                 var alertToStore = new Alert({
                     show_name: session.choosenSeriesAlert.show.name,
                     show_id: session.choosenSeriesAlert.show.id,
@@ -70,16 +70,23 @@ exports.subscribe = function (session, bot, from) {
 
                 //TODO controllo che non si inserisca due volte lo stesso alert, ora lo fa e non lo deve fare
 
-                alertToStore.save(function (err, storedAlert) {
-                    if (err) console.log("ERROR IN SAVE MONGO", err);
+                Alert.findOneAndUpdate({ show_id: alertToStore.show_id, language: languageElement },
+                    alertToStore,
+                    { new: true, upsert: true },
+                    function (err, storedAlert) {
+                        if (err) console.log("ERROR IN SAVE MONGO", err);
 
-                    console.log('storedAlert:\t', storedAlert)
-                    alertsIdList.push(storedAlert._id);
-                    ScheduleManager.activeStoredSchedules(storedAlert);
-                });
+                        console.log('storedAlert:\t', storedAlert);
+
+                        ScheduleManager.activeStoredSchedules(storedAlert);
+                        alertsIdList.push(storedAlert._id);
+                        
+                        if (index == session.chosenLanguagesAlert.length - 1) {
+                            subscribeUser(alertsIdList, session, bot, from);
+                            Common.resetValues(session);
+                        }
+                    });
             });
-            subscribeUser(alertsIdList, session, bot, from);
-            Common.resetValues(session);
         });
     }
     else {
@@ -89,25 +96,25 @@ exports.subscribe = function (session, bot, from) {
 }
 
 function subscribeUser(alertsIdList, session, bot, from) {
-    console.log('alertsIdList ', alertsIdList);
-    User.find({ 'chat_id': from.id }, function (err, user) {
-        if (user) {
-            var alertsToAdd = user.alerts;
-            alertsIdList.forEach(function (alertId) {
-                if (user.alerts.indexOf(alertId) == -1) alertsToAdd.push(alertId);
-            });
-            User.update({ _id: user.id }, { $set: { alerts: alertsToAdd } }, function (err, user) {
-                if (err) console.log("ERROR UPDATING USER IN MONGO");
-            });
-        } else {
-            var userToStore = new User({
-                chat_id: from.id,
-                first_name: from.first_name,
-                alerts: alertsIdList
-            });
-            userToStore.save(function (err, storedUser) {
-                if (err) return console.log("ERROR SAVING USER IN MONGO", err);
-            });
-        }
-    });
+    console.log('SUBSCRIBE USER - alertsIdList ', alertsIdList);
+    // User.find({ 'chat_id': from.id }, function (err, user) {
+    //     if (user) {
+    //         var alertsToAdd = user.alerts;
+    //         alertsIdList.forEach(function (alertId) {
+    //             if (user.alerts.indexOf(alertId) == -1) alertsToAdd.push(alertId);
+    //         });
+    //         User.update({ _id: user.id }, { $set: { alerts: alertsToAdd } }, function (err, user) {
+    //             if (err) console.log("ERROR UPDATING USER IN MONGO");
+    //         });
+    //     } else {
+    //         var userToStore = new User({
+    //             chat_id: from.id,
+    //             first_name: from.first_name,
+    //             alerts: alertsIdList
+    //         });
+    //         userToStore.save(function (err, storedUser) {
+    //             if (err) return console.log("ERROR SAVING USER IN MONGO", err);
+    //         });
+    //     }
+    // });
 }
