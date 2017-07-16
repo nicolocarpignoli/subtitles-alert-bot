@@ -8,7 +8,8 @@ var ScheduleManager = require('../schedule/scheduleManager.js');
 
 var db = undefined;
 var Schema = Mongoose.Schema;
-var Alert = Mongoose.model('Alert', new Schema({
+
+exports.Alert = Mongoose.model('Alert', new Schema({
     id: String,
     show_name: String,
     show_id: Number,
@@ -17,13 +18,13 @@ var Alert = Mongoose.model('Alert', new Schema({
     nextepisode_season: Number,
     nextepisode_episode: Number
 }));
-var User = Mongoose.model('User', new Schema({
+exports.User = Mongoose.model('User', new Schema({
     id: String,
     chat_id: Number,
     first_name: String,
     alerts: Array
 }));
-var Language = Mongoose.model('Language', new Schema({
+exports.Language = Mongoose.model('Language', new Schema({
     code: String,
     int: String,
     native: String
@@ -103,7 +104,3 @@ subscribeUser = function(idAlertList, session, bot, from){
     });
 
 }
-
-module.exports = User;
-module.exports = Alert;
-module.exports = Language;
