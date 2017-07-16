@@ -18,12 +18,13 @@ exports.activeStoredSchedules = function(alert){
         });
         doneJobDate();
     });
-
 }
 
-exports.setConnectionString = function (connectionStringP, maxConcurrency) {
+var setConnectionString = function (connectionStringP, maxConcurrency) {
     connectionString = connectionStringP;
 }
+
+exports.setConnectionString = setConnectionString;
 
 exports.scheduleFunctionGivenTime = function (jobName, date, func, data) {
     var agenda = new Agenda({ db: { address: connectionString } });

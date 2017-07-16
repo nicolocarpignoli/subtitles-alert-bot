@@ -12,7 +12,7 @@ exports.runningState = 'Running';
 
 exports.whichSeriesAlertMessage = function (firstName) { return "Ok " + firstName + "! Which series do you want to subscribe to?"; }
 exports.seriesNotRunningMessage = function (series)
-{ return "Hey man I really think " + series + " is ended! If you want to get subtitles of it please try the GET functionality or try another series for ALERT!" }
+{ return "Hey man I really think " + series + " is ended! If you want to get subtitles of it please try the GET functionality or try another series for SUBSCRIBE!" }
 exports.whichLanguagesAlertMessage = function (series)
 { return "Ok you choose " + series + "! Please send me a language for your subtitles. You can send more than one language and click 'Done' at the end!"; }
 exports.languageAlreadyPresentMessage = "It seems you have already inserted this language, dude! Try with another one!";
