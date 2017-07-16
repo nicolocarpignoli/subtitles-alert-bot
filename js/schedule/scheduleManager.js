@@ -9,15 +9,15 @@ var usable = false;
 
 
 exports.activateStoredSchedules = function(alert){
-    setConnectionString('mongodb://localhost');
-    scheduleFunctionGivenTime(alert.show_name + '_' + alert.language + '_giventime', alert.nextepisode_airdate, function (jobDate, doneJobDate) {
-        scheduleFunctionInterval(alert.show_name + '_' + alert.language + '_interval', intervalSchedule, function (jobInterval, doneJobInterval) {
-            doneJobInterval.attrs.data.count = doneJobInterval.attrs.data.count - 1
-            Addic7ed.addic7edGetSubtitleAlert(alert._id, alert.show_name, alert.language, alert.season, alert.number);
-            doneJobInterval();
-        });
-        doneJobDate();
-    });
+    // setConnectionString('mongodb://localhost');
+    // scheduleFunctionGivenTime(alert.show_name + '_' + alert.language + '_giventime', alert.nextepisode_airdate, function (jobDate, doneJobDate) {
+    //     scheduleFunctionInterval(alert.show_name + '_' + alert.language + '_interval', intervalSchedule, function (jobInterval, doneJobInterval) {
+    //         doneJobInterval.attrs.data.count = doneJobInterval.attrs.data.count - 1
+    //         Addic7ed.addic7edGetSubtitleAlert(alert._id, alert.show_name, alert.language, alert.season, alert.number);
+    //         doneJobInterval();
+    //     });
+    //     doneJobDate();
+    // });
 }
 
 var setConnectionString = function (connectionStringP, maxConcurrency) {

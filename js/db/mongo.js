@@ -10,25 +10,25 @@ var db = undefined;
 var Schema = Mongoose.Schema;
 
 var Alert = Mongoose.model('Alert', new Schema({
-    id: String,
+    ids: String,
     show_name: String,
-    show_id: Number,
+    showId: Number,
     language: Schema.Types.Mixed,
     nextepisode_airdate: String,
     nextepisode_season: Number,
     nextepisode_episode: Number
-}));
+}, { _id: false }));
 var User = Mongoose.model('User', new Schema({
-    id: String,
-    chat_id: Number,
+    ids: String,
+    chatId: Number,
     first_name: String,
     alerts: Array
-}));
+}, { _id: false }));
 var Language = Mongoose.model('Language', new Schema({
     code: String,
     int: String,
     native: String
-}));
+}, { _id: false }));
 
 exports.Alert = Alert;
 exports.User = User;
@@ -61,26 +61,17 @@ exports.subscribe = function (session, bot, from) {
             session.chosenLanguagesAlert.forEach(function (languageElement, index) {
                 var alertToStore = new Alert({
                     show_name: session.choosenSeriesAlert.show.name,
-                    show_id: session.choosenSeriesAlert.show.id,
+                    showId: session.choosenSeriesAlert.show.id,
                     language: languageElement,
                     nextepisode_airdate: nextepisode.airdate,
                     nextepisode_season: nextepisode.season,
                     nextepisode_episode: nextepisode.number
                 });
-
-                //TODO controllo che non si inserisca due volte lo stesso alert, ora lo fa e non lo deve fare
-
-                Alert.findOneAndUpdate({ show_id: alertToStore.show_id, language: languageElement },
-                    alertToStore,
-                    { new: true, upsert: true },
-                    function (err, storedAlert) {
+                Alert.findOneAndUpdate({ showId: alertToStore.showId, language: languageElement },
+                    alertToStore, { new: true, upsert: true }, function (err, storedAlert) {
                         if (err) console.log("ERROR IN SAVE MONGO", err);
-
-                        console.log('storedAlert:\t', storedAlert);
-
-                    ScheduleManager.activateStoredSchedules(storedAlert);
+                        ScheduleManager.activateStoredSchedules(storedAlert);
                         alertsIdList.push(storedAlert._id);
-                        
                         if (index == session.chosenLanguagesAlert.length - 1) {
                             subscribeUser(alertsIdList, session, bot, from);
                             Common.resetValues(session);
@@ -97,24 +88,13 @@ exports.subscribe = function (session, bot, from) {
 
 function subscribeUser(alertsIdList, session, bot, from) {
     console.log('SUBSCRIBE USER - alertsIdList ', alertsIdList);
-    // User.find({ 'chat_id': from.id }, function (err, user) {
-    //     if (user) {
-    //         var alertsToAdd = user.alerts;
-    //         alertsIdList.forEach(function (alertId) {
-    //             if (user.alerts.indexOf(alertId) == -1) alertsToAdd.push(alertId);
-    //         });
-    //         User.update({ _id: user.id }, { $set: { alerts: alertsToAdd } }, function (err, user) {
-    //             if (err) console.log("ERROR UPDATING USER IN MONGO");
-    //         });
-    //     } else {
-    //         var userToStore = new User({
-    //             chat_id: from.id,
-    //             first_name: from.first_name,
-    //             alerts: alertsIdList
-    //         });
-    //         userToStore.save(function (err, storedUser) {
-    //             if (err) return console.log("ERROR SAVING USER IN MONGO", err);
-    //         });
-    //     }
-    // });
+    User.findOneAndUpdate({ chatId: from.id}, new User({chatId: from.id, first_name: from.first_name, alerts: alertsIdList }), 
+        { new: true, upsert: true }, function (err, storedUser) {
+            alertsIdList.forEach(function (alertId) {
+                if (storedUser.alerts.indexOf(alertId) == -1) alertsToAdd.push(alertId);
+            });
+            User.update({ _id: storedUser.id }, { $set: { alerts: alertsToAdd } }, function (err, user) {
+                if (err) console.log("ERROR UPDATING USER IN MONGO");
+            });
+        });
 }
