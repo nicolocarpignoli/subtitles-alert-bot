@@ -4,6 +4,7 @@ var Tunnel = require('tunnel-ssh');
 var Conf = require('../conf.js');
 var TvMaze = require('../libs/tvMaze.js');
 var Common = require('../common.js');
+var ScheduleManager = require('../schedule/scheduleManager.js');
 
 var db = undefined;
 var Schema = Mongoose.Schema;
@@ -63,12 +64,14 @@ exports.subscribe = function (session, bot, from) {
             alertToStore.save(function (err, storedAlert){
                 if (err) console.log("ERROR IN SAVE MONGO", err);
                 idAlertList.push(storedAlert._id);
+                ScheduleManager.activeStoredSchedules(storedAlert);
             });
 
         });
         //TODO fix problema della asincronicita, quando passo idAlertList è sempre vuoto
         // perche la save è asincrona
         subscribeUser(idAlertList, session, bot, from);
+        
     }
     else
         bot.sendMessage(from.id, nextEpisodeNotAvailableMessage);
@@ -98,4 +101,9 @@ subscribeUser = function(idAlertList, session, bot, from){
             });
         }
     });
+
 }
+
+module.exports = User;
+module.exports = Alert;
+module.exports = Language;

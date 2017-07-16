@@ -1,7 +1,26 @@
 Agenda = require('agenda');
+var Mongo = require('../db/mongo.js');
+var intervalSchedule = '*/10 * * * * * ';
+var Addic7ed = require('../libs/addic7ed.js');
+
 
 var connectionString;
 var usable = false;
+
+
+exports.activeStoredSchedules = function(alert){
+    setConnectionString('mongodb://localhost');
+    scheduleFunctionGivenTime(alert.show_name + '_' + alert.language + '_giventime', alert.nextepisode_airdate, function (jobDate, doneJobDate) {
+        scheduleFunctionInterval(alert.show_name + '_' + alert.language + '_interval', intervalSchedule, function (jobInterval, doneJobInterval) {
+            doneJobInterval.attrs.data.count = doneJobInterval.attrs.data.count - 1
+            Addic7ed.addic7edGetSubtitleAlert(alert._id, alert.show_name, alert.language, alert.season, alert.number);
+            doneJobInterval();
+        });
+        doneJobDate();
+    });
+
+}
+
 exports.setConnectionString = function (connectionStringP, maxConcurrency) {
     connectionString = connectionStringP;
 }
@@ -40,7 +59,7 @@ exports.scheduleFunctionInterval = function (jobName, interval, func, data) {
     });
 }
 
-exports.cancellJob = function (jobName) {
+exports.cancelJob = function (jobName) {
     var agenda = new Agenda({ db: { address: connectionString } });
     agenda.cancel({ name: jobName }, function (err, numRemoved) { });
 }
