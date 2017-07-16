@@ -8,7 +8,7 @@ var connectionString;
 var usable = false;
 
 
-exports.activeStoredSchedules = function(alert){
+exports.activateStoredSchedules = function(alert){
     setConnectionString('mongodb://localhost');
     scheduleFunctionGivenTime(alert.show_name + '_' + alert.language + '_giventime', alert.nextepisode_airdate, function (jobDate, doneJobDate) {
         scheduleFunctionInterval(alert.show_name + '_' + alert.language + '_interval', intervalSchedule, function (jobInterval, doneJobInterval) {
