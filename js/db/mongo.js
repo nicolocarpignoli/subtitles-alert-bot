@@ -42,7 +42,7 @@ exports.connectToDatabase = function () {
         }
         Mongoose.connect('mongodb://127.0.0.1:' + Conf.mongoConfig.localPort + '/' + Conf.dbName);
         db = Mongoose.connection;
-        db.on('error', () => { console.log('DB connection error:') });
+        db.on('error', () => { console.log('DB connection error ') });
         db.once('open', function () {
             console.log("DB connection successful");
         });
@@ -74,10 +74,8 @@ exports.subscribe = function (session, bot, from) {
                     alertToStore, { new: true, upsert: true }, function (err, storedAlert) {
                         if (err) console.log("ERROR IN SAVE MONGO", err);
                         ScheduleManager.activateStoredSchedules(storedAlert);
-                        alertsIdList.push(storedAlert._id);
-                        // TODO FIX il problema è qua. storedAlert se stampato ha _id, ma in realtà essa è undefined
-                        // pohcè la console.log non è 'sincrona' diciamo. bisognerebbe 'aspettare' e andare avanti
-                        // con il flusso solo quando ho gli _id del nuovo oggetto creato
+                        alertsIdList.push(storedAlert._doc._id.toString());
+
                         if (index == session.chosenLanguagesAlert.length - 1) {
                             subscribeUser(alertsIdList, session, bot, from);
                             Common.resetValues(session);
