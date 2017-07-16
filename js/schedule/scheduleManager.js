@@ -24,9 +24,7 @@ var setConnectionString = function (connectionStringP, maxConcurrency) {
     connectionString = connectionStringP;
 }
 
-exports.setConnectionString = setConnectionString;
-
-exports.scheduleFunctionGivenTime = function (jobName, date, func, data) {
+var scheduleFunctionGivenTime = function (jobName, date, func, data) {
     var agenda = new Agenda({ db: { address: connectionString } });
     data = (typeof data !== 'undefined') ? data : {};
     agenda.define(jobName, function (job, done) {
@@ -42,7 +40,7 @@ exports.scheduleFunctionGivenTime = function (jobName, date, func, data) {
     });
 }
 
-exports.scheduleFunctionInterval = function (jobName, interval, func, data) {
+var scheduleFunctionInterval = function (jobName, interval, func, data) {
     var agendaP = new Agenda({ db: { address: connectionString } });
     data = (typeof data !== 'undefined') ? data : {};
     agendaP.define(jobName, function (job1, done2) {
@@ -60,7 +58,13 @@ exports.scheduleFunctionInterval = function (jobName, interval, func, data) {
     });
 }
 
-exports.cancelJob = function (jobName) {
+var cancelJob = function (jobName) {
     var agenda = new Agenda({ db: { address: connectionString } });
     agenda.cancel({ name: jobName }, function (err, numRemoved) { });
 }
+
+
+exports.setConnectionString = setConnectionString;
+exports.scheduleFunctionGivenTime = scheduleFunctionGivenTime;
+exports.scheduleFunctionInterval = scheduleFunctionInterval;
+exports.cancelJob = cancelJob;
