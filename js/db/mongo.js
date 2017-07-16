@@ -75,7 +75,7 @@ exports.subscribe = function (session, bot, from) {
 
                     console.log('storedAlert:\t', storedAlert)
                     alertsIdList.push(storedAlert._id);
-                    ScheduleManager.activeStoredSchedules(storedAlert);
+                    ScheduleManager.activateStoredSchedules(storedAlert);
                 });
             });
             subscribeUser(alertsIdList, session, bot, from);
