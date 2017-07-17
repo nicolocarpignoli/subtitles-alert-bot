@@ -17,18 +17,22 @@ var Alert = Mongoose.model('Alert', new Schema({
     nextepisode_airdate: String,
     nextepisode_season: Number,
     nextepisode_episode: Number
-}, { _id: false }));
+}, {
+    _id: false
+}));
 var User = Mongoose.model('User', new Schema({
     ids: String,
     chatId: Number,
     first_name: String,
     alerts: Array
-}, { _id: false }));
+}));
 var Language = Mongoose.model('Language', new Schema({
     code: String,
     int: String,
     native: String
-}, { _id: false }));
+}, {
+    _id: false
+}));
 
 exports.Alert = Alert;
 exports.User = User;
@@ -42,7 +46,9 @@ exports.connectToDatabase = function () {
         }
         Mongoose.connect('mongodb://127.0.0.1:' + Conf.mongoConfig.localPort + '/' + Conf.dbName);
         db = Mongoose.connection;
-        db.on('error', () => { console.log('DB connection error ') });
+        db.on('error', () => {
+            console.log('DB connection error ')
+        });
         db.once('open', function () {
             console.log("DB connection successful");
         });
@@ -70,8 +76,15 @@ exports.subscribe = function (session, bot, from) {
                 if (alertToStore._id === undefined) {
                     delete alertToStore._id;
                 }
-                Alert.findOneAndUpdate({ showId: alertToStore.showId, language: languageElement },
-                    alertToStore, { new: true, upsert: true }, function (err, storedAlert) {
+                Alert.findOneAndUpdate({
+                        showId: alertToStore.showId,
+                        language: languageElement
+                    },
+                    alertToStore, {
+                        new: true,
+                        upsert: true
+                    },
+                    function (err, storedAlert) {
                         if (err) console.log("ERROR IN SAVE MONGO", err);
                         ScheduleManager.activateStoredSchedules(storedAlert);
                         alertsIdList.push(storedAlert._doc._id.toString());
@@ -83,8 +96,7 @@ exports.subscribe = function (session, bot, from) {
                     });
             });
         });
-    }
-    else {
+    } else {
         bot.sendMessage(from.id, nextEpisodeNotAvailableMessage);
         Common.resetValues(session);
     }
@@ -92,15 +104,24 @@ exports.subscribe = function (session, bot, from) {
 
 function subscribeUser(alertsList, session, bot, from) {
     var alertsToAdd = [];
-    console.log("LAERTLIST", alertsList);
-    User.findOneAndUpdate({ chatId: from.id}, new User({chatId: from.id, first_name: from.first_name, alerts: alertsList }), 
-        { new: true, upsert: true }, function (err, storedUser) {
-            alertsToAdd = storedUser.alerts;
-            alertsList.forEach(function (alertId) {
-                if (storedUser.alerts.indexOf(alertId) == -1) alertsToAdd.push(alertId);
+    console.log("ALERTLIST", alertsList);
+    User.findOne({
+        chatId: from.id
+    }, function (err, user) {
+        if (!user) {
+            var newUser = new User({
+                chatId: from.id,
+                first_name: from.first_name,
+                alerts: alertsList
             });
-            User.update({ _id: storedUser._id }, { $set: { alerts: alertsToAdd } }, function (err, user) {
-                if (err) console.log("ERROR UPDATING USER IN MONGO");
+            User.create(newUser, function (err, value) {
+                if (err) console.log("error saving new user");
+            })
+        } else {
+            user._doc.alerts.addToSet(alertsList);
+            user.save(function () {
+                console.log("alerts updated");
             });
-        });
+        }
+    });
 }
