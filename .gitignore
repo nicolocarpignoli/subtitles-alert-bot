@@ -7,4 +7,4 @@ node_modules/
 
 *.srt
 
-js/conf.js
+js/env.js
