@@ -1,3 +1,5 @@
+var Env = require('./env.js');
+
 exports.mongoConfig = {
         username: 'pi',
         host: '2.234.125.63',
@@ -9,3 +11,5 @@ exports.mongoConfig = {
 };
 
 exports.dbName = 'subtitlesAlertBot';
+
+exports.mongoHost = Env.mongoHost;
