@@ -18,8 +18,8 @@ var Alert = Mongoose.model('Alert', new Schema({
     nextepisode_season: Number,
     nextepisode_episode: Number
 }, {
-    _id: false
-}));
+        _id: false
+    }));
 var User = Mongoose.model('User', new Schema({
     ids: String,
     chatId: Number,
@@ -31,8 +31,8 @@ var Language = Mongoose.model('Language', new Schema({
     int: String,
     native: String
 }, {
-    _id: false
-}));
+        _id: false
+    }));
 
 exports.Alert = Alert;
 exports.User = User;
@@ -57,7 +57,7 @@ exports.connectToDatabase = function () {
 
 
 exports.subscribe = function (session, bot, from) {
-    bot.sendMessage(from.id, "Hey have patience I can't do this ...at least for now \uD83E\uDD14 \uD83E\uDD14");
+    // bot.sendMessage(from.id, "Hey have patience I can't do this ...at least for now \uD83E\uDD14 \uD83E\uDD14");
     var alertsToStore = [];
     var alertsIdList = [];
     if (session.choosenSeriesAlert.show._links.nextepisode) {
@@ -76,24 +76,21 @@ exports.subscribe = function (session, bot, from) {
                 if (alertToStore._id === undefined) {
                     delete alertToStore._id;
                 }
-                Alert.findOneAndUpdate({
-                        showId: alertToStore.showId,
-                        language: languageElement
-                    },
-                    alertToStore, {
-                        new: true,
-                        upsert: true
-                    },
+                Alert.findOneAndUpdate({ showId: alertToStore.showId, language: languageElement },
+                    alertToStore, { new: true, upsert: true },
                     function (err, storedAlert) {
                         if (err) console.log("ERROR IN SAVE MONGO", err);
-                        ScheduleManager.activateStoredSchedules(storedAlert);
-                        alertsIdList.push(storedAlert._doc._id.toString());
+                        else {
+                            ScheduleManager.activateStoredSchedules(storedAlert._doc, bot);
+                            alertsIdList.push(storedAlert._doc._id.toString());
 
-                        if (index == session.chosenLanguagesAlert.length - 1) {
-                            subscribeUser(alertsIdList, session, bot, from);
-                            Common.resetValues(session);
+                            if (index == session.chosenLanguagesAlert.length - 1) {
+                                subscribeUser(alertsIdList, session, bot, from);
+                                Common.resetValues(session);
+                            }
                         }
-                    });
+                    }
+                );
             });
         });
     } else {
@@ -105,9 +102,7 @@ exports.subscribe = function (session, bot, from) {
 function subscribeUser(alertsList, session, bot, from) {
     var alertsToAdd = [];
     console.log("ALERTLIST", alertsList);
-    User.findOne({
-        chatId: from.id
-    }, function (err, user) {
+    User.findOne({ chatId: from.id }, function (err, user) {
         if (!user) {
             var newUser = new User({
                 chatId: from.id,
@@ -116,11 +111,11 @@ function subscribeUser(alertsList, session, bot, from) {
             });
             User.create(newUser, function (err, value) {
                 if (err) console.log("error saving new user");
-            })
+            });
         } else {
             user._doc.alerts.addToSet(alertsList);
             user.save(function () {
-                console.log("alerts updated");
+                bot.sendMessage(from.id, "You are now subscribed to " + session.choosenSeriesAlert + "! When next episode's subtitles for languages you chose will be out, I'll send them to you ;)");
             });
         }
     });
