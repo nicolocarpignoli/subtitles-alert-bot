@@ -1,1 +1,1 @@
-exports.envType = "raspi";
+exports.envType = "";
