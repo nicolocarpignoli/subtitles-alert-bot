@@ -12,4 +12,4 @@ exports.mongoConfig = {
 
 exports.dbName = 'subtitlesAlertBot';
 
-exports.mongoHost = Env.mongoHost;
+exports.mongoHost = Env.envType;
