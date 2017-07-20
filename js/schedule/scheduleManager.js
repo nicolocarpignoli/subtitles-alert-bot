@@ -16,7 +16,7 @@ exports.activateStoredSchedules = function (alert, bot) {
     scheduleFunctionGivenTime(alert.show_name + '_' + alert.language + '_giventime', alert.nextepisode_airdate, function (jobDate, doneJobDate) {
         scheduleFunctionInterval(alert.show_name + '_' + alert.language + '_interval', intervalSchedule, function (jobInterval, doneJobInterval) {
             jobInterval.attrs.data.count--;
-            Addic7ed.addic7edGetSubtitleAlert(alert, jobDate.attrs.name, bot);
+            Addic7ed.addic7edGetSubtitleAlert(alert, jobInterval.attrs.name, bot);
             doneJobInterval();
         });
         doneJobDate();
