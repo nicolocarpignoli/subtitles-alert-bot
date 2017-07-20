@@ -9,8 +9,8 @@ var usable = false;
 
 
 exports.activateStoredSchedules = function (alert) {
-    // setConnectionString('mongodb://localhost');
-    setConnectionString('mongodb://127.0.0.1:' + Conf.mongoConfig.localPort + '/' + Conf.dbName);
+    if(Conf.mongoHost == "raspi") setConnectionString('mongodb://127.0.0.1:');
+    else setConnectionString('mongodb://127.0.0.1:' + Conf.mongoConfig.localPort + '/' + Conf.dbName);
     scheduleFunctionGivenTime(alert.show_name + '_' + alert.language + '_giventime', alert.nextepisode_airdate, function (jobDate, doneJobDate) {
         scheduleFunctionInterval(alert.show_name + '_' + alert.language + '_interval', intervalSchedule, function (jobInterval, doneJobInterval) {
             doneJobInterval.attrs.data.count = doneJobInterval.attrs.data.count - 1
