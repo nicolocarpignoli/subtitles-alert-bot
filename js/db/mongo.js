@@ -58,7 +58,6 @@ exports.connectToDatabase = function () {
 
 
 exports.subscribe = function (session, bot, from) {
-    // bot.sendMessage(from.id, "Hey have patience I can't do this ...at least for now \uD83E\uDD14 \uD83E\uDD14");
     var alertsToStore = [];
     var alertsIdList = [];
     if (session.choosenSeriesAlert.show._links.nextepisode) {
@@ -70,12 +69,13 @@ exports.subscribe = function (session, bot, from) {
                     show_name: session.choosenSeriesAlert.show.name,
                     showId: session.choosenSeriesAlert.show.id,
                     language: languageElement,
-                    // nextepisode_airdate: nextepisode.airdate,
-                    // nextepisode_season: nextepisode.season,
-                    // nextepisode_episode: nextepisode.number
-                    nextepisode_airdate: "today",
-                    nextepisode_season: "1",
-                    nextepisode_episode: "1"
+                    nextepisode_airdate: nextepisode.airdate,
+                    nextepisode_season: nextepisode.season,
+                    nextepisode_episode: nextepisode.number
+                    // FOR DEBUG:
+                    // nextepisode_airdate: "today",
+                    // nextepisode_season: "1",
+                    // nextepisode_episode: "1"
                 });
                 if (alertToStore._id === undefined) {
                     delete alertToStore._id;
@@ -104,7 +104,6 @@ exports.subscribe = function (session, bot, from) {
 
 function subscribeUser(alertsList, session, bot, from) {
     var alertsToAdd = [];
-    console.log("ALERTLIST", alertsList);
     User.findOne({ chatId: from.id }, function (err, user) {
         if (!user) {
             var newUser = new User({
@@ -118,7 +117,6 @@ function subscribeUser(alertsList, session, bot, from) {
         } else {
             user._doc.alerts.addToSet(alertsList);
             user.save(function () {
-                console.log(session.choosenSeriesAlert);
                 bot.sendMessage(from.id, Common.successSubscribeMessage(session.choosenSeriesAlert.show.name));
                 Common.resetValues(session);
             });

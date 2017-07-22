@@ -43,12 +43,13 @@ exports.addic7edGetSubtitleAlert = function (alert, jobName, bot) {
                         console.log('Subtitles file saved.');
                         Mongo.User.find({ alerts: alert._id.toString() }, function (err, users) {
                             users.forEach(function (user) {
+                                console.log(user);
                                 var userDoc = user._doc;
                                 bot.sendMessage(userDoc.chatId, Common.buildLinkMessage(subInfo.link));
                                 bot.sendDocument(userDoc.chatId, filename).then(function () {
                                     console.log("File sent to user " + userDoc.first_name);
                                 });
-                                //modificare l'if perché potrebbero esistere serie con le parentesi nel nome
+                                //TODO modificare l'if perché potrebbero esistere serie con le parentesi nel nome
                                 if (alert.show_name.indexOf("(") > -1 && alert.show_name.indexOf(")") > -1) {
                                     bot.sendMessage(userDoc.chatId, Common.ambigousSubtitleMessage);
                                 }
