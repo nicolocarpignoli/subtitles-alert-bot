@@ -7,6 +7,7 @@ var Conf = require('../conf.js');
 var intervalSchedule = '1 minutes'; //every 10 seconds
 var connectionString;
 var usable = false;
+var agenda = null;
 
 //TODO rifattorizzare per bene sto passaggio di bot: main->mongo->scheduleManager->addic7ed
 
@@ -28,7 +29,7 @@ var setConnectionString = function (connectionStringP, maxConcurrency) {
 }
 
 var scheduleFunctionGivenTime = function (jobName, date, func, data) {
-    var agenda = new Agenda({ db: { address: connectionString } });
+    agenda = new Agenda({ db: { address: connectionString } });
     data = (typeof data !== 'undefined') ? data : {};
     agenda.define(jobName, function (job, done) {
         func(job, done);
@@ -48,7 +49,7 @@ var scheduleFunctionGivenTime = function (jobName, date, func, data) {
 }
 
 var scheduleFunctionInterval = function (jobName, interval, func, data) {
-    var agendaP = new Agenda({ db: { address: connectionString } });
+    agendaP = new Agenda({ db: { address: connectionString } });
     data = (typeof data !== 'undefined') ? data : {};
     agendaP.define(jobName, function (job1, done2) {
         func(job1, done2);
@@ -59,14 +60,15 @@ var scheduleFunctionInterval = function (jobName, interval, func, data) {
     });
     agendaP.on('complete', function (job) {
         console.log('Job %s finished', job.attrs.name);
-        if (job.attrs.data.count === 0) {
-            agendaP.cancel({ name: job.attrs.name }, function (err, numRemoved) { });
-        }
+        //if (job.attrs.data.count === 0) { //TODO a che serve? Se ha un senso rimettilo pure
+            agendaP.cancel({ name: job.attrs.name }, function (err, numRemoved) { 
+                console.log("Removed alerts: " + numRemoved);
+            });
+       // }
     });
 }
 
 var cancelJob = function (jobName) {
-    var agenda = new Agenda({ db: { address: connectionString } });
     agenda.cancel({ name: jobName }, function (err, numRemoved) {
         console.log("%s jobs removed named %s", numRemoved, jobName);
     });
