@@ -70,9 +70,12 @@ exports.subscribe = function (session, bot, from) {
                     show_name: session.choosenSeriesAlert.show.name,
                     showId: session.choosenSeriesAlert.show.id,
                     language: languageElement,
-                    nextepisode_airdate: nextepisode.airdate,
-                    nextepisode_season: nextepisode.season,
-                    nextepisode_episode: nextepisode.number
+                    // nextepisode_airdate: nextepisode.airdate,
+                    // nextepisode_season: nextepisode.season,
+                    // nextepisode_episode: nextepisode.number
+                    nextepisode_airdate: "today",
+                    nextepisode_season: "1",
+                    nextepisode_episode: "1"
                 });
                 if (alertToStore._id === undefined) {
                     delete alertToStore._id;
@@ -87,7 +90,6 @@ exports.subscribe = function (session, bot, from) {
 
                             if (index == session.chosenLanguagesAlert.length - 1) {
                                 subscribeUser(alertsIdList, session, bot, from);
-                                Common.resetValues(session);
                             }
                         }
                     }
@@ -116,8 +118,11 @@ function subscribeUser(alertsList, session, bot, from) {
         } else {
             user._doc.alerts.addToSet(alertsList);
             user.save(function () {
-                bot.sendMessage(from.id, "You are now subscribed to " + session.choosenSeriesAlert + "! When next episode's subtitles for languages you chose will be out, I'll send them to you ;)");
+                console.log(session.choosenSeriesAlert);
+                bot.sendMessage(from.id, Common.successSubscribeMessage(session.choosenSeriesAlert.show.name));
+                Common.resetValues(session);
             });
+            
         }
     });
 }
