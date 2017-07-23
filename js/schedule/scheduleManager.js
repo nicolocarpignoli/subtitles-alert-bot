@@ -77,7 +77,7 @@ var updateNextRunDate = function (job, newDate) {
     job.nextRunAt = newDate;
     job.save(function (err) {
         if (!err)
-            console.log("Job %s nextRunAt successfully edited to %s", job.attrs.name, newDate);
+            console.log("Job %s nextRunAt successfully edited to %s", job.attrs.name, formatDate(newDate));
     });
 }
 
