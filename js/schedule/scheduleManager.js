@@ -3,8 +3,8 @@ var Mongo = require('../db/mongo.js');
 var Addic7ed = require('../libs/addic7ed.js');
 var Conf = require('../conf.js');
 
-// var intervalSchedule = '*/10 * * * *'; //every 10 minutes
-var intervalSchedule = '1 minutes'; //test
+var intervalSchedule = '*/15 * * * *'; //every 15 minutes
+// var intervalSchedule = '1 minutes'; //test
 var connectionString;
 var usable = false;
 var agenda = null;
@@ -16,9 +16,7 @@ exports.activateStoredSchedules = function (alert, bot) {
     else setConnectionString('mongodb://127.0.0.1:' + Conf.mongoConfig.localPort + '/' + Conf.dbName);
     scheduleFunctionGivenTime(alert.show_name + '_' + alert.language + '_giventime', alert.nextepisode_airdate, function (jobDate, doneJobDate) {
         scheduleFunctionInterval(alert.show_name + '_' + alert.language + '_interval', intervalSchedule, function (jobInterval, doneJobInterval) {
-            //jobInterval.attrs.data.count--;
-            Addic7ed.addic7edGetSubtitleAlert(alert, jobInterval, bot);
-            
+            Addic7ed.addic7edGetSubtitleAlert(alert, jobInterval, bot);   
             doneJobInterval();
         });
         doneJobDate();
@@ -30,14 +28,14 @@ var setConnectionString = function (connectionStringP, maxConcurrency) {
 }
 
 var scheduleFunctionGivenTime = function (jobName, date, func, data) {
-    agenda = new Agenda({ db: { address: connectionString } });
+    if(agenda == null) agenda = new Agenda({ db: { address: connectionString } });
     data = (typeof data !== 'undefined') ? data : {};
     agenda.define(jobName, function (job, done) {
         func(job, done);
     });
     agenda.on("ready", function () {
-        // agenda.schedule(new Date(date), jobName, data);
-        agenda.schedule(new Date(Date.now() + 5000), jobName, data); //test
+        agenda.schedule(formatDate(date), jobName, data);
+        // agenda.schedule(new Date(Date.now() + 5000), jobName, data); //test
         agenda.start();
         console.log("Job %s scheduled with nextRunAt %s", jobName, date);
     })
@@ -50,7 +48,7 @@ var scheduleFunctionGivenTime = function (jobName, date, func, data) {
 }
 
 var scheduleFunctionInterval = function (jobName, interval, func, data) {
-    agendaP = new Agenda({ db: { address: connectionString } });
+    if(agenda == null) agendaP = new Agenda({ db: { address: connectionString } });
     data = (typeof data !== 'undefined') ? data : {};
     agendaP.define(jobName, function (job1, done2) {
         func(job1, done2);
@@ -62,11 +60,17 @@ var scheduleFunctionInterval = function (jobName, interval, func, data) {
     agendaP.on('complete', function (job) {
         console.log('Job %s finished', job.attrs.name);
         //if (job.attrs.data.count === 0) { //TODO a che serve? Se ha un senso rimettilo pure
-        agendaP.cancel({ name: job.attrs.name }, function (err, numRemoved) {
-            console.log("Removed %s jobs with name %s", numRemoved, job.attrs.name);
-        });
+        // agendaP.cancel({ name: job.attrs.name }, function (err, numRemoved) {
+        //     console.log("Removed %s jobs with name %s", numRemoved, job.attrs.name);
+        // });
         // }
     });
+}
+
+var formatDate = function(date){
+    var tokens = date.split("-");
+    // starts at 00.00 of airDate 
+    return new Date(tokens[0], tokens[1], tokens[2], "00", "00", "00");
 }
 
 var updateNextRunDate = function (job, newDate) {

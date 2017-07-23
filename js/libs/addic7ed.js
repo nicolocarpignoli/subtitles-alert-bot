@@ -56,9 +56,6 @@ exports.addic7edGetSubtitleAlert = function (alert, job, bot) {
                                 }
                             });
 
-                            //mi sa che sta roba va fatta dentro l'on a riga 62 di scheduleManager
-                            //oppure forse lì non si deve cancellare a prescindere
-                            //oppure qui se ne deve semplicemente creare uno nuovo 
                             var getShowPromise = TvMaze.getShowInfosById(alert.showId);
                             getShowPromise.then(function (show) {
                                 const nextEpisodeLink = show._links.nextepisode.href;
@@ -69,7 +66,7 @@ exports.addic7edGetSubtitleAlert = function (alert, job, bot) {
                                     });
                                 }
                                 else
-                                    cancelJob(jobName);
+                                    ScheduleManager.cancelJob(jobName);
                             });
 
                             fs.unlinkSync(filename);

@@ -12,10 +12,8 @@ var ScheduleManager = require('./schedule/scheduleManager.js')
 
 var sessions = [];
 var bot = new TelegramBot(telegramBotToken, { polling: true });
-
 console.log("Starting bot...");
 Mongo.connectToDatabase();
-
 
 bot.onText(/\/start/, (msg, match) => {
     var session = Common.checkSessions(sessions, msg.chat);
