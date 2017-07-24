@@ -44,8 +44,9 @@ exports.connectToDatabase = function () {
         if (error) {
             console.log("SSH connection error: " + error);
         }
-        if(Conf.mongoHost == "raspi") Mongoose.connect('mongodb://localhost:');
-        else Mongoose.connect('mongodb://localhost:' + Conf.mongoConfig.localPort + '/' + Conf.dbName);
+        // if(Conf.mongoHost == "raspi") Mongoose.connect('mongodb://127.0.0.1:');
+        // else 
+        Mongoose.connect('mongodb://localhost:' + Conf.mongoConfig.localPort + '/' + Conf.dbName);
         db = Mongoose.connection;
         db.on('error', () => {
             console.log('DB connection error ')
@@ -58,7 +59,6 @@ exports.connectToDatabase = function () {
 
 
 exports.subscribe = function (session, bot, from) {
-    // bot.sendMessage(from.id, "Hey have patience I can't do this ...at least for now \uD83E\uDD14 \uD83E\uDD14");
     var alertsToStore = [];
     var alertsIdList = [];
     if (session.choosenSeriesAlert.show._links.nextepisode) {
@@ -73,6 +73,10 @@ exports.subscribe = function (session, bot, from) {
                     nextepisode_airdate: nextepisode.airdate,
                     nextepisode_season: nextepisode.season,
                     nextepisode_episode: nextepisode.number
+                    // FOR DEBUG:
+                    // nextepisode_airdate: "today",
+                    // nextepisode_season: "1",
+                    // nextepisode_episode: "1"
                 });
                 if (alertToStore._id === undefined) {
                     delete alertToStore._id;
@@ -87,7 +91,6 @@ exports.subscribe = function (session, bot, from) {
 
                             if (index == session.chosenLanguagesAlert.length - 1) {
                                 subscribeUser(alertsIdList, session, bot, from);
-                                Common.resetValues(session);
                             }
                         }
                     }
@@ -102,7 +105,6 @@ exports.subscribe = function (session, bot, from) {
 
 function subscribeUser(alertsList, session, bot, from) {
     var alertsToAdd = [];
-    console.log("ALERTLIST", alertsList);
     User.findOne({ chatId: from.id }, function (err, user) {
         if (!user) {
             var newUser = new User({
@@ -116,8 +118,10 @@ function subscribeUser(alertsList, session, bot, from) {
         } else {
             user._doc.alerts.addToSet(alertsList);
             user.save(function () {
-                bot.sendMessage(from.id, "You are now subscribed to " + session.choosenSeriesAlert + "! When next episode's subtitles for languages you chose will be out, I'll send them to you ;)");
+                bot.sendMessage(from.id, Common.successSubscribeMessage(session.choosenSeriesAlert.show.name));
+                Common.resetValues(session);
             });
+
         }
     });
 }
