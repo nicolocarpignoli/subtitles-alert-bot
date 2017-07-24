@@ -12,8 +12,9 @@ var agenda = null;
 //TODO rifattorizzare per bene sto passaggio di bot: main->mongo->scheduleManager->addic7ed
 
 exports.activateStoredSchedules = function (alert, bot) {
-    if (Conf.mongoHost == "raspi") setConnectionString('mongodb://127.0.0.1:');
-    else setConnectionString('mongodb://127.0.0.1:' + Conf.mongoConfig.localPort + '/' + Conf.dbName);
+    // if (Conf.mongoHost == "raspi") setConnectionString('mongodb://127.0.0.1:');
+    // else 
+        setConnectionString('mongodb://127.0.0.1:' + Conf.mongoConfig.localPort + '/' + Conf.dbName);
     scheduleFunctionGivenTime(alert.show_name + '_' + alert.language + '_giventime', alert.nextepisode_airdate, function (jobDate, doneJobDate) {
         scheduleFunctionInterval(alert.show_name + '_' + alert.language + '_interval', intervalSchedule, function (jobInterval, doneJobInterval) {
             Addic7ed.addic7edGetSubtitleAlert(alert, jobInterval, bot);   
