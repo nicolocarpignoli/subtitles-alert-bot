@@ -2,24 +2,32 @@ var fs = require('fs');
 var Conf = require('../conf.js');
 
 
-createLogLine = function(event,session){
-    var message =  Date.now() + ": action: " + event + ", from: " + session.chatId + ", " + session.firstName + ", of: ";
-    if(event == "get"){
-        message = message + session.choosenSeries.show.name + " S" + session.choosenSeason + " E" + session.choosenEpisode + " lang: " +  choosingLanguage;
+createLogLine = function(event,languages,session){
+    var message =  {
+        time: new Date().toString(),
+        action: event,
+        chatId : session.chatId,
+        firstName : session.firstName
+    };
+    if(event == "get" && languages.length > 0){
+        message.show = session.choosenSeries.show.name;
+        message.season =  session.choosenSeason;
+        message.episode =  session.choosenEpisode;
+        message.lang = languages;
     }else{
-        message = message + session.choosingSeriesAlert.show.name + " lang: ";
+        message.show =  session.choosenSeriesAlert.show.name;
+        message.lang = [];
         session.chosenLanguagesAlert.forEach(function(element) {
-            message += element + " ";
+            message.lang.push(element);
         });
     }
-    message = message + "\n";
-    return message;
+    return JSON.stringify(message);
 }
 
-exports.logEvent = function(event, session){
+exports.logEvent = function(event, languages, session){
     fs.exists(Conf.logFile, function (exists) {
         if (exists) {
-            fs.writeFile(Conf.logFile, this.createLogLine(event,session), function (err) {
+            fs.appendFile(Conf.logFile, this.createLogLine(event,languages,session), function (err) {
                 if (err) return console.log(err);
             });
         }
