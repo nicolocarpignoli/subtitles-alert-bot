@@ -44,8 +44,9 @@ exports.connectToDatabase = function () {
         if (error) {
             console.log("SSH connection error: " + error);
         }
-        if(Conf.mongoHost == "raspi") Mongoose.connect('mongodb://127.0.0.1:');
-        else Mongoose.connect('mongodb://127.0.0.1:' + Conf.mongoConfig.localPort + '/' + Conf.dbName);
+        // if(Conf.mongoHost == "raspi") Mongoose.connect('mongodb://127.0.0.1:');
+        // else 
+        Mongoose.connect('mongodb://127.0.0.1:' + Conf.mongoConfig.localPort + '/' + Conf.dbName);
         db = Mongoose.connection;
         db.on('error', () => {
             console.log('DB connection error ')
@@ -120,7 +121,7 @@ function subscribeUser(alertsList, session, bot, from) {
                 bot.sendMessage(from.id, Common.successSubscribeMessage(session.choosenSeriesAlert.show.name));
                 Common.resetValues(session);
             });
-            
+
         }
     });
 }
