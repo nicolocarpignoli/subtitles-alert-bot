@@ -14,10 +14,10 @@ var agenda = null;
 exports.activateStoredSchedules = function (alert, bot) {
     // if (Conf.mongoHost == "raspi") setConnectionString('mongodb://127.0.0.1:');
     // else 
-        setConnectionString('mongodb://127.0.0.1:' + Conf.mongoConfig.localPort + '/' + Conf.dbName);
+    setConnectionString('mongodb://127.0.0.1:' + Conf.mongoConfig.localPort + '/' + Conf.dbName);
     scheduleFunctionGivenTime(alert.show_name + '_' + alert.language + '_giventime', alert.nextepisode_airdate, function (jobDate, doneJobDate) {
         scheduleFunctionInterval(alert.show_name + '_' + alert.language + '_interval', intervalSchedule, function (jobInterval, doneJobInterval) {
-            Addic7ed.addic7edGetSubtitleAlert(alert, jobInterval, bot);   
+            Addic7ed.addic7edGetSubtitleAlert(alert, jobInterval, bot);
             doneJobInterval();
         });
         doneJobDate();
@@ -29,7 +29,7 @@ var setConnectionString = function (connectionStringP, maxConcurrency) {
 }
 
 var scheduleFunctionGivenTime = function (jobName, date, func, data) {
-    if(agenda == null) agenda = new Agenda({ db: { address: connectionString } });
+    if (agenda == null) agenda = new Agenda({ db: { address: connectionString } });
     data = (typeof data !== 'undefined') ? data : {};
     agenda.define(jobName, function (job, done) {
         func(job, done);
@@ -49,7 +49,7 @@ var scheduleFunctionGivenTime = function (jobName, date, func, data) {
 }
 
 var scheduleFunctionInterval = function (jobName, interval, func, data) {
-    if(agenda == null) agendaP = new Agenda({ db: { address: connectionString } });
+    if (agenda == null) agendaP = new Agenda({ db: { address: connectionString } });
     data = (typeof data !== 'undefined') ? data : {};
     agendaP.define(jobName, function (job1, done2) {
         func(job1, done2);
@@ -68,10 +68,9 @@ var scheduleFunctionInterval = function (jobName, interval, func, data) {
     });
 }
 
-var formatDate = function(date){
-    var tokens = date.split("-");
-    // starts at 00.00 of airDate 
-    return new Date(tokens[0], tokens[1], tokens[2], "00", "00", "00");
+var formatDate = function (date) {
+    // starts at 00.00 of airDate
+    return new Date(date + " 00:00:00");
 }
 
 var updateNextRunDate = function (job, newDate) {
