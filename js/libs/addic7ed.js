@@ -5,8 +5,10 @@ var Mongoose = require('mongoose');
 var Mongo = require('../db/mongo.js');
 var ScheduleManager = require('../schedule/scheduleManager.js');
 var TvMaze = require('../libs/tvMaze.js');
+var Logger = require('../log/logger.js');
 
 exports.addic7edGetSubtitle = function (session, languages = [], bot, chat, sessionsList) {
+    Logger.logEvent("get", languages, session);
     addic7edApi.search(session.choosenSeries.show.name, session.choosenSeason,
         session.choosenEpisode, languages).then(function (subtitlesList) {
             var subInfo = subtitlesList[0];

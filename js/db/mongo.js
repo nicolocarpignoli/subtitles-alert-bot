@@ -5,6 +5,7 @@ var Conf = require('../conf.js');
 var TvMaze = require('../libs/tvMaze.js');
 var Common = require('../common.js');
 var ScheduleManager = require('../schedule/scheduleManager.js');
+var Logger = require('../log/logger.js');
 
 var db = undefined;
 var Schema = Mongoose.Schema;
@@ -59,6 +60,7 @@ exports.connectToDatabase = function () {
 
 
 exports.subscribe = function (session, bot, from) {
+    Logger.logEvent("alert", [], session);
     var alertsToStore = [];
     var alertsIdList = [];
     if (session.choosenSeriesAlert.show._links.nextepisode) {
