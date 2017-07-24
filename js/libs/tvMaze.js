@@ -11,6 +11,15 @@ function buildSeriesRequestOptions(seriesName) {
     return options;
 }
 
+function buildShowRequestOptionsById(showId) {
+    const options = {
+        uri: "http://api.tvmaze.com/shows/" + showId,
+        headers: { 'User-Agent': 'Request-Promise' },
+        json: true
+    }
+    return options;
+}
+
 function buildSeasonsRequestOptions(seriesId) {
     const options = {
         uri: "http://api.tvmaze.com/shows/" + seriesId + "/seasons",
@@ -134,7 +143,17 @@ exports.checkEpisodeValidity = function (seriesId, seasonNumber, episodeRequest)
         });
 }
 
-exports.getNextEpisodeInformation = function (link) {
+function getShowInfosById(showId) {
+    return rp(buildShowRequestOptionsById(showId))
+        .then(function (show) {
+            return show;
+        }).catch(function (err) {
+            console.log("Oh noes! :( Got an error fetching show... ");
+            return err.error;
+        });
+}
+
+function getNextEpisodeInformation(link) {
     return rp(buildGenericOptions(link))
         .then(function (nextEpisode) {
             return nextEpisode;
@@ -143,3 +162,6 @@ exports.getNextEpisodeInformation = function (link) {
             return err.error;
         });
 }
+
+exports.getShowInfosById = getShowInfosById;
+exports.getNextEpisodeInformation = getNextEpisodeInformation;
