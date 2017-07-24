@@ -49,19 +49,19 @@ var scheduleFunctionGivenTime = function (jobName, date, func, data) {
 }
 
 var scheduleFunctionInterval = function (jobName, interval, func, data) {
-    if (agenda == null) agendaP = new Agenda({ db: { address: connectionString } });
+    if (agenda == null) agenda = new Agenda({ db: { address: connectionString } });
     data = (typeof data !== 'undefined') ? data : {};
-    agendaP.define(jobName, function (job1, done2) {
+    agenda.define(jobName, function (job1, done2) {
         func(job1, done2);
     });
-    agendaP.on("ready", function () {
-        agendaP.every(interval, jobName, data);
-        agendaP.start();
+    agenda.on("ready", function () {
+        agenda.every(interval, jobName, data);
+        agenda.start();
     });
-    agendaP.on('complete', function (job) {
+    agenda.on('complete', function (job) {
         console.log('Job %s finished', job.attrs.name);
         //if (job.attrs.data.count === 0) { //TODO a che serve? Se ha un senso rimettilo pure
-        // agendaP.cancel({ name: job.attrs.name }, function (err, numRemoved) {
+        // agenda.cancel({ name: job.attrs.name }, function (err, numRemoved) {
         //     console.log("Removed %s jobs with name %s", numRemoved, job.attrs.name);
         // });
         // }
