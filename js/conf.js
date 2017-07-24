@@ -13,3 +13,5 @@ exports.mongoConfig = {
 exports.dbName = 'subtitlesAlertBot';
 
 exports.mongoHost = Env.envType;
+
+exports.logFile = './log.txt':
