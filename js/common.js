@@ -11,6 +11,7 @@ exports.whichLanguageMessage = "Great! Which language do I have to search for?";
 exports.runningState = 'Running';
 exports.successSubscribeMessage = function (series) { return  "You are now subscribed to " + series + "! When next episode's subtitles for languages you chose will be out, I'll send them to you ;)"}
 exports.newEpisodeAlertMessage = function (firstName, showName) { return  "Hey " + firstName + ", subtitles for the last episode of " + showName + " are out! Here it is!"}
+exports.showAlertsMessage = "These are your active alerts right now:";
 
 exports.whichSeriesAlertMessage = function (firstName) { return "Ok " + firstName + "! Which series do you want to subscribe to?"; }
 exports.seriesNotRunningMessage = function (series)

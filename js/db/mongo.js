@@ -6,9 +6,12 @@ var TvMaze = require('../libs/tvMaze.js');
 var Common = require('../common.js');
 var ScheduleManager = require('../schedule/scheduleManager.js');
 var Logger = require('../log/logger.js');
+var BotGui = require('../gui/keyboards.js');
+
 
 var db = undefined;
 var Schema = Mongoose.Schema;
+Mongoose.set('debug', true);
 
 var Alert = Mongoose.model('Alert', new Schema({
     ids: String,
@@ -124,6 +127,23 @@ function subscribeUser(alertsList, session, bot, from) {
                 Common.resetValues(session);
             });
 
+        }
+    });
+}
+
+exports.getAlertsFromUser = function(id, bot){
+    var alerts = [];
+    User.findOne({ chatId: id }, function (err, user) {
+        if (user) {
+            user._doc.alerts.forEach(function(alertId, index) {
+                Alert.findById(Mongoose.Types.ObjectId(alertId), function (err, foundAlert) { 
+                    alerts.push(foundAlert);
+                        if(index == user.alerts.length - 1){
+                            if(alerts.length > 0) bot.sendMessage(id, Common.showAlertsMessage, BotGui.generateAlertsInlineKeyboard(alerts));
+                    }
+                });
+                    
+            });
         }
     });
 }
