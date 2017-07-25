@@ -48,3 +48,22 @@ exports.generatesLanguageInlineKeyboard = function (options){
     };
 };
 
+exports.generateAlertsInlineKeyboard = function (alerts){
+    let inlineOptions = [];
+    alerts.forEach(function(element) {
+        if(element != null){
+            inlineOptions.push([
+                    {
+                        text: element.show_name + " [" + element.language + "] S" + element.nextepisode_season + "E" + element.nextepisode_episode + " (" + element.nextepisode_airdate + ")",
+                        callback_data: element.show_name
+                    }
+                ]);
+        }
+    }, this);
+    return {
+        "parse_mode": "Markdown",
+        "reply_markup": {
+            "inline_keyboard": inlineOptions
+        }
+    };
+};

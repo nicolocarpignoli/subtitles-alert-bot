@@ -38,6 +38,11 @@ bot.onText(Common.STARTregExp, (msg, match) => {
     Common.pushInSessions(sessions, session);
 })
 
+bot.onText(Common.SHOWregExp, (msg, match) => {
+    var alerts = Mongo.getAlertsFromUser(msg.chat.id, bot);
+})
+
+
 bot.on('callback_query', (msg) => {
     var session = Common.checkSessions(sessions, msg.from);
     var userInput = msg.data;
