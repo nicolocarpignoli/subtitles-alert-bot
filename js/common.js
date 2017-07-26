@@ -1,4 +1,5 @@
 var Session = require('./models/session.js');
+var Languages = require('./models/languages.js'); 
 
 
 exports.instructionsMessage = "Welcome, my tv-addicted friend! What you want me to do today?"

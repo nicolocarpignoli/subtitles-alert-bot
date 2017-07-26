@@ -7,6 +7,7 @@ var telegramBotToken = '398340624:AAH3rtCzaX9Y2fDU0ssRrK4vhRVh1PpZA0w';
 var Session = require('./models/session.js');
 var Mongo = require('./db/mongo.js');
 var Core = require('./core.js');
+var Model = require('./models/languages.js'); 
 
 exports.handleGetLogic = function(userInput, session, sessions, msg, match, bot){
     if (Common.notACommand(userInput) && session.choosingSeries) {
