@@ -6,8 +6,7 @@ exports.generateKeyboardOptions = function () {
         "reply_markup": {
             "keyboard": [
             [{ text: Common.getCommand}],
-            [{text: Common.startAlertCommand},{ text:Common.stopAlertCommand}, 
-            {text: Common.showAlertsCommand}],
+            [{text: Common.startAlertCommand},{ text:Common.stopAlertCommand}],
             ],
             "resize_keyboard": true
         }

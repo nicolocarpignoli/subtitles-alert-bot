@@ -3,7 +3,6 @@ var Addic7ed = require('./libs/addic7ed.js');
 var BotGui = require('./gui/keyboards.js');
 var Common = require('./common.js');
 var TvMaze = require('./libs/tvMaze.js');
-var Model = require('./models/languages.js');
 var telegramBotToken = '398340624:AAH3rtCzaX9Y2fDU0ssRrK4vhRVh1PpZA0w';
 var Session = require('./models/session.js');
 var Mongo = require('./db/mongo.js');
