@@ -1,6 +1,5 @@
 var Session = require('./models/session.js');
-var Languages = require('./models/languages.js');
-var Language = require('./models/alert.js');
+
 
 exports.instructionsMessage = "Welcome, my tv-addicted friend! What you want me to do today?"
 exports.whichSeriesMessage = function (firstName) { return "Ok " + firstName + "! Which series do you want?"; }
@@ -37,21 +36,18 @@ exports.nextEpisodeNotAvailableMessage = "Too early for a subscription for this 
 exports.getCommand = "Get subtitles \uD83D\uDCE5";
 exports.startAlertCommand = "Subscribe \uD83D\uDCE2";
 exports.stopAlertCommand = "Unsubscribe \uD83D\uDEAB";
-exports.showAlertsCommand = "Show Subscriptions \uD83D\uDCC5";
 
 exports.doneLanguageCallback = "doneLanguageCallback";
 
 exports.GETregExp = new RegExp(this.getCommand);
 exports.STARTregExp = new RegExp(this.startAlertCommand);
 exports.STOPregExp = new RegExp(this.stopAlertCommand);
-exports.SHOWregExp = new RegExp(this.showAlertsCommand);
 
 exports.notACommand = function (userInput) {
     return userInput != this.getCommand &&
         userInput != this.startAlertCommand &&
-        userInput != this.stopAlertCommand &&
-        userInput != this.showAlertsCommand;
-}
+        userInput != this.stopAlertCommand;
+    }
 
 exports.isValidNumber = function (str) {
     var number = Math.floor(Number(str));
