@@ -8,6 +8,7 @@ var Session = require('./models/session.js');
 var Mongo = require('./db/mongo.js');
 var Core = require('./core.js');
 var ScheduleManager = require('./schedule/scheduleManager.js')
+require('events').EventEmitter.prototype._maxListeners = 100;
 
 var sessions = [];
 var bot = new TelegramBot(telegramBotToken, { polling: true });
@@ -38,9 +39,11 @@ bot.onText(Common.STARTregExp, (msg, match) => {
 })
 
 bot.onText(Common.STOPregExp, (msg, match) => {
+    var session = Common.checkSessions(sessions, msg.chat);
+    Common.resetValues(session);
+    session.deletingAlert = true;
     var alerts = Mongo.getAlertsFromUser(msg.chat.id, bot);
 })
-
 
 bot.on('callback_query', (msg) => {
     var session = Common.checkSessions(sessions, msg.from);
@@ -85,4 +88,7 @@ bot.onText(/(.*?)/, (msg, match) => {
     var session = Common.checkSessions(sessions, msg.chat);
     Core.handleGetLogic(userInput, session, sessions, msg, match, bot);
     Core.handleStartAlertLogic(userInput, session, sessions, msg, match, bot);
+    if(session.deletingAlert && (userInput == Common.revertCallback || Common.confirmCallback)){
+        Core.handleDeleteLogic(userInput, session, sessions, bot);
+    }
 })

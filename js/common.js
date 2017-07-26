@@ -11,6 +11,8 @@ exports.runningState = 'Running';
 exports.successSubscribeMessage = function (series) { return  "You are now subscribed to " + series + "! When next episode's subtitles for languages you chose will be out, I'll send them to you ;)"}
 exports.newEpisodeAlertMessage = function (firstName, showName) { return  "Hey " + firstName + ", subtitles for the last episode of " + showName + " are out! Here it is!"}
 exports.showAlertsMessage = "These are your active alerts right now:";
+exports.confirmCallback = "yes";
+exports.revertCallback = "no";
 
 exports.whichSeriesAlertMessage = function (firstName) { return "Ok " + firstName + "! Which series do you want to subscribe to?"; }
 exports.seriesNotRunningMessage = function (series)
@@ -109,6 +111,7 @@ exports.resetValues = function (session) {
         session.choosenSeriesAlert = {},
         session.ambiguousSeriesAlert = {}
     session.chosenLanguagesAlert = []
+    session.deletingAlert = false
 }
 
 exports.handleChosenSeries = function (chosenSeries, session, sessions) {

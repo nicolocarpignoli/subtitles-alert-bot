@@ -137,3 +137,7 @@ exports.handleStartAlertLogic = function(userInput, session, sessions, msg, matc
             bot.sendMessage(msg.chat.id, Common.languageNotFoundMessage, BotGui.generatesLanguageInlineKeyboard()); 
     } 
 }
+
+exports.handleDeleteLogic = function(userInput, session, sessions, bot){
+    //TODO Handle delete
+}
