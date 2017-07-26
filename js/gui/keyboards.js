@@ -54,11 +54,31 @@ exports.generateAlertsInlineKeyboard = function (alerts){
             inlineOptions.push([
                     {
                         text: element.show_name + " [" + element.language + "] S" + element.nextepisode_season + "E" + element.nextepisode_episode + " (" + element.nextepisode_airdate + ")",
-                        callback_data: element.show_name
+                        callback_data: element.show_name + "_" + element.language // re-using notation already used in agenda jobs name on database
                     }
                 ]);
         }
     }, this);
+    return {
+        "parse_mode": "Markdown",
+        "reply_markup": {
+            "inline_keyboard": inlineOptions
+        }
+    };
+};
+
+exports.generatesConfirmInlineKeyboard = function (){
+    let inlineOptions = [
+        [
+        {
+            text: "Yes", 
+            callback_data: Common.confirmCallback
+        },
+        {
+            text: "No", 
+            callback_data: Common.revertCallback            
+        }]
+    ];
     return {
         "parse_mode": "Markdown",
         "reply_markup": {
