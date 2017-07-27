@@ -35,8 +35,7 @@ exports.addic7edGetSubtitle = function (session, languages = [], bot, chat, sess
         });
 }
 
-exports.addic7edGetSubtitleAlert = function (alert, job, bot) {
-    job.attrs.data.hasToBeRemoved = false;
+exports.addic7edGetSubtitleAlert = function (alert, job, bot, doneJobInterval) {
     addic7edApi.search(alert.show_name, alert.nextepisode_season, alert.nextepisode_episode, alert.language).then(function (subtitlesList) {
         var subInfo = subtitlesList[0];
         if (subInfo != undefined) {
@@ -73,10 +72,14 @@ exports.addic7edGetSubtitleAlert = function (alert, job, bot) {
                             });
 
                             fs.unlinkSync(filename);
+                             doneJobInterval();
                         });
                     }
                 });
             });
+        } else {
+            job.attrs.data.hasToBeRemoved = false;
+            doneJobInterval();
         }
     });
 }

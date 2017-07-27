@@ -17,8 +17,7 @@ exports.activateStoredSchedules = function (alert, bot) {
     //setConnectionString('mongodb://localhost:' + Conf.mongoConfig.localPort + '/' + Conf.dbName);
     scheduleFunctionGivenTime(alert.show_name + '_' + alert.language + '_giventime', alert.nextepisode_airdate, function (jobDate, doneJobDate) {
         scheduleFunctionInterval(alert.show_name + '_' + alert.language + '_interval', intervalSchedule, function (jobInterval, doneJobInterval) {
-            Addic7ed.addic7edGetSubtitleAlert(alert, jobInterval, bot);
-            doneJobInterval();
+            Addic7ed.addic7edGetSubtitleAlert(alert, jobInterval, bot, doneJobInterval);
         }, {hasToBeRemoved:false});
         doneJobDate();
     });
