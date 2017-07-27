@@ -3,8 +3,8 @@ var Mongo = require('../db/mongo.js');
 var Addic7ed = require('../libs/addic7ed.js');
 var Conf = require('../conf.js');
 
-var intervalSchedule = '*/15 * * * *'; //every 15 minutes
-// var intervalSchedule = '1 minutes'; //test
+//var intervalSchedule = '*/15 * * * *'; //every 15 minutes
+var intervalSchedule = '10 seconds'; //test
 var connectionString;
 var usable = false;
 var agenda = null;
@@ -19,7 +19,7 @@ exports.activateStoredSchedules = function (alert, bot) {
         scheduleFunctionInterval(alert.show_name + '_' + alert.language + '_interval', intervalSchedule, function (jobInterval, doneJobInterval) {
             Addic7ed.addic7edGetSubtitleAlert(alert, jobInterval, bot);
             doneJobInterval();
-        });
+        }, {hasToBeRemoved:false});
         doneJobDate();
     });
 }
@@ -29,14 +29,15 @@ var setConnectionString = function (connectionStringP, maxConcurrency) {
 }
 
 var scheduleFunctionGivenTime = function (jobName, date, func, data) {
-    if (agenda == null) agenda = new Agenda({ mongo: Mongo.getMongoConnection() });
+    //if (agenda == null) agenda = new Agenda({ mongo: Mongo.getMongoConnection() });
+    var agenda = new Agenda({ mongo: Mongo.getMongoConnection() });
     data = (typeof data !== 'undefined') ? data : {};
     agenda.define(jobName, function (job, done) {
         func(job, done);
     });
     agenda.on("ready", function () {
-        agenda.schedule(formatDate(date), jobName, data);
-        // agenda.schedule(new Date(Date.now() + 5000), jobName, data); //test
+        //agenda.schedule(formatDate(date), jobName, data);
+        agenda.schedule(new Date(Date.now() + 5000), jobName, data); //test
         agenda.start();
         console.log("Job %s scheduled with nextRunAt %s", jobName, date);
     })
@@ -49,7 +50,8 @@ var scheduleFunctionGivenTime = function (jobName, date, func, data) {
 }
 
 var scheduleFunctionInterval = function (jobName, interval, func, data) {
-    if (agenda == null) agenda = new Agenda({ mongo: Mongo.getMongoConnection() });
+    //if (agenda == null) agenda = new Agenda({ mongo: Mongo.getMongoConnection() });
+    var agenda = new Agenda({ mongo: Mongo.getMongoConnection() });
     data = (typeof data !== 'undefined') ? data : {};
     agenda.define(jobName, function (job1, done2) {
         func(job1, done2);
@@ -60,11 +62,12 @@ var scheduleFunctionInterval = function (jobName, interval, func, data) {
     });
     agenda.on('complete', function (job) {
         console.log('Job %s finished', job.attrs.name);
-        //if (job.attrs.data.count === 0) { //TODO a che serve? Se ha un senso rimettilo pure
-        // agenda.cancel({ name: job.attrs.name }, function (err, numRemoved) {
-        //     console.log("Removed %s jobs with name %s", numRemoved, job.attrs.name);
-        // });
-        // }
+        console.log(job.attrs.data.hasToBeRemoved);
+        if (job.attrs.data.hasToBeRemoved) {   //TODO a che serve? Se ha un senso rimettilo pure
+            agenda.cancel({ name: job.attrs.name }, function (err, numRemoved) {
+                console.log("Removed %s jobs with name %s", numRemoved, job.attrs.name);
+            });
+        }
     });
 }
 
@@ -81,15 +84,9 @@ var updateNextRunDate = function (job, newDate) {
     });
 }
 
-var cancelJob = function (jobName) {
-    agenda.cancel({ name: jobName }, function (err, numRemoved) {
-        console.log("%s jobs removed named %s", numRemoved, jobName);
-    });
-}
 
 
 exports.setConnectionString = setConnectionString;
 exports.scheduleFunctionGivenTime = scheduleFunctionGivenTime;
 exports.scheduleFunctionInterval = scheduleFunctionInterval;
 exports.updateNextRunDate = updateNextRunDate;
-exports.cancelJob = cancelJob;
