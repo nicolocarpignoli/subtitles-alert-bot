@@ -36,6 +36,7 @@ exports.addic7edGetSubtitle = function (session, languages = [], bot, chat, sess
 }
 
 exports.addic7edGetSubtitleAlert = function (alert, job, bot) {
+    job.attrs.data.hasToBeRemoved = false;
     addic7edApi.search(alert.show_name, alert.nextepisode_season, alert.nextepisode_episode, alert.language).then(function (subtitlesList) {
         var subInfo = subtitlesList[0];
         if (subInfo != undefined) {
@@ -57,7 +58,7 @@ exports.addic7edGetSubtitleAlert = function (alert, job, bot) {
                                     bot.sendMessage(userDoc.chatId, Common.ambigousSubtitleMessage);
                                 }
                             });
-
+                            job.attrs.data.hasToBeRemoved = true;
                             var getShowPromise = TvMaze.getShowInfosById(alert.showId);
                             getShowPromise.then(function (show) {
                                 const nextEpisodeLink = show._links.nextepisode.href;
@@ -67,8 +68,8 @@ exports.addic7edGetSubtitleAlert = function (alert, job, bot) {
                                         ScheduleManager.updateNextRunDate(job, nextEp.airdate);
                                     });
                                 }
-                                else
-                                    ScheduleManager.cancelJob(jobName);
+                                //else
+                                    //ScheduleManager.cancelJob(jobName);
                             });
 
                             fs.unlinkSync(filename);
