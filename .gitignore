@@ -8,3 +8,5 @@ node_modules/
 *.srt
 
 js/env.js
+
+js/log.js
