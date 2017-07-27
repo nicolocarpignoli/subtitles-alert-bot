@@ -51,7 +51,8 @@ exports.connectToDatabase = function () {
         }
         // if(Conf.mongoHost == "raspi") Mongoose.connect('mongodb://127.0.0.1:');
         // else 
-        Mongoose.connect('mongodb://localhost:' + Conf.mongoConfig.localPort + '/' + Conf.dbName);
+        //Mongoose.connect('mongodb://localhost:' + Conf.mongoConfig.localPort + '/' + Conf.dbName);
+        Mongoose.connect('mongodb://localhost/' + Conf.dbName);
         db = Mongoose.connection;
         db.on('error', () => {
             console.log('DB connection error ')
