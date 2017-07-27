@@ -41,6 +41,7 @@ var Language = Mongoose.model('Language', new Schema({
 exports.Alert = Alert;
 exports.User = User;
 exports.Language = Language;
+exports.mongoConnection = db;
 
 
 exports.connectToDatabase = function () {

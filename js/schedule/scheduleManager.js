@@ -29,7 +29,7 @@ var setConnectionString = function (connectionStringP, maxConcurrency) {
 }
 
 var scheduleFunctionGivenTime = function (jobName, date, func, data) {
-    if (agenda == null) agenda = new Agenda({ db: { address: connectionString } });
+    if (agenda == null) agenda = new Agenda({ mongo: Mongo.mongoConnection });
     data = (typeof data !== 'undefined') ? data : {};
     agenda.define(jobName, function (job, done) {
         func(job, done);
@@ -49,7 +49,7 @@ var scheduleFunctionGivenTime = function (jobName, date, func, data) {
 }
 
 var scheduleFunctionInterval = function (jobName, interval, func, data) {
-    if (agenda == null) agenda = new Agenda({ db: { address: connectionString } });
+    if (agenda == null) agenda = new Agenda({ mongo: Mongo.mongoConnection });
     data = (typeof data !== 'undefined') ? data : {};
     agenda.define(jobName, function (job1, done2) {
         func(job1, done2);
