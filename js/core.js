@@ -3,11 +3,11 @@ var Addic7ed = require('./libs/addic7ed.js');
 var BotGui = require('./gui/keyboards.js');
 var Common = require('./common.js');
 var TvMaze = require('./libs/tvMaze.js');
-var Model = require('./models/languages.js');
 var telegramBotToken = '398340624:AAH3rtCzaX9Y2fDU0ssRrK4vhRVh1PpZA0w';
 var Session = require('./models/session.js');
 var Mongo = require('./db/mongo.js');
 var Core = require('./core.js');
+var Model = require('./models/languages.js'); 
 
 exports.handleGetLogic = function(userInput, session, sessions, msg, match, bot){
     if (Common.notACommand(userInput) && session.choosingSeries) {
@@ -137,4 +137,8 @@ exports.handleStartAlertLogic = function(userInput, session, sessions, msg, matc
         else
             bot.sendMessage(msg.chat.id, Common.languageNotFoundMessage, BotGui.generatesLanguageInlineKeyboard()); 
     } 
+}
+
+exports.handleDeleteLogic = function(userInput, session, sessions, bot){
+    //TODO Handle delete
 }

@@ -6,8 +6,7 @@ exports.generateKeyboardOptions = function () {
         "reply_markup": {
             "keyboard": [
             [{ text: Common.getCommand}],
-            [{text: Common.startAlertCommand},{ text:Common.stopAlertCommand}, 
-            {text: Common.showAlertsCommand}],
+            [{text: Common.startAlertCommand},{ text:Common.stopAlertCommand}],
             ],
             "resize_keyboard": true
         }
@@ -48,3 +47,42 @@ exports.generatesLanguageInlineKeyboard = function (options){
     };
 };
 
+exports.generateAlertsInlineKeyboard = function (alerts){
+    let inlineOptions = [];
+    alerts.forEach(function(element) {
+        if(element != null){
+            inlineOptions.push([
+                    {
+                        text: element.show_name + " [" + element.language + "] S" + element.nextepisode_season + "E" + element.nextepisode_episode + " (" + element.nextepisode_airdate + ")",
+                        callback_data: element.show_name + "_" + element.language // re-using notation already used in agenda jobs name on database
+                    }
+                ]);
+        }
+    }, this);
+    return {
+        "parse_mode": "Markdown",
+        "reply_markup": {
+            "inline_keyboard": inlineOptions
+        }
+    };
+};
+
+exports.generatesConfirmInlineKeyboard = function (){
+    let inlineOptions = [
+        [
+        {
+            text: "Yes", 
+            callback_data: Common.confirmCallback
+        },
+        {
+            text: "No", 
+            callback_data: Common.revertCallback            
+        }]
+    ];
+    return {
+        "parse_mode": "Markdown",
+        "reply_markup": {
+            "inline_keyboard": inlineOptions
+        }
+    };
+};
