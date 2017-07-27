@@ -17,6 +17,7 @@ function Session() {
     this.choosenSeriesAlert = {},
     this.ambiguousSeriesAlert = {}
     this.chosenLanguagesAlert = []
+    this.deletingAlert = false
 }
 
 module.exports = Session;
