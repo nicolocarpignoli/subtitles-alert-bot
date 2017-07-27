@@ -38,11 +38,9 @@ var Language = Mongoose.model('Language', new Schema({
         _id: false
     }));
 
-exports.Alert = Alert;
-exports.User = User;
-exports.Language = Language;
-exports.mongoConnection = db;
-
+exports.getMongoConnection = function(){
+    return db;
+}
 
 exports.connectToDatabase = function () {
     if(Conf.mongoHost == ""){
@@ -157,3 +155,8 @@ exports.getAlertsFromUser = function(id, bot){
         }
     });
 }
+
+
+exports.Alert = Alert;
+exports.User = User;
+exports.Language = Language;
