@@ -98,6 +98,18 @@ exports.removeSession = function (sessions, session) {
     if (sessionIdx != -1) sessions.splice(sessionIdx, 1);
 }
 
+exports.isAmbiguousTitle = function(name){
+    // returns true if the name contains 4 number between brackets (e.g.: (2344))
+    var firstBracket = name.indexOf("(");
+    var secondBracket = name.indexOf(")");
+    if(secondBracket > -1 && firstBracket > -1 ){
+        var number = name.substring(firstBracket, secondBracket);
+        return this.isValidNumber(number)
+    }else{
+        return false;
+    }
+}
+
 exports.resetValues = function (session) {
     session.choosingSeries = false;
     session.choosingSeason = false;
