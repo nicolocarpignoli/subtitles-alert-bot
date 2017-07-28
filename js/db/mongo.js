@@ -127,6 +127,8 @@ function subscribeUser(alertsList, session, bot, from) {
             });
             User.create(newUser, function (err, value) {
                 if (err) console.log("error saving new user");
+                bot.sendMessage(from.id, Common.successSubscribeMessage(session.choosenSeriesAlert.show.name));
+                Common.resetValues(session);
             });
         } else {
             user._doc.alerts.addToSet(alertsList);
