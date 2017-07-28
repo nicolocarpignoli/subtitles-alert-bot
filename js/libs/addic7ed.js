@@ -61,8 +61,8 @@ exports.addic7edGetSubtitleAlert = function (alert, job, bot, doneJobInterval) {
                             getShowPromise.then(function (show) {
                                 const nextEpisodeLink = show._links.nextepisode.href;
                                 if(show.status != 'Running'){
-                                    // TODO eliminare alert da db
-                                    // TODO eliminarlo da tutti gli utenti
+                                    Mongo.deleteAlert(alert);
+                                    Mongo.deleteAlertFromAllUsers(alert);
                                 }else{
                                     if (nextEpisodeLink) {
                                         var nextEpisodePromise = TvMaze.getNextEpisodeInformation(nextEpisodeLink);
@@ -70,7 +70,7 @@ exports.addic7edGetSubtitleAlert = function (alert, job, bot, doneJobInterval) {
                                             ScheduleManager.updateNextRunDate(job, nextEp.airdate);
                                         });
                                     }else{
-                                        // TODO mandare messaggio all'utente che non si ha ancora informaz. per il nuovo episodio
+                                        bot.sendMessage(userDoc.chatId, Common.noNextEpisodeYetMessage);
                                         // TODO Job Pending task su trello (#29)
                                     }
                                 }
