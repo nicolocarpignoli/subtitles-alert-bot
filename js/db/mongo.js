@@ -157,6 +157,21 @@ exports.getAlertsFromUser = function(id, bot){
 }
 
 
+exports.deleteAlert = function(alert){
+    Alert.findByIdAndRemove(Mongoose.Types.ObjectId(alert._id), function(err, foundAlert){
+        if(err){
+            console.log("Cannot remove alert ", err);
+        }
+    });
+}
+
+exports.deleteAlertFromAllUsers = function(alert){
+    this.deleteAlert(alert);
+    //TODO to continue
+}
+
+
+
 exports.Alert = Alert;
 exports.User = User;
 exports.Language = Language;
