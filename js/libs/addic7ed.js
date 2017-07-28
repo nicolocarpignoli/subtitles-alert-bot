@@ -52,8 +52,7 @@ exports.addic7edGetSubtitleAlert = function (alert, job, bot, doneJobInterval) {
                                 bot.sendDocument(userDoc.chatId, filename).then(function () {
                                     console.log("File sent to user " + userDoc.first_name);
                                 });
-                                //TODO modificare l'if perché potrebbero esistere serie con le parentesi nel nome
-                                if (alert.show_name.indexOf("(") > -1 && alert.show_name.indexOf(")") > -1) {
+                                if (Common.isAmbiguousTitle(alert.show_name)) {
                                     bot.sendMessage(userDoc.chatId, Common.ambigousSubtitleMessage);
                                 }
                             });
