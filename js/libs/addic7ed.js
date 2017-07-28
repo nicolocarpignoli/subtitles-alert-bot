@@ -60,14 +60,21 @@ exports.addic7edGetSubtitleAlert = function (alert, job, bot, doneJobInterval) {
                             var getShowPromise = TvMaze.getShowInfosById(alert.showId);
                             getShowPromise.then(function (show) {
                                 const nextEpisodeLink = show._links.nextepisode.href;
-                                if (nextEpisodeLink) {
-                                    var nextEpisodePromise = TvMaze.getNextEpisodeInformation(nextEpisodeLink);
-                                    nextEpisodePromise.then(function (nextEp) {
-                                        ScheduleManager.updateNextRunDate(job, nextEp.airdate);
-                                    });
+                                if(show.status != 'Running'){
+                                    // TODO eliminare alert da db
+                                    // TODO eliminarlo da tutti gli utenti
+                                }else{
+                                    if (nextEpisodeLink) {
+                                        var nextEpisodePromise = TvMaze.getNextEpisodeInformation(nextEpisodeLink);
+                                        nextEpisodePromise.then(function (nextEp) {
+                                            ScheduleManager.updateNextRunDate(job, nextEp.airdate);
+                                        });
+                                    }else{
+                                        // TODO mandare messaggio all'utente che non si ha ancora informaz. per il nuovo episodio
+                                        // TODO Job Pending task su trello (#29)
+                                    }
                                 }
-                                //else
-                                    //ScheduleManager.cancelJob(jobName);
+                                
                             });
 
                             fs.unlinkSync(filename);
