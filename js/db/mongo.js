@@ -71,7 +71,7 @@ exports.connectToDatabase = function () {
 
 
 exports.subscribe = function (session, bot, from) {
-    Logger.logEvent("alert", [], session);
+    //Logger.logEvent("alert", [], session);
     var alertsToStore = [];
     var alertsIdList = [];
     if (session.choosenSeriesAlert.show._links.nextepisode) {
@@ -83,13 +83,13 @@ exports.subscribe = function (session, bot, from) {
                     show_name: session.choosenSeriesAlert.show.name,
                     showId: session.choosenSeriesAlert.show.id,
                     language: languageElement,
-                    nextepisode_airdate: nextepisode.airdate,
-                    nextepisode_season: nextepisode.season,
-                    nextepisode_episode: nextepisode.number
+                    // nextepisode_airdate: nextepisode.airdate,
+                    // nextepisode_season: nextepisode.season,
+                    // nextepisode_episode: nextepisode.number
                     //FOR DEBUG:
-                    // nextepisode_airdate: "today",
-                    // nextepisode_season: "1",
-                    // nextepisode_episode: "1"
+                    nextepisode_airdate: "today",
+                    nextepisode_season: "1",
+                    nextepisode_episode: "1"
                 });
                 if (alertToStore._id === undefined) {
                     delete alertToStore._id;
