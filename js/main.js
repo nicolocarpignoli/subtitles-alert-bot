@@ -92,3 +92,7 @@ bot.onText(/(.*?)/, (msg, match) => {
         Core.handleDeleteLogic(userInput, session, sessions, bot);
     }
 })
+
+exports.getBotInstance = function(){
+    return bot;
+}

@@ -8,7 +8,7 @@ var TvMaze = require('../libs/tvMaze.js');
 var Logger = require('../log/logger.js');
 
 exports.addic7edGetSubtitle = function (session, languages = [], bot, chat, sessionsList) {
-    Logger.logEvent("get", languages, session);
+    //Logger.logEvent("get", languages, session);
     addic7edApi.search(session.choosenSeries.show.name, session.choosenSeason,
         session.choosenEpisode, languages).then(function (subtitlesList) {
             var subInfo = subtitlesList[0];
@@ -57,28 +57,8 @@ exports.addic7edGetSubtitleAlert = function (alert, job, bot, doneJobInterval) {
                                 }
                             });
                             job.attrs.data.hasToBeRemoved = true;
-                            var getShowPromise = TvMaze.getShowInfosById(alert.showId);
-                            getShowPromise.then(function (show) {
-                                const nextEpisodeLink = show._links.nextepisode.href;
-                                if(show.status != 'Running'){
-                                    Mongo.deleteAlert(alert);
-                                    Mongo.deleteAlertFromAllUsers(alert);
-                                }else{
-                                    if (nextEpisodeLink) {
-                                        var nextEpisodePromise = TvMaze.getNextEpisodeInformation(nextEpisodeLink);
-                                        nextEpisodePromise.then(function (nextEp) {
-                                            ScheduleManager.updateNextRunDate(job, nextEp.airdate);
-                                        });
-                                    }else{
-                                        bot.sendMessage(userDoc.chatId, Common.noNextEpisodeYetMessage);
-                                        // TODO Job Pending task su trello (#29)
-                                    }
-                                }
-                                
-                            });
-
                             fs.unlinkSync(filename);
-                             doneJobInterval();
+                            doneJobInterval();
                         });
                     }
                 });
