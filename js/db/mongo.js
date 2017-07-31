@@ -36,7 +36,8 @@ var Language = Mongoose.model('Language', new Schema({
     native: String
 }, {
         _id: false
-    }));
+}));
+
 
 exports.getMongoConnection = function(){
     return db;
