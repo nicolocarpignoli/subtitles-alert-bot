@@ -5,27 +5,19 @@ var Conf = require('../conf.js');
 var Main = require('../main.js');
 var TvMaze = require('../libs/tvMaze.js');
 
-//var intervalSchedule = '*/15 * * * *'; //every 15 minutes
-var intervalSchedule = '10 seconds'; //test
+var intervalSchedule = '*/15 * * * *'; //every 15 minutes
+//var intervalSchedule = '10 seconds'; //test
 var connectionString;
 var usable = false;
 var agenda = null;
 
 
-exports.activateStoredSchedules = function (alert, bot) {
-    scheduleFunctionGivenTime(alert.show_name + '_' + alert.language + '_giventime', alert.nextepisode_airdate, function (jobDate, doneJobDate, alert) {
-        scheduleFunctionInterval(alert.show_name + '_' + alert.language + '_interval', intervalSchedule, function (jobInterval, doneJobInterval, alert) {
-            Addic7ed.addic7edGetSubtitleAlert(alert, jobInterval, bot, doneJobInterval);
-        }, {hasToBeRemoved:false});
-        doneJobDate();
-    });
-}
 
 var setConnectionString = function (connectionStringP, maxConcurrency) {
     connectionString = connectionStringP;
 }
 
-var scheduleFunctionGivenTime = function (jobName, date, func, alert, data) {
+var scheduleFunctionGivenTime = function (jobName, date, alert, func, data) {
     var agenda = new Agenda({ mongo: Mongo.getMongoConnection() });
     data = (typeof data !== 'undefined') ? data : {};
     agenda.define(jobName, function (job, done) {
@@ -33,8 +25,8 @@ var scheduleFunctionGivenTime = function (jobName, date, func, alert, data) {
         func(job, done);
     });
     agenda.on("ready", function () {
-        //agenda.schedule(this.formatDate(date), jobName, data);
-        agenda.schedule(new Date(Date.now() + 5000), jobName, data); //test
+        agenda.schedule(formatDate(date), jobName, data);
+        //agenda.schedule(new Date(Date.now() + 5000), jobName, data); //test
         agenda.start();
         console.log("Job %s scheduled with nextRunAt %s", jobName, date);
     })
@@ -47,7 +39,7 @@ var scheduleFunctionGivenTime = function (jobName, date, func, alert, data) {
 
 }
 
-var scheduleFunctionInterval = function (jobName, interval, func, alert, data) {
+var scheduleFunctionInterval = function (jobName, interval, alert, func, data) {
     var agenda = new Agenda({ mongo: Mongo.getMongoConnection() });
     data = (typeof data !== 'undefined') ? data : {};
     agenda.define(jobName, function (job1, done2) {
@@ -75,7 +67,7 @@ var scheduleFunctionInterval = function (jobName, interval, func, alert, data) {
                             nextEpisodePromise.then(function (nextEp) {
                                 console.log("RE_ASSIGNING NEXTRUNB AL JOB: ", nextEp.airdate);
                                 job.alert.nextepisode_airdate = nextEp.airdate;
-                                this.activateStoredSchedules(job.alert, Main.getBotInstance());
+                                activateStoredSchedules(job.alert, Main.getBotInstance());
                             });
                         }else{
                             bot.sendMessage(userDoc.chatId, Common.noNextEpisodeYetMessage);
@@ -88,10 +80,20 @@ var scheduleFunctionInterval = function (jobName, interval, func, alert, data) {
     });
 }
 
-exports.formatDate = function (date) {
+var formatDate = function (date) {
     // starts at 00.00 of airDate
     return new Date(date + " 00:00:00");
 }
+
+var activateStoredSchedules = function (alert, bot) {
+    scheduleFunctionGivenTime(alert.show_name + '_' + alert.language + '_giventime', alert.nextepisode_airdate, alert,  function (jobDate, doneJobDate) {
+        scheduleFunctionInterval(alert.show_name + '_' + alert.language + '_interval', intervalSchedule, alert, function (jobInterval, doneJobInterval) {
+            Addic7ed.addic7edGetSubtitleAlert(alert, jobInterval, bot, doneJobInterval);
+        }, {hasToBeRemoved:false});
+        doneJobDate();
+    });
+}
+
 
 var updateNextRunDate = function (job, newDate) {
     job.nextRunAt = newDate;
@@ -101,8 +103,8 @@ var updateNextRunDate = function (job, newDate) {
     });
 }
 
-
-
+exports.formatDate = formatDate;
+exports.activateStoredSchedules = activateStoredSchedules;
 exports.setConnectionString = setConnectionString;
 exports.scheduleFunctionGivenTime = scheduleFunctionGivenTime;
 exports.scheduleFunctionInterval = scheduleFunctionInterval;
