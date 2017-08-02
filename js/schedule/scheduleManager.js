@@ -67,8 +67,8 @@ var scheduleFunctionInterval = function (jobName, interval, func, alert, data) {
                 getShowPromise.then(function (show) {
                     const nextEpisodeLink = show._links.nextepisode.href;
                     if(show.status != 'Running'){
-                        Mongo.deleteAlert(job.alert);
-                        Mongo.deleteAlertFromAllUsers(job.alert);
+                        Mongo.deleteAlert(job.alert);   //TODO verify if works
+                        Mongo.deleteAlertFromAllUsers(job.alert);   //TODO verify if works
                     }else{
                         if (nextEpisodeLink) {
                             var nextEpisodePromise = TvMaze.getNextEpisodeInformation(nextEpisodeLink);
