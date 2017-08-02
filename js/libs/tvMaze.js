@@ -51,9 +51,10 @@ function buildGenericOptions(link) {
     return options;
 }
 
-function resultMatchesQuery(firstSeries, query) {
-    var foundSeriesName = firstSeries.show.name;
-    return query.trim().toLowerCase() === foundSeriesName.trim().toLowerCase();
+
+function checkPerfectMatch(foundSeries, name){
+    var foundSeriesName = foundSeries.show.name;
+    return name.trim().toLowerCase() === foundSeriesName.trim().toLowerCase();
 }
 
 // checks if tvMaze's results contains the required season 
@@ -83,7 +84,9 @@ function checkDuplicates(list) {
     Object.keys(duplicates).forEach(function (element) {
         for (var i = 0; i < duplicates[element].length; i++) {
             var index = duplicates[element][i];
-            foundSeries[index].show.name += " (" + foundSeries[index].show.premiered.slice(0, 4) + ")";
+            if(foundSeries[index].show.premiered != null){
+                foundSeries[index].show.name += " (" + foundSeries[index].show.premiered.slice(0, 4) + ")";
+            }
         }
     });
     return {
@@ -103,15 +106,15 @@ exports.checkSeriesValidity = function (seriesName) {
         .then(function (foundSeries) {
             if (foundSeries && foundSeries.length == 0)
                 return [];
+            else if(checkPerfectMatch(foundSeries[0], seriesName)){
+                var result =  checkDuplicates(foundSeries);
+                if(!result["hasDuplicates"]) return [foundSeries[0]];
+                else return result["foundSeries"];
+            }
             else {
-                resultsMatchesQuery = resultMatchesQuery(foundSeries[0], seriesName);
-                if (resultsMatchesQuery)
-                    return [foundSeries[0]];
-                else {
-                    foundSeries = checkDuplicates(foundSeries);
-                    if (!foundSeries["hasDuplicates"]) return foundSeries = foundSeries["foundSeries"].slice(0, 6);
-                    return foundSeries["foundSeries"];
-                }
+                foundSeries = checkDuplicates(foundSeries);
+                if (!foundSeries["hasDuplicates"]) return foundSeries = foundSeries["foundSeries"].slice(0, 6);
+                return foundSeries["foundSeries"];
             }
         })
         .catch(function (err) {
