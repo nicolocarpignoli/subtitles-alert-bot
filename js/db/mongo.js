@@ -170,7 +170,19 @@ exports.deleteAlert = function(alert){
 
 exports.deleteAlertFromAllUsers = function(alert){
     this.deleteAlert(alert);
-    //TODO to continue
+    User.find({}, function(error, users){
+        if(!error){
+            users.forEach(function(user) {
+                var index = user.doc.alerts.indexOf(alert._id);
+                if(index > -1){
+                    var newAlertList = user.doc.alerts.splice(index,1);
+                    User.update({chatId : user.chatId, alerts : newAlertList}, function(err, doc){
+                        if(err) console.log("Error in updating alerts list of user");
+                    })
+                }
+            });
+        }
+    });
 }
 
 
