@@ -3,42 +3,42 @@ var Languages = require('./models/languages.js');
 var Language = require('./models/language.js'); 
 
 
-exports.instructionsMessage = "Welcome, my tv-addicted friend! What you want me to do today?"
-exports.whichSeriesMessage = function (firstName) { return "Ok " + firstName + "! Which series do you want?"; }
-exports.whichSeasonMessage = function (series) { return "Good you choose " + series + "! Which season?"; }
-exports.whichAmbigousSeasonMessage = function (series) { return "Great choice! Which season of " + series + " do you want?" }
+exports.instructionsMessage = "Welcome, my tv-addicted friend! What do you want me to do today?"
+exports.whichSeriesMessage = function (firstName) { return "Ok " + firstName + "! Which show do you want me to search for?"; }
+exports.whichSeasonMessage = function (series) { return "Good, you choose " + series + "! Which season do you desire?"; }
+exports.whichAmbigousSeasonMessage = function (series) { return "Great choice! Which season of " + series + " do you desire?" }
 exports.whichEpisodeMessage = "Great! Which episode?";
 exports.whichLanguageMessage = "Great! Which language do I have to search for?";
 exports.runningState = 'Running';
-exports.successSubscribeMessage = function (series) { return  "You are now subscribed to " + series + "! When next episode's subtitles for languages you chose will be out, I'll send them to you ;)"}
-exports.newEpisodeAlertMessage = function (firstName, showName) { return  "Hey " + firstName + ", subtitles for the last episode of " + showName + " are out! Here it is!"}
-exports.showAlertsMessage = "These are your active alerts right now:";
+exports.successSubscribeMessage = function (series) { return  "You are now subscribed to " + series + "! When the subtitles for the next episode of your show will be out, I'll send them to you immediately!"}
+exports.newEpisodeAlertMessage = function (firstName, showName) { return  "Hey " + firstName + ", subtitles for the last episode of " + showName + " are out! Check these out!"}
+exports.showAlertsMessage = "This list shows your active subscriptions right now:";
 exports.confirmCallback = "yes";
 exports.revertCallback = "no";
 //TODO questo messaggio di noNextEpisodeYetMessage andrà tolto quando avremo fatto la feature #29 su trello
-exports.noNextEpisodeYetMessage = "Hey, it seems that this season it's over or maybe our magic system cannot see the future of this show yet!"
+exports.noNextEpisodeYetMessage = "Hey, it seems that this season it's over or maybe our magic system cannot see the future for this show yet!"
 
 
-exports.whichSeriesAlertMessage = function (firstName) { return "Ok " + firstName + "! Which series do you want to subscribe to?"; }
+exports.whichSeriesAlertMessage = function (firstName) { return "Ok " + firstName + "! Which show do you want to subscribe to?"; }
 exports.seriesNotRunningMessage = function (series)
-{ return "Hey man I really think " + series + " is ended! If you want to get subtitles of it please try the GET functionality or try another series for SUBSCRIBE!" }
+{ return "Hey dude I really think " + series + " is ended! If you want to get subtitles of it please try the 'Get subtitles \uD83D\uDCE5' functionality or try another show!" }
 exports.whichLanguagesAlertMessage = function (series)
 { return "Ok you choose " + series + "! Please send me a language for your subtitles. You can send more than one language and click 'Done' at the end!"; }
 exports.languageAlreadyPresentMessage = "It seems you have already inserted this language, dude! Try with another one!";
 
-exports.failedSeriesMessage = "Sorry, no series found with that name \u2639\uFE0F Please try with another great tv-series title";
-exports.ambiguousSeriesMessage = "Mmh ambiguous! \uD83E\uDD14 Which of these? (if none of these is the series you are looking for, try GET again with a more precise name)"
+exports.failedSeriesMessage = "Sorry, no shows found with that name \u2639\uFE0F Please try with another great tv-show title";
+exports.ambiguousSeriesMessage = "Mmh ambiguous! \uD83E\uDD14 Which of these? (If none of these is the show you are looking for, try again with a more precise name)"
 exports.notANumberMessage = "This doesn't seem to be a valid number, dude... retry!";
-exports.seasonNotFoundMessage = "Season not found or not out yet. Retry or restart GET!";
-exports.episodeNotFoundMessage = "Episode doesn't exist or not found. Retry or restart GET!";
+exports.seasonNotFoundMessage = "Season not found or not out yet. Retry or restart 'Get subtitles \uD83D\uDCE5'!";
+exports.episodeNotFoundMessage = "Episode doesn't exist or not found. Retry or restart 'Get subtitles \uD83D\uDCE5'!";
 exports.languageNotFoundMessage = "Sorry, language not found! Try typing your language as three-letter code, international form or native form!"
 exports.subtitleNofFoundInAddic7edMessage = "Oh noes! We can't find your subtitles in our magic system! I guess nobody has subbed this yet... try again with a different language or a new request!"
 exports.LoadingSubtitleMessage = "Great! I'm fetching for your subtitle now mate \uD83D\uDCE5";
-exports.ambigousSubtitleMessage = "Hey, watch out! It's possible that you choose a very ambiguous series and our system find the only match it has!";
-exports.chooseAtLeastALanguageMessage = "Hey, you have to choose at least one language for your subscription! Try again sending me a valid language!";
+exports.ambigousSubtitleMessage = "Hey, watch out! It's possible that you choose a very ambiguous tv-show title and our system find the only match it has!";
+exports.chooseAtLeastALanguageMessage = "Hey, you have to choose at least one language for your subscription! Try again and send me a valid language!";
 exports.subscribingToMessage = "Ok, I'm gonna subscribe you! Please wait a sec \u270F\uFE0F \uD83D\uDDD3";
 exports.addLanguageMessage = "Ok gotcha! Send me another language or click on 'Done' to subscribe";
-exports.nextEpisodeNotAvailableMessage = "Too early for a subscription for this series. We haven't got enough informations yet! Try again on the next weeks!";
+exports.nextEpisodeNotAvailableMessage = "Too early for a subscription for this show. We haven't got enough informations yet! Try again on the next weeks!";
 
 exports.getCommand = "Get subtitles \uD83D\uDCE5";
 exports.startAlertCommand = "Subscribe \uD83D\uDCE2";
@@ -49,6 +49,12 @@ exports.doneLanguageCallback = "doneLanguageCallback";
 exports.GETregExp = new RegExp(this.getCommand);
 exports.STARTregExp = new RegExp(this.startAlertCommand);
 exports.STOPregExp = new RegExp(this.stopAlertCommand);
+
+exports.helpMessage = "A bot for subscribe and download subtitles for your favourite tv shows.\nUse Get subtitles \uD83D\uDCE5 for instant download of a single subtitles file" +
+    "\nUse Subscribe \uD83D\uDCE2 to start a subscription to subtitles for a tv show. Just relax and as soon as they're out you will receive your subtitles on your phone" +
+    "\nUse Unsubscribe \uD83D\uDEAB for a list of your active subscriptions. You can also delete the subscriptions." +
+    "\nType /help for seeing this help message any time you want." +
+    "\nFollow us on: ";
 
 exports.notACommand = function (userInput) {
     return userInput != this.getCommand &&
