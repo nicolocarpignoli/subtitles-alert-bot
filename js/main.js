@@ -22,6 +22,11 @@ bot.onText(/\/start/, (msg, match) => {
         BotGui.generateKeyboardOptions());
 });
 
+bot.onText(/\/help/, (msg, match) => {
+    bot.sendMessage(msg.chat.id, Common.helpMessage,
+        BotGui.generateKeyboardOptions());
+});
+
 bot.onText(Common.GETregExp, (msg, match) => {
     var session = Common.checkSessions(sessions, msg.chat);
     Common.resetValues(session);
