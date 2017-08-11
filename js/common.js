@@ -17,7 +17,7 @@ exports.confirmCallback = "yes";
 exports.revertCallback = "no";
 //TODO questo messaggio di noNextEpisodeYetMessage andrà tolto quando avremo fatto la feature #29 su trello
 exports.noNextEpisodeYetMessage = "Hey, it seems that this season it's over or maybe our magic system cannot see the future for this show yet!"
-
+exports.noAlertMessage = "It seems you have no active subscriptions right now... Try to add some!"
 
 exports.whichSeriesAlertMessage = function (firstName) { return "Ok " + firstName + "! Which show do you want to subscribe to?"; }
 exports.seriesNotRunningMessage = function (series)

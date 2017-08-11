@@ -142,19 +142,24 @@ function subscribeUser(alertsList, session, bot, from) {
     });
 }
 
-exports.getAlertsFromUser = function(id, bot){
+exports.getAlertsFromUser = function(id, bot, session){
     var alerts = [];
     User.findOne({ chatId: id }, function (err, user) {
         if (user) {
-            user._doc.alerts.forEach(function(alertId, index) {
-                Alert.findById(Mongoose.Types.ObjectId(alertId), function (err, foundAlert) { 
-                    alerts.push(foundAlert);
-                        if(index == user.alerts.length - 1){
-                            if(alerts.length > 0) bot.sendMessage(id, Common.showAlertsMessage, BotGui.generateAlertsInlineKeyboard(alerts));
-                    }
+            if(user._doc.alerts.length > 0){
+                user._doc.alerts.forEach(function(alertId, index) {
+                    Alert.findById(Mongoose.Types.ObjectId(alertId), function (err, foundAlert) { 
+                        alerts.push(foundAlert);
+                            if(index == user.alerts.length - 1){
+                                if(alerts.length > 0) bot.sendMessage(id, Common.showAlertsMessage, BotGui.generateAlertsInlineKeyboard(alerts));
+                        }
+                    });
+                        
                 });
-                    
-            });
+            }else{
+               bot.sendMessage(id, Common.noAlertMessage, BotGui.generateKeyboardOptions());
+               Common.resetValues(session); 
+            }
         }
     });
 }
