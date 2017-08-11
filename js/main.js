@@ -50,7 +50,7 @@ bot.onText(Common.STOPregExp, (msg, match) => {
     var session = Common.checkSessions(sessions, msg.chat);
     Common.resetValues(session);
     session.deletingAlert = true;
-    var alerts = Mongo.getAlertsFromUser(msg.chat.id, bot);
+    var alerts = Mongo.getAlertsFromUser(msg.chat.id, bot, session);
 })
 
 bot.on('callback_query', (msg) => {
