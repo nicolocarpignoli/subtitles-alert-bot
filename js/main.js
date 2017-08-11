@@ -3,11 +3,14 @@ var Addic7ed = require('./libs/addic7ed.js');
 var BotGui = require('./gui/keyboards.js');
 var Common = require('./common.js');
 var TvMaze = require('./libs/tvMaze.js');
-var telegramBotToken = '398340624:AAH3rtCzaX9Y2fDU0ssRrK4vhRVh1PpZA0w';
 var Session = require('./models/session.js');
 var Mongo = require('./db/mongo.js');
 var Core = require('./core.js');
 var ScheduleManager = require('./schedule/scheduleManager.js')
+
+var telegramBotToken = '398340624:AAH3rtCzaX9Y2fDU0ssRrK4vhRVh1PpZA0w';
+var paymentTestToken = 'NjExZmQ4MTcxYjhi';
+
 require('events').EventEmitter.prototype._maxListeners = 100;
 
 var sessions = [];
