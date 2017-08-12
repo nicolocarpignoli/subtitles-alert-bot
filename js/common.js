@@ -82,7 +82,7 @@ exports.buildLinkMessage = function (link) {
     return 'There it is! If you want more subtitles of this episode please visit: www.addic7ed.com' + link;
 }
 
-exports.checkSessions = function (sessions, msg) {
+exports.getUserSession = function (sessions, msg) {
     let userSession = sessions.find(function (session) {
         return session.chatId === msg.id;
     }) || new Session();

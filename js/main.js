@@ -19,7 +19,7 @@ console.log("Starting bot...");
 Mongo.connectToDatabase();
 
 bot.onText(/\/start/, (msg, match) => {
-    var session = Common.checkSessions(sessions, msg.chat);
+    var session = Common.getUserSession(sessions, msg.chat);
     Common.resetValues(session);
     if (!session.choosingSeries) bot.sendMessage(msg.chat.id, Common.instructionsMessage,
         BotGui.generateKeyboardOptions());
@@ -31,7 +31,7 @@ bot.onText(/\/help/, (msg, match) => {
 });
 
 bot.onText(Common.GETregExp, (msg, match) => {
-    var session = Common.checkSessions(sessions, msg.chat);
+    var session = Common.getUserSession(sessions, msg.chat);
     Common.resetValues(session);
     bot.sendMessage(msg.chat.id, Common.whichSeriesMessage(msg.chat.first_name));
     session.choosingSeries = true;
@@ -39,7 +39,7 @@ bot.onText(Common.GETregExp, (msg, match) => {
 })
 
 bot.onText(Common.STARTregExp, (msg, match) => {
-    var session = Common.checkSessions(sessions, msg.chat);
+    var session = Common.getUserSession(sessions, msg.chat);
     Common.resetValues(session);
     bot.sendMessage(msg.chat.id, Common.whichSeriesAlertMessage(msg.chat.first_name));
     session.choosingSeriesAlert = true;
@@ -47,7 +47,7 @@ bot.onText(Common.STARTregExp, (msg, match) => {
 })
 
 bot.onText(Common.STOPregExp, (msg, match) => {
-    var session = Common.checkSessions(sessions, msg.chat);
+    var session = Common.getUserSession(sessions, msg.chat);
     Common.resetValues(session);
     session.deletingAlert = true;
     Common.pushInSessions(sessions, session);
@@ -55,7 +55,7 @@ bot.onText(Common.STOPregExp, (msg, match) => {
 })
 
 bot.on('callback_query', (msg) => {
-    var session = Common.checkSessions(sessions, msg.from);
+    var session = Common.getUserSession(sessions, msg.from);
     var userInput = msg.data;
     if (Common.notACommand(userInput) && session.choosingSeries && !Common.isEmpty(session.ambiguousSeries)) {
         var seriesObj = session.ambiguousSeries.find(function (elem) {
@@ -65,35 +65,35 @@ bot.on('callback_query', (msg) => {
         bot.sendMessage(msg.from.id, Common.whichAmbigousSeasonMessage(userInput));
     }
     if (Common.notACommand(userInput) && session.choosingSeriesAlert && !Common.isEmpty(session.ambiguousSeriesAlert)) {
-        var seriesObj = session.ambiguousSeriesAlert.find(function (elem) { 
-            return elem.show.name === userInput; 
+        var seriesObj = session.ambiguousSeriesAlert.find(function (elem) {
+            return elem.show.name === userInput;
         });
         Common.handleChosenSeriesAlert(seriesObj, session, sessions);
-        if(seriesObj.show.status !== Common.runningState){
+        if (seriesObj.show.status !== Common.runningState) {
             bot.sendMessage(msg.from.id, Common.seriesNotRunningMessage(seriesObj.show.name));
-        }else{
+        } else {
             bot.sendMessage(msg.from.id, Common.whichLanguagesAlertMessage(seriesObj.show.name),
                 BotGui.generatesLanguageInlineKeyboard());
             Common.resetValues(session);
             session.choosingLanguageAlert = true;
             session.choosenSeriesAlert = seriesObj;
-            Common.pushInSessions(sessions,session);
+            Common.pushInSessions(sessions, session);
         }
     }
-    if (Common.notACommand(userInput) && session.choosingLanguageAlert && userInput == Common.doneLanguageCallback){        
-        if(session.chosenLanguagesAlert.length == 0){
+    if (Common.notACommand(userInput) && session.choosingLanguageAlert && userInput == Common.doneLanguageCallback) {
+        if (session.chosenLanguagesAlert.length == 0) {
             bot.sendMessage(msg.from.id, Common.chooseAtLeastALanguageMessage, BotGui.generatesLanguageInlineKeyboard());
-        }else{
+        } else {
             session.choosingLanguageAlert = false;
             bot.sendMessage(msg.from.id, Common.subscribingToMessage);
             Mongo.subscribe(session, bot, msg.from);
         }
     }
-    if (Common.notACommand(userInput) && session.deletingAlert && userInput.indexOf("_") > -1){ 
+    if (Common.notACommand(userInput) && session.deletingAlert && userInput.indexOf("_") > -1) {
         // if exist remove jobs named "showname_language_interval/giventime"
         var seriesName = userInput.length > 1 ? userInput.substring(0, userInput.indexOf('_')) : null;
         session.alertToDelete = userInput;
-        Common.pushInSessions(sessions,session);
+        Common.pushInSessions(sessions, session);
         if (seriesName != null) {
             session.deletingAlert = false;
             session.confirmDelete = true;
@@ -107,11 +107,11 @@ bot.on('callback_query', (msg) => {
 
 bot.onText(/(.*?)/, (msg, match) => {
     var userInput = match.input;
-    var session = Common.checkSessions(sessions, msg.chat);
+    var session = Common.getUserSession(sessions, msg.chat);
     Core.handleGetLogic(userInput, session, sessions, msg, match, bot);
     Core.handleStartAlertLogic(userInput, session, sessions, msg, match, bot);
 });
 
-exports.getBotInstance = function(){
+exports.getBotInstance = function () {
     return bot;
 }
