@@ -92,8 +92,8 @@ exports.subscribe = function (session, bot, from) {
                     // nextepisode_season: "1",
                     // nextepisode_episode: "1"
                 });
-                if (alertToStore._id === undefined) {
-                    delete alertToStore._id;
+                if (alertToStore._doc._id === undefined) {
+                    delete alertToStore._doc._id;
                 }
                 Alert.findOneAndUpdate({ showId: alertToStore.showId, language: languageElement },
                     alertToStore, { new: true, upsert: true },
@@ -170,10 +170,7 @@ exports.getAlertsFromUser = function(id, bot, session){
 
 exports.deleteAlertFromSingleUser = function(chatId,alert, userId, bot){
     var tokens = alert.split("_");
-    console.log(tokens[0]);
-    console.log(tokens[1]);
     Alert.findOne({show_name : tokens[0], language: tokens[1]}, function(err, foundAlert){
-        console.log(foundAlert);
         if(!err && foundAlert != null){
             this.deleteAlertFromUser(chatId,userId, foundAlert, bot);
         }
@@ -182,16 +179,24 @@ exports.deleteAlertFromSingleUser = function(chatId,alert, userId, bot){
 
 deleteAlertFromUser = function(chatId, userId, alert, bot){
     User.findOne({ chatId: userId }, function (err, user) {
-        if(!err){
-            var index = user._doc.alerts.indexOf(alert._id);
-            var newAlertList = user._doc.alerts.splice(index,1);
-                User.update({chatId : user.chatId, alerts : newAlertList}, function(err, doc){
-                    if(err){
-                         console.log("Error in updating alerts list of user");
-                    }else{
-                        console.log("Removed active alert: " + alert);
-                        bot.sendMessage(chatId, Common.deletedAlertMessage, BotGui.generateKeyboardOptions()); 
-                    }
+        if(!err){   
+            var index = user._doc.alerts.indexOf(alert._doc._id);
+            var newAlertList = user._doc.alerts.filter(function(value, arrIndex){
+                return index !== arrIndex;
+            });
+            var userToStore = new User({
+                chatId : userId,
+                first_name: user._doc.first_name,
+                alerts: newAlertList
+            });
+            delete userToStore._doc._id;
+            User.findOneAndUpdate({chatId : userId}, userToStore, { new: true, upsert: true }, function(err, doc){
+                if(err){
+                    console.log("Error in updating alerts list of user " + err);
+                }else{
+                    console.log("Removed active alert: " + alert._id);
+                    bot.sendMessage(chatId, Common.deletedAlertMessage, BotGui.generateKeyboardOptions()); 
+                }
             }) 
         }
     });
@@ -212,8 +217,16 @@ exports.deleteAlertFromAllUsers = function(alert){
             users.forEach(function(user) {
                 var index = user.doc.alerts.indexOf(alert._id);
                 if(index > -1){
-                    var newAlertList = user.doc.alerts.splice(index,1);
-                    User.update({chatId : user.chatId, alerts : newAlertList}, function(err, doc){
+                    var newAlertList = user._doc.alerts.filter(function(value, arrIndex){
+                        return index !== arrIndex;
+                    });
+                    var userToStore = new User({
+                        chatId : user._doc.chatId,
+                        first_name: user._doc.first_name,
+                        alerts: newAlertList
+                    });
+                    delete userToStore._doc._id;
+                    User.findOneAndUpdate({chatId : user._doc.chatId},userToStore, { new: true, upsert: true }, function(err, doc){
                         if(err) console.log("Error in updating alerts list of user");
                     })
                 }
