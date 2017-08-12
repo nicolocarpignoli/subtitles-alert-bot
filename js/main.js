@@ -89,9 +89,14 @@ bot.on('callback_query', (msg) => {
             Mongo.subscribe(session, bot, msg.from);
         }
     }
-    if (Common.notACommand(userInput) && session.deletingAlert && userInput.indexOf("_" > -1)){ 
+    if(Common.notACommand(userInput) && session.deletingAlert && (userInput == Common.revertCallback || userInput == Common.confirmCallback)){
+        Core.handleDeleteLogic(msg, userInput, session, sessions, bot);
+    }
+    if (Common.notACommand(userInput) && session.deletingAlert && userInput.indexOf("_") > -1){ 
         // if exist remove jobs named "showname_language_interval/giventime"
         var seriesName = userInput.length > 1 ? userInput.substring(0, userInput.indexOf('_')) : null;
+        session.alertToDelete = userInput;
+        Common.pushInSessions(sessions,session);
         if(seriesName != null) bot.sendMessage(msg.from.id, Common.areYouSureRemoveAlert(seriesName), BotGui.generatesConfirmInlineKeyboard());
     }
 
@@ -102,9 +107,6 @@ bot.onText(/(.*?)/, (msg, match) => {
     var session = Common.checkSessions(sessions, msg.chat);
     Core.handleGetLogic(userInput, session, sessions, msg, match, bot);
     Core.handleStartAlertLogic(userInput, session, sessions, msg, match, bot);
-    if(session.deletingAlert && (userInput == Common.revertCallback || userInput == Common.confirmCallback)){
-        Core.handleDeleteLogic(msg, userInput, session, sessions, bot);
-    }
 })
 
 exports.getBotInstance = function(){

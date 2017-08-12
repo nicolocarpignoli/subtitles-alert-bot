@@ -18,6 +18,7 @@ function Session() {
     this.ambiguousSeriesAlert = {}
     this.chosenLanguagesAlert = []
     this.deletingAlert = false
+    this.alertToDelete = "";
 }
 
 module.exports = Session;

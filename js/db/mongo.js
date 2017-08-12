@@ -169,17 +169,15 @@ exports.getAlertsFromUser = function(id, bot, session){
 }
 
 exports.deleteAlertFromSingleUser = function(chatId,alert, userId, bot){
-    Alert.findOne({name : alert + "_giventime"}, function(err, foundAlert){
-        if(!err){
+    var tokens = alert.split("_");
+    console.log(tokens[0]);
+    console.log(tokens[1]);
+    Alert.findOne({show_name : tokens[0], language: tokens[1]}, function(err, foundAlert){
+        console.log(foundAlert);
+        if(!err && foundAlert != null){
             this.deleteAlertFromUser(chatId,userId, foundAlert, bot);
         }
     });
-    Alert.findOne({name : alert + "_interval"}, function(err, foundAlert){
-        if(!err){
-            this.deleteAlertFromUser(chatId,userId, foundAlert, bot);
-        }
-    });
-    
 }
 
 deleteAlertFromUser = function(chatId, userId, alert, bot){
