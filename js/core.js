@@ -141,11 +141,10 @@ exports.handleStartAlertLogic = function(userInput, session, sessions, msg, matc
 
 exports.handleDeleteLogic = function(msg, userInput, session, sessions, bot){
     if(userInput == Common.revertCallback){
-        Mongo.getAlertsFromUser(msg.chat.id, bot, session);
+        bot.sendMessage(msg.from.id, Common.instructionsMessage, BotGui.generateKeyboardOptions());
     }else{
-        Common.resetValues(session);
-        Common.pushInSessions(sessions,session);
-        Mongo.deleteAlertFromSingleUser(msg.chat.id,userInput, session.chatId, bot);
-        bot.sendMessage(msg.chat.id, Common.instructionsMessage, BotGui.generateKeyboardOptions());
+        Mongo.deleteAlertFromSingleUser(msg.from.id,session.alertToDelete, session.chatId, bot);
     }
+    Common.resetValues(session);
+    Common.pushInSessions(sessions,session);
 }
