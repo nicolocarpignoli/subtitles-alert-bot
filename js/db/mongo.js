@@ -144,17 +144,21 @@ function subscribeUser(alertsList, session, bot, from) {
 
 exports.getAlertsFromUser = function(id, bot, session){
     var alerts = [];
+    var counter = 0;
     User.findOne({ chatId: id }, function (err, user) {
         if (user) {
             if(user._doc.alerts.length > 0){
-                user._doc.alerts.forEach(function(alertId, index) {
+                user._doc.alerts.forEach(function(alertId) {
                     Alert.findById(Mongoose.Types.ObjectId(alertId), function (err, foundAlert) { 
                         alerts.push(foundAlert);
-                            if(index == user.alerts.length - 1){
-                                if(alerts.length > 0) bot.sendMessage(id, Common.showAlertsMessage, BotGui.generateAlertsInlineKeyboard(alerts));
-                        }
+                            if(counter == user.alerts.length - 1){
+                                counter = 0;
+                                if(alerts.length > 0 && alerts.length == user.alerts.length) 
+                                    bot.sendMessage(id, Common.showAlertsMessage, BotGui.generateAlertsInlineKeyboard(alerts));
+                            }else{
+                                counter++;
+                            }
                     });
-                        
                 });
             }else{
                bot.sendMessage(id, Common.noAlertMessage, BotGui.generateKeyboardOptions());
