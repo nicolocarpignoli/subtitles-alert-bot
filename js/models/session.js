@@ -1,4 +1,3 @@
-
 function Session() {
     //get
     this.firstName = "";
@@ -17,7 +16,9 @@ function Session() {
     this.choosenSeriesAlert = {},
     this.ambiguousSeriesAlert = {}
     this.chosenLanguagesAlert = []
+    //deletealert
     this.deletingAlert = false
+    this.confirmDelete = false
     this.alertToDelete = "";
 }
 
