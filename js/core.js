@@ -139,6 +139,13 @@ exports.handleStartAlertLogic = function(userInput, session, sessions, msg, matc
     } 
 }
 
-exports.handleDeleteLogic = function(userInput, session, sessions, bot){
-    //TODO Handle delete
+exports.handleDeleteLogic = function(msg, userInput, session, sessions, bot){
+    if(userInput == Common.revertCallback){
+        Mongo.getAlertsFromUser(msg.chat.id, bot, session);
+    }else{
+        Common.resetValues(session);
+        Common.pushInSessions(sessions,session);
+        Mongo.deleteAlertFromSingleUser(msg.chat.id,userInput, session.chatId, bot);
+        bot.sendMessage(msg.chat.id, Common.instructionsMessage, BotGui.generateKeyboardOptions());
+    }
 }

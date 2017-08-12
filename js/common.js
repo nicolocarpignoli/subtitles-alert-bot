@@ -39,6 +39,8 @@ exports.chooseAtLeastALanguageMessage = "Hey, you have to choose at least one la
 exports.subscribingToMessage = "Ok, I'm gonna subscribe you! Please wait a sec \u270F\uFE0F \uD83D\uDDD3";
 exports.addLanguageMessage = "Ok gotcha! Send me another language or click on 'Done' to subscribe";
 exports.nextEpisodeNotAvailableMessage = "Too early for a subscription for this show. We haven't got enough informations yet! Try again on the next weeks!";
+exports.areYouSureRemoveAlert = function (series) {return "Are you sure you want to remove this " + series + " active alert?"}
+exports.deletedAlertMessage = "Subscription successfully deleted!"
 
 exports.getCommand = "Get subtitles \uD83D\uDCE5";
 exports.startAlertCommand = "Subscribe \uD83D\uDCE2";

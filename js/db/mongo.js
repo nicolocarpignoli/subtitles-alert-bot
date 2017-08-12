@@ -168,6 +168,36 @@ exports.getAlertsFromUser = function(id, bot, session){
     });
 }
 
+exports.deleteAlertFromSingleUser = function(chatId,alert, userId, bot){
+    Alert.findOne({name : alert + "_giventime"}, function(err, foundAlert){
+        if(!err){
+            this.deleteAlertFromUser(chatId,userId, foundAlert, bot);
+        }
+    });
+    Alert.findOne({name : alert + "_interval"}, function(err, foundAlert){
+        if(!err){
+            this.deleteAlertFromUser(chatId,userId, foundAlert, bot);
+        }
+    });
+    
+}
+
+deleteAlertFromUser = function(chatId, userId, alert, bot){
+    User.findOne({ chatId: userId }, function (err, user) {
+        if(!err){
+            var index = user._doc.alerts.indexOf(alert._id);
+            var newAlertList = user._doc.alerts.splice(index,1);
+                User.update({chatId : user.chatId, alerts : newAlertList}, function(err, doc){
+                    if(err){
+                         console.log("Error in updating alerts list of user");
+                    }else{
+                        console.log("Removed active alert: " + alert);
+                        bot.sendMessage(chatId, Common.deletedAlertMessage, BotGui.generateKeyboardOptions()); 
+                    }
+            }) 
+        }
+    });
+}
 
 exports.deleteAlert = function(alert){
     Alert.findByIdAndRemove(Mongoose.Types.ObjectId(alert._id), function(err, foundAlert){

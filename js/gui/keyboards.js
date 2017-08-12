@@ -54,7 +54,7 @@ exports.generateAlertsInlineKeyboard = function (alerts){
             inlineOptions.push([
                     {
                         text: element.show_name + " [" + element.language + "] S" + element.nextepisode_season + "E" + element.nextepisode_episode + " (" + element.nextepisode_airdate + ")",
-                        callback_data: element.show_name + "_" + element.language // re-using notation already used in agenda jobs name on database
+                        callback_data: element.show_name + "_" + element.language 
                     }
                 ]);
         }
