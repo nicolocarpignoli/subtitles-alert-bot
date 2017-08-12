@@ -7,9 +7,9 @@ var telegramBotToken = '398340624:AAH3rtCzaX9Y2fDU0ssRrK4vhRVh1PpZA0w';
 var Session = require('./models/session.js');
 var Mongo = require('./db/mongo.js');
 var Core = require('./core.js');
-var Model = require('./models/languages.js'); 
+var Model = require('./models/languages.js');
 
-exports.handleGetLogic = function(userInput, session, sessions, msg, match, bot){
+exports.handleGetLogic = function (userInput, session, sessions, msg, match, bot) {
     if (Common.notACommand(userInput) && session.choosingSeries) {
         let promise = TvMaze.checkSeriesValidity(userInput);
         promise.then(function (response) {
@@ -82,15 +82,15 @@ exports.handleGetLogic = function(userInput, session, sessions, msg, match, bot)
         if (languageKey) {
             session.chosenLanguage = languageKey;
             bot.sendMessage(msg.chat.id, Common.LoadingSubtitleMessage);
-            Addic7ed.addic7edGetSubtitle(session, session.chosenLanguage, bot, msg.chat.id, sessions);         
+            Addic7ed.addic7edGetSubtitle(session, session.chosenLanguage, bot, msg.chat.id, sessions);
         }
         else
             bot.sendMessage(msg.chat.id, Common.languageNotFoundMessage);
     }
 }
 
-exports.handleStartAlertLogic = function(userInput, session, sessions, msg, match, bot){
-   if (Common.notACommand(userInput) && session.choosingSeriesAlert) {
+exports.handleStartAlertLogic = function (userInput, session, sessions, msg, match, bot) {
+    if (Common.notACommand(userInput) && session.choosingSeriesAlert) {
         let promise = TvMaze.checkSeriesValidity(userInput);
         promise.then(function (response) {
             switch (response.length) {
@@ -99,15 +99,15 @@ exports.handleStartAlertLogic = function(userInput, session, sessions, msg, matc
                     Common.pushInSessions(sessions, session);
                     break;
                 case 1:
-                    if(response[0].show.status !== Common.runningState){
+                    if (response[0].show.status !== Common.runningState) {
                         bot.sendMessage(msg.chat.id, Common.seriesNotRunningMessage(response[0].show.name));
-                    }else{
+                    } else {
                         bot.sendMessage(msg.chat.id, Common.whichLanguagesAlertMessage(response[0].show.name),
                             BotGui.generatesLanguageInlineKeyboard());
                         Common.resetValues(session);
                         session.choosingLanguageAlert = true;
                         session.choosenSeriesAlert = response[0];
-                        Common.pushInSessions(sessions,session);
+                        Common.pushInSessions(sessions, session);
                     }
                     break;
                 default:
@@ -118,33 +118,33 @@ exports.handleStartAlertLogic = function(userInput, session, sessions, msg, matc
             }
         });
     }
-    if (Common.notACommand(userInput) && session.choosingLanguageAlert){
-       var languageKey = Object.keys(Model.languages).find(function (key) {
+    if (Common.notACommand(userInput) && session.choosingLanguageAlert) {
+        var languageKey = Object.keys(Model.languages).find(function (key) {
             return key.length == 3 && (key.toUpperCase() === userInput.toUpperCase() ||
                 Model.languages[key]["native"][0].toUpperCase() === userInput.toUpperCase() ||
                 Model.languages[key]["int"][0].toUpperCase() === userInput.toUpperCase())
         })
 
         if (languageKey) {
-            if(!Common.languageAlreadyPresent(session.chosenLanguagesAlert, languageKey)){
+            if (!Common.languageAlreadyPresent(session.chosenLanguagesAlert, languageKey)) {
                 Common.getLanguageFromKey(languageKey);
                 session.chosenLanguagesAlert.push(languageKey);
                 bot.sendMessage(msg.chat.id, Common.addLanguageMessage, BotGui.generatesLanguageInlineKeyboard());
-            }else{
-                bot.sendMessage(msg.chat.id, Common.languageAlreadyPresentMessage, BotGui.generatesLanguageInlineKeyboard()); 
+            } else {
+                bot.sendMessage(msg.chat.id, Common.languageAlreadyPresentMessage, BotGui.generatesLanguageInlineKeyboard());
             }
         }
         else
-            bot.sendMessage(msg.chat.id, Common.languageNotFoundMessage, BotGui.generatesLanguageInlineKeyboard()); 
-    } 
+            bot.sendMessage(msg.chat.id, Common.languageNotFoundMessage, BotGui.generatesLanguageInlineKeyboard());
+    }
 }
 
-exports.handleDeleteLogic = function(msg, userInput, session, sessions, bot){
-    if(userInput == Common.revertCallback){
-        bot.sendMessage(msg.from.id, Common.instructionsMessage, BotGui.generateKeyboardOptions());
-    }else{
-        Mongo.deleteAlertFromSingleUser(msg.from.id,session.alertToDelete, session.chatId, bot);
-    }
+exports.handleDeleteLogic = function (msg, userInput, session, sessions, bot) {
+    if (userInput == Common.revertCallback)
+        bot.sendMessage(msg.from.id, Common.revertDeleteMessage, BotGui.generateKeyboardOptions());
+    else
+        Mongo.deleteAlertFromSingleUser(msg.from.id, session.alertToDelete, session.chatId, bot);
+
     Common.resetValues(session);
-    Common.pushInSessions(sessions,session);
+    Common.pushInSessions(sessions, session);
 }
