@@ -11,12 +11,14 @@ var ScheduleManager = require('./schedule/scheduleManager.js')
 var telegramBotToken = '398340624:AAH3rtCzaX9Y2fDU0ssRrK4vhRVh1PpZA0w';
 var paymentTestToken = 'NjExZmQ4MTcxYjhi';
 
-require('events').EventEmitter.prototype._maxListeners = 100;
+require('events').EventEmitter.prototype._maxListeners = 10000;
 
 var sessions = [];
 var bot = new TelegramBot(telegramBotToken, { polling: true });
 console.log("Starting bot...");
 Mongo.connectToDatabase();
+
+
 
 bot.onText(/\/start/, (msg, match) => {
     var session = Common.getUserSession(sessions, msg.chat);
