@@ -69,7 +69,6 @@ exports.connectToDatabase = function () {
     }
 }
 
-
 exports.subscribe = function (session, bot, from) {
     //Logger.logEvent("alert", [], session);
     var alertsToStore = [];
@@ -157,17 +156,27 @@ exports.getAlertsFromUser = function (id, bot, session) {
     });
 }
 
+function deleteAlertIfNoUserSubscribed(alert) {
+    const alertId = alert._id.toString();
+    User.find({alerts: alertId}, function(err, users) {
+        if(!err && users.length == 0){
+            deleteAlert(alertId);
+            ScheduleManager.cancelJob(alert.show_name + "_" + alert.language + "_interval");
+        }
+    });
+}
+
 exports.deleteAlertFromSingleUser = function (chatId, alert, userId, bot) {
     var tokens = alert.split("_");
     Alert.findOne({ show_name: tokens[0], language: tokens[1] }, function (err, foundAlert) {
         if (!err && foundAlert != null) {
-            // deleteAlertFromUser(chatId, userId, foundAlert, bot);
             User.update({ chatId: chatId }, { $pullAll: { alerts: [foundAlert._doc._id.toString()] } }, function (err) {
                 if (err) console.log("Error in updating alerts list of user. " + err);
                 else {
                     console.log("Removed active alert: " + foundAlert._doc._id);
                     bot.sendMessage(chatId, Common.deletedAlertMessage, BotGui.generateKeyboardOptions());
                 }
+                deleteAlertIfNoUserSubscribed(foundAlert._doc);
             });
         }
         else
@@ -175,8 +184,8 @@ exports.deleteAlertFromSingleUser = function (chatId, alert, userId, bot) {
     });
 }
 
-exports.deleteAlert = function (alert) {
-    Alert.findByIdAndRemove(Mongoose.Types.ObjectId(alert._id), function (err, foundAlert) {
+var deleteAlert = function (alertId) {
+    Alert.findByIdAndRemove(Mongoose.Types.ObjectId(alertId), function (err, foundAlert) {
         if (err) {
             console.log("Cannot remove alert because of: ", err);
         }
@@ -184,14 +193,17 @@ exports.deleteAlert = function (alert) {
 }
 
 exports.deleteAlertFromAllUsers = function (alert) {
-    const alertIdString = alert._id.toString();
-    User.update({ alerts: alertIdString }, { $pullAll: { alerts: [alertIdString] } }, function (err) {
+    const alertId = alert._id.toString()
+    User.update({ alerts: alertId }, { $pullAll: { alerts: [alertId] } }, function (err) {
         if (err) {
             console.log("Cannot remove alert from users because of: ", err);
         }
+        else
+            deleteAlertIfNoUserSubscribed(alert);
     });
 }
 
 exports.Alert = Alert;
 exports.User = User;
 exports.Language = Language;
+exports.deleteAlert = deleteAlert;

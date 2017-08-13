@@ -51,8 +51,8 @@ var scheduleFunctionInterval = function (jobName, interval, alert, func, data) {
             getShowPromise.then(function (show) {
                 const nextEpisodeLink = show._links.nextepisode.href;
                 if (show.status != 'Running') {
-                    Mongo.deleteAlert(job.alert);   //TODO verify if works
-                    Mongo.deleteAlertFromAllUsers(job.alert);   //TODO verify if works
+                    Mongo.deleteAlert(job.alert._id.toString());
+                    Mongo.deleteAlertFromAllUsers(job.alert);
                     agenda.cancel({ name: job.attrs.name }, function (err, numRemoved) {
                         console.log("Removed %s jobs with name %s", numRemoved, job.attrs.name);
                     });
@@ -90,7 +90,6 @@ var activateStoredSchedules = function (alert, bot) {
     });
 }
 
-
 var updateNextRunDate = function (job, newDate) {
     job.nextRunAt = formatDate(newDate);
     job.save(function (err) {
@@ -99,8 +98,16 @@ var updateNextRunDate = function (job, newDate) {
     });
 }
 
+var cancelJob = function (jobName) {
+    var agenda = new Agenda({ mongo: Mongo.getMongoConnection() });    
+    agenda.cancel({ name: jobName }, function (err, numRemoved) {
+        console.log("Removed %s jobs with name %s", numRemoved, jobName);
+    });
+}
+
 exports.formatDate = formatDate;
 exports.activateStoredSchedules = activateStoredSchedules;
 exports.scheduleFunctionGivenTime = scheduleFunctionGivenTime;
 exports.scheduleFunctionInterval = scheduleFunctionInterval;
 exports.updateNextRunDate = updateNextRunDate;
+exports.cancelJob = cancelJob;
