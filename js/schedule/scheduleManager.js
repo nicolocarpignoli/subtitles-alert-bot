@@ -13,11 +13,25 @@ var usable = false;
 var agenda = null;
 
 exports.startAgenda = function(){
+    Mongo.getMongoConnection().db.collection('agendaJobs', function (err, collection) {
+        collection.update({lockedAt: {$exists: true}, lastFinishedAt: {$exists: false}}, {
+            $unset: {
+                lockedAt: undefined,
+                lastModifiedBy: undefined,
+                lastRunAt: undefined
+            }, $set: {nextRunAt: new Date()}
+        }, {multi: true}, function (error, numUnlocked) {
+            if (error) console.log("Error: " + error);
+            console.log("# Unlocked: " + numUnlocked);
+        });
+    });
+
     var agenda = new Agenda({ mongo: Mongo.getMongoConnection() });
     agenda.on("ready", function () {
         agenda.start();
         console.log("Starting agenda scheduler...");
     })
+    
 }
 
 var scheduleFunctionGivenTime = function (jobName, date, alert, func, data) {
