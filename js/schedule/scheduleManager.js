@@ -12,6 +12,14 @@ var connectionString;
 var usable = false;
 var agenda = null;
 
+exports.startAgenda = function(){
+    var agenda = new Agenda({ mongo: Mongo.getMongoConnection() });
+    agenda.on("ready", function () {
+        agenda.start();
+        console.log("Starting agenda scheduler...");
+    })
+}
+
 var scheduleFunctionGivenTime = function (jobName, date, alert, func, data) {
     var agenda = new Agenda({ mongo: Mongo.getMongoConnection() });
     data = (typeof data !== 'undefined') ? data : {};

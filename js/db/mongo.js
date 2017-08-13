@@ -48,23 +48,27 @@ exports.connectToDatabase = function () {
             if (error) {
                 console.log("SSH connection error: " + error);
             }
-            Mongoose.connect('mongodb://localhost:' + Conf.mongoConfig.localPort + "/" + Conf.dbName);
+            Mongoose.connect('mongodb://localhost:' + Conf.mongoConfig.localPort + "/" + Conf.dbName,
+            { server: { reconnectTries: Number.MAX_VALUE } });
             db = Mongoose.connection;
             db.on('error', () => {
                 console.log('DB connection error ')
             });
             db.once('open', function () {
                 console.log("DB connection successful");
+                ScheduleManager.startAgenda();
             });
         });
     } else {
-        Mongoose.connect('mongodb://localhost:' + Conf.mongoConfig.localPort + "/" + Conf.dbName);
+        Mongoose.connect('mongodb://localhost:' + Conf.mongoConfig.localPort + "/" + Conf.dbName,
+            { server: { reconnectTries: Number.MAX_VALUE } });
         db = Mongoose.connection;
         db.on('error', () => {
             console.log('DB connection error ')
         });
         db.once('open', function () {
             console.log("DB connection successful");
+            ScheduleManager.startAgenda();
         });
     }
 }
