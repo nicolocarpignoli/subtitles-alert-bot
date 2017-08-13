@@ -36,11 +36,6 @@ exports.addic7edGetSubtitle = function (session, languages = [], bot, chat, sess
 }
 
 exports.addic7edGetSubtitleAlert = function (alert, job, bot, doneJobInterval) {
-    //assegnazioni per test
-    // alert.nextepisode_episode, alert.nextepisode_season = 1;
-    // alert.language = "eng";
-    // alert.nextepisode_airdate = "today";
-
     addic7edApi.search(alert.show_name, alert.nextepisode_season, alert.nextepisode_episode, alert.language).then(function (subtitlesList) {
         var subInfo = subtitlesList[0];
         if (subInfo != undefined) {
