@@ -27,11 +27,13 @@ exports.startAgenda = function(){
                 console.log("Error: " + error);
             }else{
                 cursor.forEach(function(job) {
+                    cancelJob(job.name);
                     var tokens = job.name.split("_");
                     Mongo.Alert.findOne({ show_name: tokens[0], language: tokens[1] }, function (err, jobAlert) {
-                        scheduleFunctionInterval(job.name, intervalSchedule, jobAlert, function (jobInterval, doneJobInterval) {
-                            Addic7ed.addic7edGetSubtitleAlert(jobAlert, jobInterval, Main.getBotInstance(), doneJobInterval);}, 
-                                { hasToBeRemoved: false });
+                        activateStoredSchedules(jobAlert, Main.getBotInstance(), new Date(job.nextRunAt) <= new Date());
+                        // scheduleFunctionInterval(job.name, intervalSchedule, jobAlert, function (jobInterval, doneJobInterval) {
+                        //     Addic7ed.addic7edGetSubtitleAlert(jobAlert, jobInterval, Main.getBotInstance(), doneJobInterval);}, 
+                        //         { hasToBeRemoved: false });
                     });
                 });
             }
@@ -68,7 +70,6 @@ var scheduleFunctionInterval = function (jobName, interval, alert, func, data) {
         func(job1, done2);
     });
     agenda.on("ready", function () {
-        console.log(interval, jobName, data);
         agenda.every(interval, jobName, data);
         agenda.start();
     });
@@ -90,7 +91,7 @@ var scheduleFunctionInterval = function (jobName, interval, alert, func, data) {
                         nextEpisodePromise.then(function (nextEp) {
                             console.log("RE_ASSIGNING NEXTRUNB AL JOB: ", nextEp.airdate);
                             // job.alert.nextepisode_airdate = nextEp.airdate;
-                            // activateStoredSchedules(job.alert, Main.getBotInstance());
+                            // activateStoredSchedules(job.alert, Main.getBotInstance(), false);
                             updateNextRunDate(job, nextEp.airdate);
                         });
                     } else {
@@ -105,11 +106,13 @@ var scheduleFunctionInterval = function (jobName, interval, alert, func, data) {
 
 var formatDate = function (date) {
     // starts at 00.00 of airDate
+    if(!date) return new Date();
     return new Date(date + " 00:00:00");
 }
 
-var activateStoredSchedules = function (alert, bot) {
-    scheduleFunctionGivenTime(alert.show_name + '_' + alert.language + '_giventime', alert.nextepisode_airdate, alert, function (jobDate, doneJobDate) {
+var activateStoredSchedules = function (alert, bot, outdated) {
+    var date = outdated ? formatDate() : alert.nextepisode_airdate;
+    scheduleFunctionGivenTime(alert.show_name + '_' + alert.language + '_giventime', date, alert, function (jobDate, doneJobDate) {
         scheduleFunctionInterval(alert.show_name + '_' + alert.language + '_interval', intervalSchedule, alert, function (jobInterval, doneJobInterval) {
             Addic7ed.addic7edGetSubtitleAlert(alert, jobInterval, bot, doneJobInterval);
         }, { hasToBeRemoved: false });
