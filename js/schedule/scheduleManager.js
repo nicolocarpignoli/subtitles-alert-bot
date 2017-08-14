@@ -7,31 +7,36 @@ var TvMaze = require('../libs/tvMaze.js');
 
 var pendingShowInterval = '1 month';
 var intervalSchedule = '*/15 * * * *'; //every 15 minutes
-// var intervalSchedule = '1 minute'; //test
+//var intervalSchedule = '1 minute'; //test
 var connectionString;
 var usable = false;
 var agenda = null;
 
 exports.startAgenda = function(){
     Mongo.getMongoConnection().db.collection('agendaJobs', function (err, collection) {
-        collection.update({lockedAt: {$exists: true}, lastFinishedAt: {$exists: false}}, {
-            $unset: {
-                lockedAt: undefined,
-                lastModifiedBy: undefined,
-                lastRunAt: undefined
-            }, $set: {nextRunAt: new Date()}
+        collection.update({}, {
+            $set: {nextRunAt: new Date()}
         }, {multi: true}, function (error, numUnlocked) {
             if (error) console.log("Error: " + error);
-            console.log("# Unlocked: " + numUnlocked);
         });
     });
 
-    var agenda = new Agenda({ mongo: Mongo.getMongoConnection() });
-    agenda.on("ready", function () {
-        agenda.start();
-        console.log("Starting agenda scheduler...");
-    })
-    
+    Mongo.getMongoConnection().db.collection('agendaJobs', function (err, collection) {
+        collection.find(function (error, cursor) {
+            if (error){
+                console.log("Error: " + error);
+            }else{
+                cursor.forEach(function(job) {
+                    var tokens = job.name.split("_");
+                    Mongo.Alert.findOne({ show_name: tokens[0], language: tokens[1] }, function (err, jobAlert) {
+                        scheduleFunctionInterval(job.name, intervalSchedule, jobAlert, function (jobInterval, doneJobInterval) {
+                            Addic7ed.addic7edGetSubtitleAlert(jobAlert, jobInterval, Main.getBotInstance(), doneJobInterval);}, 
+                                { hasToBeRemoved: false });
+                    });
+                });
+            }
+        });
+    });    
 }
 
 var scheduleFunctionGivenTime = function (jobName, date, alert, func, data) {
@@ -43,7 +48,7 @@ var scheduleFunctionGivenTime = function (jobName, date, alert, func, data) {
     });
     agenda.on("ready", function () {
         agenda.schedule(formatDate(date), jobName, data);
-        // agenda.schedule(new Date(Date.now() + 5000), jobName, data); //test
+        //agenda.schedule(new Date(Date.now() + 5000), jobName, data); //test
         agenda.start();
         console.log("Job %s scheduled with nextRunAt %s", jobName, date);
     })
@@ -63,6 +68,7 @@ var scheduleFunctionInterval = function (jobName, interval, alert, func, data) {
         func(job1, done2);
     });
     agenda.on("ready", function () {
+        console.log(interval, jobName, data);
         agenda.every(interval, jobName, data);
         agenda.start();
     });
@@ -85,7 +91,6 @@ var scheduleFunctionInterval = function (jobName, interval, alert, func, data) {
                             console.log("RE_ASSIGNING NEXTRUNB AL JOB: ", nextEp.airdate);
                             // job.alert.nextepisode_airdate = nextEp.airdate;
                             // activateStoredSchedules(job.alert, Main.getBotInstance());
-
                             updateNextRunDate(job, nextEp.airdate);
                         });
                     } else {
