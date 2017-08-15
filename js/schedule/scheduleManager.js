@@ -43,6 +43,7 @@ exports.startAgenda = function(){
 
 var scheduleFunctionGivenTime = function (jobName, date, alert, func, data) {
     var agenda = new Agenda({ mongo: Mongo.getMongoConnection() });
+    agenda.defaultLockLifetime(1000*60*1000);
     data = (typeof data !== 'undefined') ? data : {};
     agenda.define(jobName, function (job, done) {
         job.alert = alert;
@@ -64,6 +65,7 @@ var scheduleFunctionGivenTime = function (jobName, date, alert, func, data) {
 
 var scheduleFunctionInterval = function (jobName, interval, alert, func, data) {
     var agenda = new Agenda({ mongo: Mongo.getMongoConnection() });
+    agenda.defaultLockLifetime(1000*60*1000);
     data = data || {};
     agenda.define(jobName, function (job1, done2) {
         job1.alert = alert;
