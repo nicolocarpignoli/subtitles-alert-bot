@@ -52,7 +52,7 @@ function buildGenericOptions(link) {
 }
 
 
-function checkPerfectMatch(foundSeries, name){
+function checkPerfectMatch(foundSeries, name) {
     var foundSeriesName = foundSeries.show.name;
     return name.trim().toLowerCase() === foundSeriesName.trim().toLowerCase();
 }
@@ -84,7 +84,7 @@ function checkDuplicates(list) {
     Object.keys(duplicates).forEach(function (element) {
         for (var i = 0; i < duplicates[element].length; i++) {
             var index = duplicates[element][i];
-            if(foundSeries[index].show.premiered != null){
+            if (foundSeries[index].show.premiered != null) {
                 foundSeries[index].show.name += " (" + foundSeries[index].show.premiered.slice(0, 4) + ")";
             }
         }
@@ -106,9 +106,9 @@ exports.checkSeriesValidity = function (seriesName) {
         .then(function (foundSeries) {
             if (foundSeries && foundSeries.length == 0)
                 return [];
-            else if(checkPerfectMatch(foundSeries[0], seriesName)){
-                var result =  checkDuplicates(foundSeries);
-                if(!result["hasDuplicates"]) return [foundSeries[0]];
+            else if (checkPerfectMatch(foundSeries[0], seriesName)) {
+                var result = checkDuplicates(foundSeries);
+                if (!result["hasDuplicates"]) return [foundSeries[0]];
                 else return result["foundSeries"];
             }
             else {
@@ -136,14 +136,38 @@ exports.checkSeasonValidity = function (seriesId, seasonRequest) {
 }
 
 exports.checkEpisodeValidity = function (seriesId, seasonNumber, episodeRequest) {
-    return rp(buildEpisodeRequestOptions(seriesId, seasonNumber, episodeRequest))
-        .then(function (episode) {
-            return episode.status !== "404";
-        })
-        .catch(function (err) {
-            console.log("Oh noes! :( Got an error fetching episode... ");
-            return err.error;
-        });
+    if (episodeRequest.substr('-') === -1) {
+        return rp(buildEpisodeRequestOptions(seriesId, seasonNumber, episodeRequest))
+            .then(function (episode) {
+                return episode.status !== "404";
+            })
+            .catch(function (err) {
+                console.log("Oh noes! :( Got an error fetching episode... ");
+                return err.error;
+            });
+    }else {
+        var start = +episodeRequest.substr(0, episodeRequest.indexOf('-'));
+        var end = +episodeRequest.substr(episodeRequest.indexOf('-')+1, episodeRequest.length)
+        var promises = [];
+        while(start <= end){
+            console.log(start);
+            promises.push(rp(buildEpisodeRequestOptions(seriesId, seasonNumber, start)))
+            start++;
+        }
+        console.log(Promise.all(promises));
+        Promise.all(promises)
+            .then(function (episodes) {
+                var ret = true;
+                for( var episode in episodes ){
+                    ret = ret && episode.status !== "404";
+                }
+                return ret;
+            })
+            .catch(function (err) {
+                console.log("Oh noes! :( Got an error fetching episode range... ");
+                return err.error;
+            });
+    }
 }
 
 function getShowInfosById(showId) {

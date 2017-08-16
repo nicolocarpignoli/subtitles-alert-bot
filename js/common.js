@@ -63,8 +63,22 @@ exports.notACommand = function (userInput) {
     }
 
 exports.isValidNumber = function (str) {
+    return isValidNumber(str);
+}
+
+function isValidNumber(str){
     var number = Math.floor(Number(str));
     return String(number) === str && number > 0;
+}
+
+exports.isValidInterval = function (str) {
+    if(str.indexOf('-') === -1){
+        return false;
+    } 
+    var start = str.substr(0, str.indexOf('-'));
+    var end = str.substr(str.indexOf('-') + 1, str.length)
+    console.log( start + '-' + end);
+    return isValidNumber(start) && isValidNumber(end) && (+start <= +end);
 }
 
 exports.isEmpty = function (obj) {
