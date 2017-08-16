@@ -14,27 +14,13 @@ var agenda = null;
 
 exports.startAgenda = function(){
     Mongo.getMongoConnection().db.collection('agendaJobs', function (err, collection) {
-        collection.update({}, {
-            $set: {nextRunAt: new Date()}
-        }, {multi: true}, function (error, numUnlocked) {
-            if (error) console.log("Error: " + error);
-        });
-    });
-
-    Mongo.getMongoConnection().db.collection('agendaJobs', function (err, collection) {
         collection.find(function (error, cursor) {
             if (error){
                 console.log("Error: " + error);
             }else{
                 cursor.forEach(function(job) {
-                    cancelJob(job.name);
                     var tokens = job.name.split("_");
-                    Mongo.Alert.findOne({ show_name: tokens[0], language: tokens[1] }, function (err, jobAlert) {
-                        activateStoredSchedules(jobAlert, Main.getBotInstance(), new Date(job.nextRunAt) <= new Date());
-                        // scheduleFunctionInterval(job.name, intervalSchedule, jobAlert, function (jobInterval, doneJobInterval) {
-                        //     Addic7ed.addic7edGetSubtitleAlert(jobAlert, jobInterval, Main.getBotInstance(), doneJobInterval);}, 
-                        //         { hasToBeRemoved: false });
-                    });
+                    resetJob(tokens, job);
                 });
             }
         });
@@ -134,6 +120,16 @@ var cancelJob = function (jobName) {
     var agenda = new Agenda({ mongo: Mongo.getMongoConnection() });    
     agenda.cancel({ name: jobName }, function (err, numRemoved) {
         console.log("Removed %s jobs with name %s", numRemoved, jobName);
+    });
+}
+
+var resetJob = function ( tokens, job) {
+    var agenda = new Agenda({ mongo: Mongo.getMongoConnection() });    
+    agenda.cancel({ name: job.name }, function (err, numRemoved) {
+        console.log("Removed %s jobs with name %s", numRemoved, job.name);
+        Mongo.Alert.findOne({ show_name: tokens[0], language: tokens[1] }, function (err, jobAlert) {
+            activateStoredSchedules(jobAlert, Main.getBotInstance(), new Date(job.nextRunAt) <= new Date());
+        });
     });
 }
 
