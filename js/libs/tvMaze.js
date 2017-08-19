@@ -1,6 +1,6 @@
 var http = require('http');
 var rp = require('request-promise');
-
+var Promise = require('promise')
 function buildSeriesRequestOptions(seriesName) {
     const options = {
         uri: "http://api.tvmaze.com/search/shows",
@@ -136,7 +136,7 @@ exports.checkSeasonValidity = function (seriesId, seasonRequest) {
 }
 
 exports.checkEpisodeValidity = function (seriesId, seasonNumber, episodeRequest) {
-    if (episodeRequest.substr('-') === -1) {
+    if (episodeRequest.indexOf('-') === -1) {
         return rp(buildEpisodeRequestOptions(seriesId, seasonNumber, episodeRequest))
             .then(function (episode) {
                 return episode.status !== "404";
@@ -145,28 +145,32 @@ exports.checkEpisodeValidity = function (seriesId, seasonNumber, episodeRequest)
                 console.log("Oh noes! :( Got an error fetching episode... ");
                 return err.error;
             });
-    }else {
+    } else {
         var start = +episodeRequest.substr(0, episodeRequest.indexOf('-'));
-        var end = +episodeRequest.substr(episodeRequest.indexOf('-')+1, episodeRequest.length)
-        var promises = [];
-        while(start <= end){
-            console.log(start);
-            promises.push(rp(buildEpisodeRequestOptions(seriesId, seasonNumber, start)))
-            start++;
-        }
-        console.log(Promise.all(promises));
-        Promise.all(promises)
-            .then(function (episodes) {
-                var ret = true;
-                for( var episode in episodes ){
-                    ret = ret && episode.status !== "404";
-                }
-                return ret;
+        var end = +episodeRequest.substr(episodeRequest.indexOf('-') + 1, episodeRequest.length)
+        var responses = [];
+        return recursiveCallFunction(start, end, seriesId, seasonNumber, responses);
+    }
+}
+
+function recursiveCallFunction(start, end, seriesId, seasonNumber, responses) {
+    if (start <= end) {
+        return rp(buildEpisodeRequestOptions(seriesId, seasonNumber, start))
+            .then(function (episode) {
+                responses.push(episode.status !== "404");
+                start++;
+                return recursiveCallFunction(start, end, seriesId, seasonNumber, responses)
             })
             .catch(function (err) {
-                console.log("Oh noes! :( Got an error fetching episode range... ");
+                console.log("Oh noes! :( Got an error fetching episode... ");
                 return err.error;
             });
+    } else {
+        res = true;
+        for (var i = 0; i < responses.length; i++) {
+            res = res && responses[i];
+        }
+        return res;
     }
 }
 

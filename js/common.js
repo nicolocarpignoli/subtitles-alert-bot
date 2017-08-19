@@ -77,7 +77,6 @@ exports.isValidInterval = function (str) {
     } 
     var start = str.substr(0, str.indexOf('-'));
     var end = str.substr(str.indexOf('-') + 1, str.length)
-    console.log( start + '-' + end);
     return isValidNumber(start) && isValidNumber(end) && (+start <= +end);
 }
 
