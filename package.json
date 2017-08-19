@@ -10,6 +10,7 @@
     "mongodb": "^2.2.30",
     "mongoose": "^4.11.3",
     "node-telegram-bot-api": "^0.27.1",
+    "promise": "^8.0.1",
     "request": "^2.81.0",
     "request-promise": "^4.2.1",
     "tunnel-ssh": "^4.1.3"
