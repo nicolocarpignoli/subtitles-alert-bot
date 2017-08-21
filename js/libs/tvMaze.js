@@ -148,6 +148,7 @@ exports.checkEpisodeValidity = function (seriesId, seasonNumber, episodeRequest)
     } else {
         var start = +episodeRequest.substr(0, episodeRequest.indexOf('-'));
         var end = +episodeRequest.substr(episodeRequest.indexOf('-') + 1, episodeRequest.length)
+        if(start > end) return "wrongInterval";
         var responses = [];
         return recursiveCallFunction(start, end, seriesId, seasonNumber, responses);
     }

@@ -9,18 +9,18 @@ var Logger = require('../log/logger.js');
 
 exports.addic7edGetSubtitle = function (session, languages, bot, chat, sessionsList) {
     if(session.choosenEpisode.indexOf('-')===-1){
-        getSingleEpisodeSubs(session, languages, bot, chat, sessionsList, session.choosenEpisode)
+        getSingleEpisodeSubs(session, languages, bot, chat, sessionsList, session.choosenEpisode, true)
     }else{
         var start = +session.choosenEpisode.substr(0, session.choosenEpisode.indexOf('-'));
         var end = +session.choosenEpisode.substr(session.choosenEpisode.indexOf('-') + 1, session.choosenEpisode.length);
         while (start <= end){
-            getSingleEpisodeSubs(session, languages, bot, chat, sessionsList, start),
+            getSingleEpisodeSubs(session, languages, bot, chat, sessionsList, start, start == end),
             start++;
         }
     }
 }
 
-function getSingleEpisodeSubs (session, languages = [], bot, chat, sessionsList, episode) {
+function getSingleEpisodeSubs (session, languages = [], bot, chat, sessionsList, episode, sendAmbiguousMessage) {
     //Logger.logEvent("get", languages, session);
     addic7edApi.search(session.choosenSeries.show.name, session.choosenSeason,
         episode, languages).then(function (subtitlesList) {
@@ -36,7 +36,7 @@ function getSingleEpisodeSubs (session, languages = [], bot, chat, sessionsList,
                             bot.sendDocument(chat, filename).then(function () {
                                 fs.unlinkSync(filename);
                             });
-                            if (session.choosenSeries.show.name.indexOf("(") > -1 && session.choosenSeries.show.name.indexOf(")") > -1) {
+                            if (sendAmbiguousMessage && session.choosenSeries.show.name.indexOf("(") > -1 && session.choosenSeries.show.name.indexOf(")") > -1) {
                                 bot.sendMessage(chat, Common.ambigousSubtitleMessage);
                             }
                         }
