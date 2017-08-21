@@ -39,6 +39,7 @@ exports.chooseAtLeastALanguageMessage = "Hey, you have to choose at least one la
 exports.subscribingToMessage = "Ok, I'm gonna subscribe you! Please wait a sec \u270F\uFE0F \uD83D\uDDD3";
 exports.addLanguageMessage = "Ok gotcha! Send me another language or click on 'Done' to subscribe";
 exports.nextEpisodeNotAvailableMessage = "Too early for a subscription for this show. We haven't got enough informations yet! Try again on the next weeks!";
+exports.notValidIntervalGetMessage = "Please retry with a valid interval in the form of 'first-last' without spaces!"
 
 exports.getCommand = "Get subtitles \uD83D\uDCE5";
 exports.startAlertCommand = "Subscribe \uD83D\uDCE2";
@@ -50,11 +51,12 @@ exports.GETregExp = new RegExp(this.getCommand);
 exports.STARTregExp = new RegExp(this.startAlertCommand);
 exports.STOPregExp = new RegExp(this.stopAlertCommand);
 
-exports.helpMessage = "A bot for subscribe and download subtitles for your favourite tv shows.\nUse Get subtitles \uD83D\uDCE5 for instant download of a single subtitles file" +
-    "\nUse Subscribe \uD83D\uDCE2 to start a subscription to subtitles for a tv show. Just relax and as soon as they're out you will receive your subtitles on your phone" +
-    "\nUse Unsubscribe \uD83D\uDEAB for a list of your active subscriptions. You can also delete the subscriptions." +
-    "\nType /help for seeing this help message any time you want." +
-    "\nFollow us on: ";
+exports.helpMessage = "A bot for subscribe and download subtitles for your favourite tv shows.\n\nUse Get subtitles \uD83D\uDCE5 for instant download of a single subtitles file or" +
+    "download a set of episode setting an interval like this: 'first-last' without spaces" +
+    "\n\nUse Subscribe \uD83D\uDCE2 to start a subscription to subtitles for a tv show. Just relax and as soon as they're out you will receive your subtitles on your phone" +
+    "\n\nUse Unsubscribe \uD83D\uDEAB for a list of your active subscriptions. You can also delete the subscriptions." +
+    "\n\nType /help for seeing this help message any time you want." +
+    "\n\nFollow us on: ";
 
 exports.notACommand = function (userInput) {
     return userInput != this.getCommand &&

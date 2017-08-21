@@ -26,7 +26,7 @@ function getSingleEpisodeSubs (session, languages = [], bot, chat, sessionsList,
         episode, languages).then(function (subtitlesList) {
             var subInfo = subtitlesList[0];
             if (subInfo != undefined) {
-                var filename = session.choosenSeries.show.name + '_S' + session.choosenSeason + '_E' + session.choosenEpisode + '.srt';
+                var filename = session.choosenSeries.show.name + '_S' + session.choosenSeason + '_E' + episode + '.srt';
                 addic7edApi.download(subInfo, filename).then(function () {
                     fs.exists(filename, function (exists) {
                         if (exists) {
