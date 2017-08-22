@@ -1,6 +1,6 @@
 var http = require('http');
 var rp = require('request-promise');
-
+var Promise = require('promise')
 function buildSeriesRequestOptions(seriesName) {
     const options = {
         uri: "http://api.tvmaze.com/search/shows",
@@ -52,7 +52,7 @@ function buildGenericOptions(link) {
 }
 
 
-function checkPerfectMatch(foundSeries, name){
+function checkPerfectMatch(foundSeries, name) {
     var foundSeriesName = foundSeries.show.name;
     return name.trim().toLowerCase() === foundSeriesName.trim().toLowerCase();
 }
@@ -84,7 +84,7 @@ function checkDuplicates(list) {
     Object.keys(duplicates).forEach(function (element) {
         for (var i = 0; i < duplicates[element].length; i++) {
             var index = duplicates[element][i];
-            if(foundSeries[index].show.premiered != null){
+            if (foundSeries[index].show.premiered != null) {
                 foundSeries[index].show.name += " (" + foundSeries[index].show.premiered.slice(0, 4) + ")";
             }
         }
@@ -106,9 +106,9 @@ exports.checkSeriesValidity = function (seriesName) {
         .then(function (foundSeries) {
             if (foundSeries && foundSeries.length == 0)
                 return [];
-            else if(checkPerfectMatch(foundSeries[0], seriesName)){
-                var result =  checkDuplicates(foundSeries);
-                if(!result["hasDuplicates"]) return [foundSeries[0]];
+            else if (checkPerfectMatch(foundSeries[0], seriesName)) {
+                var result = checkDuplicates(foundSeries);
+                if (!result["hasDuplicates"]) return [foundSeries[0]];
                 else return result["foundSeries"];
             }
             else {
@@ -136,14 +136,43 @@ exports.checkSeasonValidity = function (seriesId, seasonRequest) {
 }
 
 exports.checkEpisodeValidity = function (seriesId, seasonNumber, episodeRequest) {
-    return rp(buildEpisodeRequestOptions(seriesId, seasonNumber, episodeRequest))
-        .then(function (episode) {
-            return episode.status !== "404";
-        })
-        .catch(function (err) {
-            console.log("Oh noes! :( Got an error fetching episode... ");
-            return err.error;
-        });
+    if (episodeRequest.indexOf('-') === -1) {
+        return rp(buildEpisodeRequestOptions(seriesId, seasonNumber, episodeRequest))
+            .then(function (episode) {
+                return episode.status !== "404";
+            })
+            .catch(function (err) {
+                console.log("Oh noes! :( Got an error fetching episode... ");
+                return err.error;
+            });
+    } else {
+        var start = +episodeRequest.substr(0, episodeRequest.indexOf('-'));
+        var end = +episodeRequest.substr(episodeRequest.indexOf('-') + 1, episodeRequest.length)
+        if(start > end) return "wrongInterval";
+        var responses = [];
+        return recursiveCallFunction(start, end, seriesId, seasonNumber, responses);
+    }
+}
+
+function recursiveCallFunction(start, end, seriesId, seasonNumber, responses) {
+    if (start <= end) {
+        return rp(buildEpisodeRequestOptions(seriesId, seasonNumber, start))
+            .then(function (episode) {
+                responses.push(episode.status !== "404");
+                start++;
+                return recursiveCallFunction(start, end, seriesId, seasonNumber, responses)
+            })
+            .catch(function (err) {
+                console.log("Oh noes! :( Got an error fetching episode... ");
+                return err.error;
+            });
+    } else {
+        res = true;
+        for (var i = 0; i < responses.length; i++) {
+            res = res && responses[i];
+        }
+        return res;
+    }
 }
 
 function getShowInfosById(showId) {

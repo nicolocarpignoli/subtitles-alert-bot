@@ -40,6 +40,7 @@ exports.subscribingToMessage = "Ok, I'm gonna subscribe you! Please wait a sec \
 exports.addLanguageMessage = "Ok gotcha! Send me another language or click on 'Done' to subscribe";
 exports.nextEpisodeNotAvailableMessage = "Too early for a subscription for this show. I haven't got enough informations yet! Try again on the next weeks!";
 exports.areYouSureRemoveAlert = function (series) {return "Are you sure you want to remove your alert for "+ series +"?"}
+exports.notValidIntervalGetMessage = "Please retry with a valid interval in the form of 'first-last' without spaces!"
 exports.deletedAlertMessage = "Subscription successfully deleted!";
 exports.revertDeleteMessage = "Wise choice! I'll keep your subscription active";
 
@@ -53,11 +54,12 @@ exports.GETregExp = new RegExp(this.getCommand);
 exports.STARTregExp = new RegExp(this.startAlertCommand);
 exports.STOPregExp = new RegExp(this.stopAlertCommand);
 
-exports.helpMessage = "A bot for subscribe and download subtitles for your favourite tv shows.\nUse Get subtitles \uD83D\uDCE5 for instant download of a single subtitles file" +
-    "\nUse Subscribe \uD83D\uDCE2 to start a subscription to subtitles for a tv show. Just relax and as soon as they're out you will receive your subtitles on your phone" +
-    "\nUse Unsubscribe \uD83D\uDEAB for a list of your active subscriptions. You can also delete the subscriptions." +
-    "\nType /help for seeing this help message any time you want." +
-    "\nFollow us on: ";
+exports.helpMessage = "A bot for subscribe and download subtitles for your favourite tv shows.\n\nUse Get subtitles \uD83D\uDCE5 for instant download of a single subtitles file, or" +
+    " download a set of subtitles choosing an interval with 'first-last' episode numbers without spaces" +
+    "\n\nUse Subscribe \uD83D\uDCE2 to start a subscription to subtitles for a tv show. Just relax and as soon as they're out you will receive your subtitles on your phone" +
+    "\n\nUse Unsubscribe \uD83D\uDEAB for a list of your active subscriptions. You can also delete the subscriptions." +
+    "\n\nType /help for seeing this help message any time you want." +
+    "\n\nFollow us on: ";
 
 exports.notACommand = function (userInput) {
     return userInput != this.getCommand &&
@@ -66,8 +68,21 @@ exports.notACommand = function (userInput) {
     }
 
 exports.isValidNumber = function (str) {
+    return isValidNumber(str);
+}
+
+function isValidNumber(str){
     var number = Math.floor(Number(str));
     return String(number) === str && number > 0;
+}
+
+exports.isValidInterval = function (str) {
+    if(str.indexOf('-') === -1){
+        return false;
+    } 
+    var start = str.substr(0, str.indexOf('-'));
+    var end = str.substr(str.indexOf('-') + 1, str.length)
+    return isValidNumber(start) && isValidNumber(end);
 }
 
 exports.isEmpty = function (obj) {
