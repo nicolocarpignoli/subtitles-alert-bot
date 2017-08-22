@@ -6,7 +6,8 @@ function buildSeriesRequestOptions(seriesName) {
         uri: "http://api.tvmaze.com/search/shows",
         qs: { q: seriesName },
         headers: { 'User-Agent': 'Request-Promise' },
-        json: true
+        json: true,
+        simple: false
     }
     return options;
 }
@@ -15,7 +16,8 @@ function buildShowRequestOptionsById(showId) {
     const options = {
         uri: "http://api.tvmaze.com/shows/" + showId,
         headers: { 'User-Agent': 'Request-Promise' },
-        json: true
+        json: true,
+        simple: false
     }
     return options;
 }
@@ -24,7 +26,8 @@ function buildSeasonsRequestOptions(seriesId) {
     const options = {
         uri: "http://api.tvmaze.com/shows/" + seriesId + "/seasons",
         headers: { 'User-Agent': 'Request-Promise' },
-        json: true
+        json: true,
+        simple: false
     }
     return options;
 }
@@ -37,7 +40,8 @@ function buildEpisodeRequestOptions(seriesId, seasonNumber, episodeNumber) {
             number: episodeNumber
         },
         headers: { 'User-Agent': 'Request-Promise' },
-        json: true
+        json: true,
+        simple: false
     }
     return options;
 }
@@ -46,7 +50,8 @@ function buildGenericOptions(link) {
     const options = {
         uri: link,
         headers: { 'User-Agent': 'Request-Promise' },
-        json: true
+        json: true,
+        simple: false
     }
     return options;
 }
