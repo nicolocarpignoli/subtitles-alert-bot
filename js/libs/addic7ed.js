@@ -40,15 +40,17 @@ function getSingleEpisodeSubs (session, languages = [], bot, chat, sessionsList,
                                 bot.sendMessage(chat, Common.ambigousSubtitleMessage);
                             }
                         }
+                    }).catch(function(err){
+                        console.log("file not found");
                     });
                  }).catch(function (err) {
-                    console.log("error searching subs - ", err);
+                    console.log("error downloading subs - ", session);
                 });
             }
             else
                 bot.sendMessage(chat, Common.subtitleNotFoundInAddic7edMessage);
          }).catch(function (err) {
-            console.log("error downloading subs - ", err);
+            console.log("error searching subs - ", session);
         });
 }
 
@@ -78,15 +80,17 @@ exports.addic7edGetSubtitleAlert = function (alert, job, bot, doneJobInterval) {
                             doneJobInterval();
                         });
                     }
+                }).catch(function(err){
+                    console.log("file not found");
                 });
              }).catch(function (err) {
-                console.log("error searching subs - ", err);
+                console.log("error download subs - ", alert);
             });
         } else {
             job.attrs.data.hasToBeRemoved = false;
             doneJobInterval();
         }
      }).catch(function (err) {
-        console.log("error download subs - ", err);
+        console.log("error searching subs - ", alert);
     });
 }
