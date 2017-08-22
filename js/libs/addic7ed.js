@@ -41,10 +41,14 @@ function getSingleEpisodeSubs (session, languages = [], bot, chat, sessionsList,
                             }
                         }
                     });
+                 }).catch(function (err) {
+                    console.log("error searching subs - ", err);
                 });
             }
             else
                 bot.sendMessage(chat, Common.subtitleNotFoundInAddic7edMessage);
+         }).catch(function (err) {
+            console.log("error downloading subs - ", err);
         });
 }
 
@@ -75,10 +79,14 @@ exports.addic7edGetSubtitleAlert = function (alert, job, bot, doneJobInterval) {
                         });
                     }
                 });
+             }).catch(function (err) {
+                console.log("error searching subs - ", err);
             });
         } else {
             job.attrs.data.hasToBeRemoved = false;
             doneJobInterval();
         }
+     }).catch(function (err) {
+        console.log("error download subs - ", err);
     });
 }
