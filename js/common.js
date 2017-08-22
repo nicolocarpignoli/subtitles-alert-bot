@@ -51,8 +51,8 @@ exports.GETregExp = new RegExp(this.getCommand);
 exports.STARTregExp = new RegExp(this.startAlertCommand);
 exports.STOPregExp = new RegExp(this.stopAlertCommand);
 
-exports.helpMessage = "A bot for subscribe and download subtitles for your favourite tv shows.\n\nUse Get subtitles \uD83D\uDCE5 for instant download of a single subtitles file or" +
-    "download a set of episode setting an interval like this: 'first-last' without spaces" +
+exports.helpMessage = "A bot for subscribe and download subtitles for your favourite tv shows.\n\nUse Get subtitles \uD83D\uDCE5 for instant download of a single subtitles file, or" +
+    " download a set of subtitles choosing an interval with 'first-last' episode numbers without spaces" +
     "\n\nUse Subscribe \uD83D\uDCE2 to start a subscription to subtitles for a tv show. Just relax and as soon as they're out you will receive your subtitles on your phone" +
     "\n\nUse Unsubscribe \uD83D\uDEAB for a list of your active subscriptions. You can also delete the subscriptions." +
     "\n\nType /help for seeing this help message any time you want." +
