@@ -7,13 +7,26 @@ var ScheduleManager = require('../schedule/scheduleManager.js');
 var TvMaze = require('../libs/tvMaze.js');
 var Logger = require('../log/logger.js');
 
-exports.addic7edGetSubtitle = function (session, languages = [], bot, chat, sessionsList) {
+exports.addic7edGetSubtitle = function (session, languages, bot, chat, sessionsList) {
+    if(session.choosenEpisode.indexOf('-')===-1){
+        getSingleEpisodeSubs(session, languages, bot, chat, sessionsList, session.choosenEpisode, true)
+    }else{
+        var start = +session.choosenEpisode.substr(0, session.choosenEpisode.indexOf('-'));
+        var end = +session.choosenEpisode.substr(session.choosenEpisode.indexOf('-') + 1, session.choosenEpisode.length);
+        while (start <= end){
+            getSingleEpisodeSubs(session, languages, bot, chat, sessionsList, start, start == end),
+            start++;
+        }
+    }
+}
+
+function getSingleEpisodeSubs (session, languages = [], bot, chat, sessionsList, episode, sendAmbiguousMessage) {
     //Logger.logEvent("get", languages, session);
     addic7edApi.search(session.choosenSeries.show.name, session.choosenSeason,
-        session.choosenEpisode, languages).then(function (subtitlesList) {
+        episode, languages).then(function (subtitlesList) {
             var subInfo = subtitlesList[0];
             if (subInfo != undefined) {
-                var filename = session.choosenSeries.show.name + '_S' + session.choosenSeason + '_E' + session.choosenEpisode + '.srt';
+                var filename = session.choosenSeries.show.name + '_S' + session.choosenSeason + '_E' + episode + '.srt';
                 addic7edApi.download(subInfo, filename).then(function () {
                     fs.exists(filename, function (exists) {
                         if (exists) {
@@ -23,7 +36,7 @@ exports.addic7edGetSubtitle = function (session, languages = [], bot, chat, sess
                             bot.sendDocument(chat, filename).then(function () {
                                 fs.unlinkSync(filename);
                             });
-                            if (session.choosenSeries.show.name.indexOf("(") > -1 && session.choosenSeries.show.name.indexOf(")") > -1) {
+                            if (sendAmbiguousMessage && session.choosenSeries.show.name.indexOf("(") > -1 && session.choosenSeries.show.name.indexOf(")") > -1) {
                                 bot.sendMessage(chat, Common.ambigousSubtitleMessage);
                             }
                         }

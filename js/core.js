@@ -52,12 +52,16 @@ exports.handleGetLogic = function (userInput, session, sessions, msg, match, bot
         }
     }
     else if (Common.notACommand(userInput) && session.choosingEpisode) {
-        if (!Common.isValidNumber(userInput)) {
+        if (!Common.isValidNumber(userInput) && !Common.isValidInterval(userInput)) {
             bot.sendMessage(msg.chat.id, Common.notANumberMessage);
             return;
         }
         else {
             let promise = TvMaze.checkEpisodeValidity(session.choosenSeries.show.id, session.choosenSeason, userInput);
+            if(promise == "wrongInterval"){
+                bot.sendMessage(msg.chat.id, Common.notValidIntervalGetMessage);
+                return;
+            }
             promise.then(function (response) {
                 if (response !== true)
                     bot.sendMessage(msg.chat.id, Common.episodeNotFoundMessage);
