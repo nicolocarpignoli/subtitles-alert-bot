@@ -40,11 +40,9 @@ function getSingleEpisodeSubs (session, languages = [], bot, chat, sessionsList,
                                 bot.sendMessage(chat, Common.ambigousSubtitleMessage);
                             }
                         }
-                    }).catch(function(err){
-                        console.log("file not found");
                     });
                  }).catch(function (err) {
-                    console.log("error downloading subs - ", session);
+                    console.log("error downloading subs");
                 });
             }
             else
@@ -80,8 +78,6 @@ exports.addic7edGetSubtitleAlert = function (alert, job, bot, doneJobInterval) {
                             doneJobInterval();
                         });
                     }
-                }).catch(function(err){
-                    console.log("file not found");
                 });
              }).catch(function (err) {
                 console.log("error download subs - ", alert);
