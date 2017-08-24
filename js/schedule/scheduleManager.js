@@ -78,7 +78,7 @@ var scheduleFunctionInterval = function (jobName, interval, alert, func, data) {
                         var nextEpisodePromise = TvMaze.getNextEpisodeInformation(nextEpisodeLink);
                         nextEpisodePromise.then(function (nextEp) {
                             var tokens = job.attrs.name.split("_");
-                            resetJob(tokens, job, nextEp.airdate);
+                            resetJob(tokens, job, nextEp);
                         });
                     } else {
                         bot.sendMessage(userDoc.chatId, Common.noNextEpisodeYetMessage);
@@ -121,14 +121,18 @@ var cancelJob = function (jobName) {
     });
 }
 
-var resetJob = function ( tokens, job, airDate) {
-    var jobName = airDate != undefined ? job.attrs.name : job.name;
+var resetJob = function ( tokens, job, nextEp) {
+    var jobName = nextEp != undefined ? job.attrs.name : job.name;
     var agenda = new Agenda({ mongo: Mongo.getMongoConnection() });    
     agenda.cancel({ name: jobName }, function (err, numRemoved) {
         console.log("RESRET JOB: Removed %s jobs with name %s", numRemoved, jobName);
         Mongo.Alert.findOne({ show_name: tokens[0], language: tokens[1] }, function (err, jobAlert) {
-            if(airDate != undefined){
-                jobAlert.nextepisode_airdate = airDate;
+            var airDate = nextEp == undefined ? jobAlert.airdate : nextEp.airdate;
+            if(nextEp != undefined){
+                jobAlert.nextepisode_airdate = nextEp.airdate;
+                jobAlert.language = nextEp.languaged,
+                jobAlert.nextepisode_season = nextEp.nextepisode_season,
+                jobAlert.nextepisode_episode = nextEp.nextepisode_episode
             }
             activateStoredSchedules(jobAlert, Main.getBotInstance(), new Date(airDate) <= new Date());
         });
