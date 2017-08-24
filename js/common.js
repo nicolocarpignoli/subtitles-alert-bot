@@ -54,6 +54,7 @@ exports.GETregExp = new RegExp(this.getCommand);
 exports.STARTregExp = new RegExp(this.startAlertCommand);
 exports.STOPregExp = new RegExp(this.stopAlertCommand);
 
+
 exports.helpMessage = "A bot for subscribe and download subtitles for your favourite tv shows.\n\nUse Get subtitles \uD83D\uDCE5 for instant download of a single subtitles file, or" +
     " download a set of subtitles choosing an interval with 'first-last' episode numbers without spaces" +
     "\n\nUse Subscribe \uD83D\uDCE2 to start a subscription to subtitles for a tv show. Just relax and as soon as they're out you will receive your subtitles on your phone" +
@@ -64,7 +65,8 @@ exports.helpMessage = "A bot for subscribe and download subtitles for your favou
 exports.notACommand = function (userInput) {
     return userInput != this.getCommand &&
         userInput != this.startAlertCommand &&
-        userInput != this.stopAlertCommand;
+        userInput != this.stopAlertCommand &&
+        userInput != "/help";
     }
 
 exports.isValidNumber = function (str) {
