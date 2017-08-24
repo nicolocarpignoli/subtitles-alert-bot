@@ -61,15 +61,15 @@ exports.addic7edGetSubtitleAlert = function (alert, job, bot, doneJobInterval) {
                 fs.exists(filename, function (exists) {
                     if (exists) {
                         console.log('Subtitles file saved.');
-                        Mongo.User.find({ alerts: alert._id.toString() }, function (err, users) {
+                        Mongo.User.find({ alerts: alert._doc._id.toString() }, function (err, users) {
                             users.forEach(function (user) {
                                 var userDoc = user._doc;
-                                bot.sendMessage(userDoc.chatId, Common.newEpisodeAlertMessage(userDoc.first_name, alert.show_name));
+                                bot.sendMessage(userDoc.chatId, Common.newEpisodeAlertMessage(userDoc.first_name, alert._doc.show_name));
                                 bot.sendMessage(userDoc.chatId, Common.buildLinkMessage(subInfo.link));
                                 bot.sendDocument(userDoc.chatId, filename).then(function () {
                                     console.log("File sent to user " + userDoc.first_name);
                                 });
-                                if (Common.isAmbiguousTitle(alert.show_name)) {
+                                if (Common.isAmbiguousTitle(alert._doc.show_name)) {
                                     bot.sendMessage(userDoc.chatId, Common.ambigousSubtitleMessage);
                                 }
                             });
