@@ -28,13 +28,15 @@ function getSingleEpisodeSubs (session, languages = [], bot, chat, sessionsList,
             if (subInfo != undefined) {
                 var filename = session.choosenSeries.show.name + '_S' + session.choosenSeason + '_E' + episode + '.srt';
                 addic7edApi.download(subInfo, filename).then(function () {
-                    fs.exists(filename, function (exists) {
-                        if (exists) {
+                    fs.access(filename, function (err) {
+                        if (!err) {
                             console.log('Subtitles file saved.');
                             Common.removeSession(sessionsList, session);
                             bot.sendMessage(chat, Common.buildLinkMessage(subInfo.link));
                             bot.sendDocument(chat, filename).then(function () {
-                                fs.unlinkSync(filename);
+                                fs.unlinkSync(filename, function(err){
+                                    if(err) console.log("error, file not deleted");
+                                });
                             });
                             if (sendAmbiguousMessage && session.choosenSeries.show.name.indexOf("(") > -1 && session.choosenSeries.show.name.indexOf(")") > -1) {
                                 bot.sendMessage(chat, Common.ambigousSubtitleMessage);
@@ -56,10 +58,10 @@ exports.addic7edGetSubtitleAlert = function (alert, job, bot, doneJobInterval) {
     addic7edApi.search(alert.show_name, alert.nextepisode_season, alert.nextepisode_episode, alert.language).then(function (subtitlesList) {
         var subInfo = subtitlesList[0];
         if (subInfo != undefined) {
-            var filename = alert.show_name + '_S' + alert.nextepisode_season + '_E' + alert.nextepisode_episode + '.srt';
+            var filename = alert.show_name + '_S' + alert.nextepisode_season + '_E' + alert.nextepisode_episode + "_" + alert.language + '.srt';
             addic7edApi.download(subInfo, filename).then(function () {
-                fs.exists(filename, function (exists) {
-                    if (exists) {
+                fs.access(filename, function (err) {
+                    if (!err) {
                         console.log('Subtitles file saved.');
                         Mongo.User.find({ alerts: alert._doc._id.toString() }, function (err, users) {
                             users.forEach(function (user) {
@@ -74,7 +76,9 @@ exports.addic7edGetSubtitleAlert = function (alert, job, bot, doneJobInterval) {
                                 }
                             });
                             job.attrs.data.hasToBeRemoved = true;
-                            fs.unlinkSync(filename);
+                            fs.unlinkSync(filename, function(err){
+                                if(err) console.log("error, file not deleted");
+                            });
                             doneJobInterval();
                         });
                     }
