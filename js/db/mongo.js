@@ -160,6 +160,7 @@ exports.getAlertsFromUser = function (id, bot, session) {
     });
 }
 
+
 function deleteAlertIfNoUserSubscribed(alert) {
     const alertId = alert._id.toString();
     User.find({alerts: alertId}, function(err, users) {
