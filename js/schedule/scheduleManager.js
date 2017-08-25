@@ -6,8 +6,8 @@ var Main = require('../main.js');
 var TvMaze = require('../libs/tvMaze.js');
 
 var pendingShowInterval = '1 month';
-//var intervalSchedule = '*/15 * * * *'; //every 15 minutes
-var intervalSchedule = '2 minute'; //test
+var intervalSchedule = '*/15 * * * *'; //every 15 minutes
+//var intervalSchedule = '30 seconds'; //test
 var connectionString;
 var usable = false;
 var agenda = null;
@@ -78,7 +78,7 @@ var scheduleFunctionInterval = function (jobName, interval, alert, func, data) {
                         var nextEpisodePromise = TvMaze.getNextEpisodeInformation(nextEpisodeLink);
                         nextEpisodePromise.then(function (nextEp) {
                             var tokens = job.attrs.name.split("_");
-                            resetJob(tokens, job, nextEp.airdate);
+                            resetJob(tokens, job, nextEp);
                         });
                     } else {
                         bot.sendMessage(userDoc.chatId, Common.noNextEpisodeYetMessage);
@@ -121,16 +121,30 @@ var cancelJob = function (jobName) {
     });
 }
 
-var resetJob = function ( tokens, job, airDate) {
-    var jobName = airDate != undefined ? job.attrs.name : job.name;
+var resetJob = function ( tokens, job, nextEp) {
+    // if nextEp != undefined --> updating after sending subs to user
+    var jobName = nextEp != undefined ? job.attrs.name : job.name;
     var agenda = new Agenda({ mongo: Mongo.getMongoConnection() });    
     agenda.cancel({ name: jobName }, function (err, numRemoved) {
-        console.log("RESRET JOB: Removed %s jobs with name %s", numRemoved, jobName);
+        //console.log("RESRET JOB: Removed %s jobs with name %s", numRemoved, jobName);
         Mongo.Alert.findOne({ show_name: tokens[0], language: tokens[1] }, function (err, jobAlert) {
-            if(airDate != undefined){
-                jobAlert.nextepisode_airdate = airDate;
+            if(nextEp != undefined){
+                var newAlert = { 
+                    show_name: tokens[0],
+                    showId: jobAlert._doc.showId,
+                    language: tokens[1],
+                    nextepisode_airdate: nextEp.airdate,
+                    nextepisode_season: nextEp.season,
+                    nextepisode_episode: nextEp.number
+                };
+                Mongo.Alert.findOneAndUpdate({ showId: jobAlert.showId, language: jobAlert.language },
+                    newAlert, { new: true, upsert: true }, function (err, storedAlert) {
+                        if(err) console.log("err", err);
+                        else activateStoredSchedules(storedAlert._doc, Main.getBotInstance(), new Date(nextEp.airdate) <= new Date());
+                    });
+            }else{
+                activateStoredSchedules(jobAlert, Main.getBotInstance(), new Date(job.nextRunAt) <= new Date());
             }
-            activateStoredSchedules(jobAlert, Main.getBotInstance(), new Date(airDate) <= new Date());
         });
     });
 }
