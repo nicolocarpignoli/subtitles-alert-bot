@@ -74,7 +74,7 @@ exports.connectToDatabase = function () {
 }
 
 exports.subscribe = function (session, bot, from) {
-    //Logger.logEvent("alert", [], session);
+    Logger.logEvent("alert", [], session);
     var alertsToStore = [];
     var alertsIdList = [];
     if (session.choosenSeriesAlert.show._links.nextepisode) {
