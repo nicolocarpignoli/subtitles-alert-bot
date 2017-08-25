@@ -21,7 +21,7 @@ exports.addic7edGetSubtitle = function (session, languages, bot, chat, sessionsL
 }
 
 function getSingleEpisodeSubs (session, languages = [], bot, chat, sessionsList, episode, sendAmbiguousMessage) {
-    //Logger.logEvent("get", languages, session);
+    Logger.logEvent("get", languages, session);
     addic7edApi.search(session.choosenSeries.show.name, session.choosenSeason,
         episode, languages).then(function (subtitlesList) {
             var subInfo = subtitlesList[0];
