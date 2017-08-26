@@ -30,7 +30,7 @@ function getSingleEpisodeSubs (session, languages = [], bot, chat, sessionsList,
                 addic7edApi.download(subInfo, filename).then(function () {
                     fs.access(filename, function (err) {
                         if (!err) {
-                            console.log('Subtitles file saved.');
+                            //console.log('Subtitles file saved.');
                             Common.removeSession(sessionsList, session);
                             bot.sendMessage(chat, Common.buildLinkMessage(subInfo.link));
                             bot.sendDocument(chat, filename).then(function () {
@@ -44,13 +44,13 @@ function getSingleEpisodeSubs (session, languages = [], bot, chat, sessionsList,
                         }
                     });
                  }).catch(function (err) {
-                    console.log("error downloading subs");
+                    console.log("error downloading subs", err);
                 });
             }
             else
                 bot.sendMessage(chat, Common.subtitleNotFoundInAddic7edMessage);
          }).catch(function (err) {
-            console.log("error searching subs - ", session);
+            console.log("error searching subs - ", err);
         });
 }
 
@@ -62,7 +62,7 @@ exports.addic7edGetSubtitleAlert = function (alert, job, bot, doneJobInterval) {
             addic7edApi.download(subInfo, filename).then(function () {
                 fs.access(filename, function (err) {
                     if (!err) {
-                        console.log('Subtitles file saved.');
+                        //console.log('Subtitles file saved.');
                         Mongo.User.find({ alerts: alert._doc._id.toString() }, function (err, users) {
                             users.forEach(function (user) {
                                 var userDoc = user._doc;
@@ -84,13 +84,13 @@ exports.addic7edGetSubtitleAlert = function (alert, job, bot, doneJobInterval) {
                     }
                 });
              }).catch(function (err) {
-                console.log("error download subs - ", alert);
+                console.log("error download subs - ", err);
             });
         } else {
             job.attrs.data.hasToBeRemoved = false;
             doneJobInterval();
         }
      }).catch(function (err) {
-        console.log("error searching subs - ", alert);
+        console.log("error searching subs - ", err);
     });
 }
