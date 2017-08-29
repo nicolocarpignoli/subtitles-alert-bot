@@ -59,6 +59,7 @@ bot.onText(Common.STOPregExp, (msg, match) => {
 bot.on('callback_query', (msg) => {
     var session = Common.getUserSession(sessions, msg.from);
     var userInput = msg.data;
+    bot.answerCallbackQuery(msg.id,[]);
     if (Common.notACommand(userInput) && session.choosingSeries && !Common.isEmpty(session.ambiguousSeries)) {
         var seriesObj = session.ambiguousSeries.find(function (elem) {
             return elem.show.name === userInput;
