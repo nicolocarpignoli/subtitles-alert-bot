@@ -47,13 +47,16 @@ exports.revertDeleteMessage = "Wise choice! I'll keep your subscription active";
 exports.getCommand = "Get subtitles \uD83D\uDCE5";
 exports.startAlertCommand = "Subscribe \uD83D\uDCE2";
 exports.stopAlertCommand = "Unsubscribe \uD83D\uDEAB";
+exports.languageCommand = "Language";
+exports.donateCommand = "Donate";
+exports.helpCommand = "Help";
 
 exports.doneLanguageCallback = "doneLanguageCallback";
 
 exports.GETregExp = new RegExp(this.getCommand);
 exports.STARTregExp = new RegExp(this.startAlertCommand);
 exports.STOPregExp = new RegExp(this.stopAlertCommand);
-
+exports.HELPRegExp = new RegExp(this.helpCommand);
 
 exports.helpMessage = "A bot for subscribe and download subtitles for your favourite tv shows.\n\nUse Get subtitles \uD83D\uDCE5 for instant download of a single subtitles file, or" +
     " download a set of subtitles choosing an interval with 'first-last' episode numbers without spaces" +

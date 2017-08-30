@@ -32,6 +32,14 @@ bot.onText(/\/help/, (msg, match) => {
         BotGui.generateKeyboardOptions());
 });
 
+bot.onText(Common.HELPRegExp, (msg, match) => {
+    var session = Common.getUserSession(sessions, msg.chat);
+    Common.resetValues(session);
+    bot.sendMessage(msg.chat.id, Common.helpMessage,
+        BotGui.generateKeyboardOptions());
+    Common.pushInSessions(sessions, session);
+});
+
 bot.onText(Common.GETregExp, (msg, match) => {
     var session = Common.getUserSession(sessions, msg.chat);
     Common.resetValues(session);
