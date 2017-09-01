@@ -114,7 +114,7 @@ exports.subscribe = function (session, bot, from) {
             });
         });
     } else {
-        bot.sendMessage(from.id, nextEpisodeNotAvailableMessage);
+        bot.sendMessage(from.id, Mongo.nextEpisodeNotAvailableMessage);
         Common.resetValues(session);
     }
 }
