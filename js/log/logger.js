@@ -15,11 +15,11 @@ createLogLine = function(event,languages,session){
         message.episode =  session.choosenEpisode;
         message.lang = languages;
     }else{
-        message.show =  session.choosenSeriesAlert.show.name;
-        message.lang = [];
-        session.chosenLanguagesAlert.forEach(function(element) {
-            message.lang.push(element);
-        });
+        // message.show =  session.choosenSeriesAlert.show.name;
+        // message.lang = [];
+        // session.chosenLanguagesAlert.forEach(function(element) {
+        //     message.lang.push(element);
+        // });
     }
     return JSON.stringify(message);
 }
