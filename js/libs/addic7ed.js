@@ -56,7 +56,7 @@ function getSingleEpisodeSubs (session, languages = [], bot, chat, sessionsList,
 
 exports.addic7edGetSubtitleAlert = function (alert, job, bot, doneJobInterval) {
     addic7edApi.search(alert.show_name, alert.nextepisode_season, alert.nextepisode_episode, alert.language).then(function (subtitlesList) {
-        var subInfo = subtitlesList[0];
+        var subInfo = subtitlesList != undefined && subtitlesList.length > 0 ? subtitlesList[0] : undefined;
         if (subInfo != undefined) {
             var filename = alert.show_name + '_S' + alert.nextepisode_season + '_E' + alert.nextepisode_episode + "_" + alert.language + '.srt';
             addic7edApi.download(subInfo, filename).then(function () {
