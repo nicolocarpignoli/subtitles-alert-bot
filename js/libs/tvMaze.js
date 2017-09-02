@@ -57,6 +57,14 @@ function checkPerfectMatch(foundSeries, name) {
     return name.trim().toLowerCase() === foundSeriesName.trim().toLowerCase();
 }
 
+function checkOnePerfectMatch(foundSeries, name) {
+    var list = [];
+    foundSeries.map(function(element){
+        if(name.trim().toLowerCase() === element.show.name.trim().toLowerCase()) list.push(element);
+    });
+    return list;
+}
+
 // checks if tvMaze's results contains the required season 
 function checkCorrectResults(list, token) {
     let regExp = new RegExp('\\b' + token + '\\b', 'i');
@@ -107,6 +115,8 @@ exports.checkSeriesValidity = function (seriesName) {
             if (foundSeries && foundSeries.length == 0)
                 return [];
             else if (checkPerfectMatch(foundSeries[0], seriesName)) {
+                var uniquePerfectMatch = checkOnePerfectMatch(foundSeries, seriesName);
+                if(uniquePerfectMatch.length == 1) return uniquePerfectMatch;
                 var result = checkDuplicates(foundSeries);
                 if (!result["hasDuplicates"]) return [foundSeries[0]];
                 else return result["foundSeries"];
