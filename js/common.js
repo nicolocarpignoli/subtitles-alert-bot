@@ -39,6 +39,8 @@ exports.chooseAtLeastALanguageMessage = "Hey, you have to choose at least one la
 exports.subscribingToMessage = "Ok, I'm gonna subscribe you! Please wait a sec \u270F\uFE0F \uD83D\uDDD3";
 exports.addLanguageMessage = "Ok gotcha! Send me another language or click on 'Done' to subscribe";
 exports.nextEpisodeNotAvailableMessage = "Too early for a subscription for this show. I haven't got enough informations yet! Try again on the next weeks!";
+exports.seasonOverMessage = function(season, show) { return "Hey, season " + season + " of " + show + " is over! It's too early for a " +
+"subscription for the next season! Please use Get subtitles \uD83D\uDCE5 functionality for season " + season + " subtitles!"};
 exports.areYouSureRemoveAlert = function (series) {return "Are you sure you want to remove your alert for "+ series +"?"}
 exports.notValidIntervalGetMessage = "Please retry with a valid interval in the form of 'first-last' without spaces!"
 exports.deletedAlertMessage = "Subscription successfully deleted!";
