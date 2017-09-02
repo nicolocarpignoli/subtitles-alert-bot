@@ -77,6 +77,7 @@ function checkCorrectResults(list, token) {
 }
 
 function checkDuplicates(list) {
+    // TODO it can be refactored for sure
     var foundSeries = list;
     var list = list.map(function (item) { return item.show.name });
     var duplicates = {};
@@ -89,15 +90,18 @@ function checkDuplicates(list) {
             duplicates[list[i]] = [i];
         }
     }
+    var duplicateList = [];
     Object.keys(duplicates).forEach(function (element) {
         for (var i = 0; i < duplicates[element].length; i++) {
             var index = duplicates[element][i];
             if (foundSeries[index].show.premiered != null) {
                 foundSeries[index].show.name += " (" + foundSeries[index].show.premiered.slice(0, 4) + ")";
+                duplicateList.push(foundSeries[index]);
             }
         }
     });
     return {
+        "duplicateList": duplicateList,
         "foundSeries": foundSeries,
         "hasDuplicates": hasDuplicates
     }
@@ -119,12 +123,12 @@ exports.checkSeriesValidity = function (seriesName) {
                 if(uniquePerfectMatch.length == 1) return uniquePerfectMatch;
                 var result = checkDuplicates(foundSeries);
                 if (!result["hasDuplicates"]) return [foundSeries[0]];
-                else return result["foundSeries"];
+                else return result["duplicateList"];
             }
             else {
                 foundSeries = checkDuplicates(foundSeries);
                 if (!foundSeries["hasDuplicates"]) return foundSeries = foundSeries["foundSeries"].slice(0, 6);
-                return foundSeries["foundSeries"];
+                return foundSeries["duplicateList"];
             }
         })
         .catch(function (err) {
