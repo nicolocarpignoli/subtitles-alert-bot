@@ -47,6 +47,7 @@ exports.deletedAlertMessage = "Subscription successfully deleted!";
 exports.revertDeleteMessage = "Wise choice! I'll keep your subscription active";
 
 exports.getCommand = "Get subtitles \uD83D\uDCE5";
+exports.showCommand = "Show subscriptions \uD83D\uDDD3";
 exports.startAlertCommand = "Subscribe \uD83D\uDCE2";
 exports.stopAlertCommand = "Unsubscribe \uD83D\uDEAB";
 exports.languageCommand = "Language";
@@ -55,6 +56,7 @@ exports.helpCommand = "Help";
 
 exports.doneLanguageCallback = "doneLanguageCallback";
 
+exports.SHOWregExp = new RegExp(this.showCommand)
 exports.GETregExp = new RegExp(this.getCommand);
 exports.STARTregExp = new RegExp(this.startAlertCommand);
 exports.STOPregExp = new RegExp(this.stopAlertCommand);

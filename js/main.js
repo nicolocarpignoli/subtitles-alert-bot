@@ -56,6 +56,14 @@ bot.onText(Common.STARTregExp, (msg, match) => {
     Common.pushInSessions(sessions, session);
 })
 
+bot.onText(Common.SHOWregExp, (msg, match) => {
+    var session = Common.getUserSession(sessions, msg.chat);
+    Common.resetValues(session);
+    Common.pushInSessions(sessions, session);
+    var alerts = Mongo.getAlertsFromUser(msg.chat.id, bot, session);
+})
+
+
 bot.onText(Common.STOPregExp, (msg, match) => {
     var session = Common.getUserSession(sessions, msg.chat);
     Common.resetValues(session);
