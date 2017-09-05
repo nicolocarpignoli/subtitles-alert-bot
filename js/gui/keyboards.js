@@ -5,7 +5,8 @@ exports.generateKeyboardOptions = function () {
         "parse_mode": "Markdown",
         "reply_markup": {
             "keyboard": [
-            [{ text: Common.getCommand}, {text: Common.startAlertCommand},{text: Common.showCommand},{ text:Common.stopAlertCommand}],
+            [{ text: Common.getCommand}, {text: Common.startAlertCommand}],
+            [{text: Common.showCommand},{ text:Common.stopAlertCommand}],
             [{text: Common.languageCommand},{text: Common.helpCommand },{text: Common.donateCommand }],
             ],
             "resize_keyboard": true
