@@ -1,6 +1,19 @@
 var http = require('http');
 var rp = require('request-promise');
 var Promise = require('promise')
+var Common = require('../common.js');
+
+
+function buildNumberOfEpisodesOptions(seriesId){
+    const options = {
+        uri: "http://api.tvmaze.com/shows/" + seriesId + "/episodes",
+        headers: { 'User-Agent': 'Request-Promise' },
+        json: true,
+        simple: false
+    }
+    return options;
+}
+
 function buildSeriesRequestOptions(seriesName) {
     const options = {
         uri: "http://api.tvmaze.com/search/shows",
@@ -127,6 +140,18 @@ exports.checkSeriesValidity = function (seriesName) {
         });
 }
 
+
+getNumberOfEpisodes = function(seriesId, seasonNumber){
+    let options = buildNumberOfEpisodesOptions(seriesId);
+    return rp(options)
+        .then(function (episodes) {
+            return episodes.length;
+        })
+        .catch(function (err) {
+            console.log("Oh noes! :( Got an error fetching series... ");
+        });
+}
+
 // returns true if requested season is in seasons range and is already out
 exports.checkSeasonValidity = function (seriesId, seasonRequest) {
     return rp(buildSeasonsRequestOptions(seriesId))
@@ -150,7 +175,11 @@ exports.checkEpisodeValidity = function (seriesId, seasonNumber, episodeRequest)
                 console.log("Oh noes! :( Got an error fetching episode... ");
                 return err.error;
             });
-    } else {
+    }else if(episodeRequest.indexOf(Common.allString) !== -1){
+        this.getNumberOfEpisodes(seriesId,seasonNumber);
+        //TODO to use here recursiveCAllFunction or similiar
+    } 
+    else {
         var start = +episodeRequest.substr(0, episodeRequest.indexOf('-'));
         var end = +episodeRequest.substr(episodeRequest.indexOf('-') + 1, episodeRequest.length)
         if(start > end) return "wrongInterval";

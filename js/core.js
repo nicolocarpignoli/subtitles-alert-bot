@@ -65,6 +65,17 @@ exports.handleGetLogic = function (userInput, session, sessions, msg, match, bot
             promise.then(function (response) {
                 if (response !== true)
                     bot.sendMessage(msg.chat.id, Common.episodeNotFoundMessage);
+                else if(Common.isValidNumber(response)){
+                    if(response == 0 || response == undefined || response == null){
+                        bot.sendMessage(msg.chat.id, Common.noEpisodeInSeasonMessage);
+                        return;
+                    }else{
+                        Common.resetValues(session);
+                        session.numberOfEp = response;
+                        session.choosingLanguage = true;
+                        bot.sendMessage(msg.chat.id, Common.whichLanguageMessage);                        
+                    }
+                }
                 else {
                     session.choosenEpisode = userInput;
                     Common.resetValues(session);

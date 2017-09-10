@@ -8,7 +8,11 @@ var TvMaze = require('../libs/tvMaze.js');
 var Logger = require('../log/logger.js');
 
 exports.addic7edGetSubtitle = function (session, languages, bot, chat, sessionsList) {
-    if(session.choosenEpisode.indexOf('-')===-1){
+    if(session.numberOfEp != undefined){
+        for (i = 0; i < session.numberOfEp; i++){
+            getSingleEpisodeSubs(session, languages, bot, chat, sessionsList, i, true);
+        }
+    }else if(session.choosenEpisode.indexOf('-')===-1){
         getSingleEpisodeSubs(session, languages, bot, chat, sessionsList, session.choosenEpisode, true)
     }else if(session.choosenEpisode.indexOf(Common.allString)!==-1){
         TvMaze.checkNumberOfEpisodes(session.choosenSeason, session.choosenSeries);

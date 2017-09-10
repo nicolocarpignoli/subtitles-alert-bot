@@ -20,7 +20,7 @@ exports.noNextEpisodeYetMessage = "Hey, it seems that this season it's over or m
 exports.noAlertMessage = "It seems you have no active subscriptions right now... Try to add some!"
 var allString = 'all';
 exports.allString = allString;
-
+exports.noEpisodeInSeasonMessage = "Hey, we have found no episodes for the season you provide! Try with a different one!"
 exports.whichSeriesAlertMessage = function (firstName) { return "Ok " + firstName + "! Which show do you want to subscribe to?"; }
 exports.seriesNotRunningMessage = function (series)
 { return "Hey dude I really think " + series + " is ended! If you want to get subtitles of it please try the 'Get subtitles \uD83D\uDCE5' functionality or try another show!" }
