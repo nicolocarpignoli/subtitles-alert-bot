@@ -50,9 +50,9 @@ exports.getCommand = "Get subtitles \uD83D\uDCE5";
 exports.showCommand = "Show subscriptions \uD83D\uDDD3";
 exports.startAlertCommand = "Subscribe \uD83D\uDCE2";
 exports.stopAlertCommand = "Unsubscribe \uD83D\uDEAB";
-exports.languageCommand = "Language";
-exports.donateCommand = "Donate";
-exports.helpCommand = "Help";
+exports.languageCommand = "Language \uD83C\uDDEE\uD83C\uDDF9";
+exports.donateCommand = "Donate \uD83D\uDCB0";
+exports.helpCommand = "Help \uD83C\uDD98";
 
 exports.doneLanguageCallback = "doneLanguageCallback";
 
@@ -66,7 +66,8 @@ exports.helpMessage = "A bot for subscribe and download subtitles for your favou
     " download a set of subtitles choosing an interval with 'first-last' episode numbers without spaces" +
     "\n\nUse Subscribe \uD83D\uDCE2 to start a subscription to subtitles for a tv show. Just relax and as soon as they're out you will receive your subtitles on your phone" +
     "\n\nUse Unsubscribe \uD83D\uDEAB for a list of your active subscriptions. You can also delete the subscriptions." +
-    "\n\nType /help for seeing this help message any time you want." +
+    "\n\n You can also change bot Language \uD83C\uDDEE\uD83C\uDDF9 and  Donate \uD83D\uDCB0 us a beer." +
+    "\n\nUse Help \uD83C\uDD98 for seeing this help message any time you want." +
     "\n\nFollow us on: ";
 
 exports.notACommand = function (userInput) {
