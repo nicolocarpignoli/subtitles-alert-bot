@@ -18,6 +18,8 @@ exports.revertCallback = "no";
 //TODO questo messaggio di noNextEpisodeYetMessage andrà tolto quando avremo fatto la feature #29 su trello
 exports.noNextEpisodeYetMessage = "Hey, it seems that this season it's over or maybe our magic system cannot see the future for this show yet!"
 exports.noAlertMessage = "It seems you have no active subscriptions right now... Try to add some!"
+var allString = 'all';
+exports.allString = allString;
 
 exports.whichSeriesAlertMessage = function (firstName) { return "Ok " + firstName + "! Which show do you want to subscribe to?"; }
 exports.seriesNotRunningMessage = function (series)
@@ -77,6 +79,7 @@ function isValidNumber(str){
 }
 
 exports.isValidInterval = function (str) {
+    if(str == this.allString) return true;
     if(str.indexOf('-') === -1){
         return false;
     } 

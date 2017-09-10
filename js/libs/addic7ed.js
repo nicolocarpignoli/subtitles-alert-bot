@@ -10,6 +10,9 @@ var Logger = require('../log/logger.js');
 exports.addic7edGetSubtitle = function (session, languages, bot, chat, sessionsList) {
     if(session.choosenEpisode.indexOf('-')===-1){
         getSingleEpisodeSubs(session, languages, bot, chat, sessionsList, session.choosenEpisode, true)
+    }else if(session.choosenEpisode.indexOf(Common.allString)!==-1){
+        TvMaze.checkNumberOfEpisodes(session.choosenSeason, session.choosenSeries);
+        //getAllSeasonSubtitles
     }else{
         var start = +session.choosenEpisode.substr(0, session.choosenEpisode.indexOf('-'));
         var end = +session.choosenEpisode.substr(session.choosenEpisode.indexOf('-') + 1, session.choosenEpisode.length);
