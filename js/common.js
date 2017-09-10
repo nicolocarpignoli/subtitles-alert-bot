@@ -41,7 +41,7 @@ exports.subscribingToMessage = "Ok, I'm gonna subscribe you! Please wait a sec \
 exports.addLanguageMessage = "Ok gotcha! Send me another language or click on 'Done' to subscribe";
 exports.nextEpisodeNotAvailableMessage = "Too early for a subscription for this show. I haven't got enough informations yet! Try again on the next weeks!";
 exports.seasonOverMessage = function(season, show) { return "Hey, season " + season + " of " + show + " is over! It's too early for a " +
-"subscription for the next season! Please use Get subtitles \uD83D\uDCE5 functionality for season " + season + " subtitles!"};
+    "subscription for the next season! Please use Get subtitles \uD83D\uDCE5 functionality for season " + season + " subtitles!"};
 exports.areYouSureRemoveAlert = function (series) {return "Are you sure you want to remove your alert for "+ series +"?"}
 exports.notValidIntervalGetMessage = "Please retry with a valid interval in the form of 'first-last' without spaces!"
 exports.deletedAlertMessage = "Subscription successfully deleted!";
@@ -62,6 +62,8 @@ exports.GETregExp = new RegExp(this.getCommand);
 exports.STARTregExp = new RegExp(this.startAlertCommand);
 exports.STOPregExp = new RegExp(this.stopAlertCommand);
 exports.HELPRegExp = new RegExp(this.helpCommand);
+exports.DONATERegExp = new RegExp(this.donateCommand);
+exports.LANGUAGERegExp = new RegExp(this.languageCommand);
 
 exports.helpMessage = "A bot for subscribe and download subtitles for your favourite tv shows.\n\nUse Get subtitles \uD83D\uDCE5 for instant download of a single subtitles file, or" +
     " download a set of subtitles choosing an interval with 'first-last' episode numbers without spaces" +
@@ -77,7 +79,9 @@ exports.notACommand = function (userInput) {
     return userInput != this.getCommand &&
         userInput != this.startAlertCommand &&
         userInput != this.stopAlertCommand &&
-        userInput != "/help";
+        userInput != this.helpCommand &&
+        userInput != this.donateCommand &&
+        userInput != this.languageCommand;
     }
 
 exports.isValidNumber = function (str) {
