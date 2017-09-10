@@ -26,6 +26,7 @@ exports.whichLanguagesAlertMessage = function (series)
 { return "Ok you choose " + series + "! Please send me a language for your subtitles. You can send more than one language and click 'Done' at the end!"; }
 exports.languageAlreadyPresentMessage = "It seems you have already inserted this language, dude! Try with another one!";
 
+exports.buildLinkMessage = function (link) { return 'There it is! If you want more subtitles of this episode please visit: www.addic7ed.com' + link;}
 exports.failedSeriesMessage = "Sorry, no shows found with that name \u2639\uFE0F Please try with another great tv-show title";
 exports.ambiguousSeriesMessage = "Mmh ambiguous! \uD83E\uDD14 Which of these? (If none of these is the show you are looking for, try again with a more precise name)"
 exports.notANumberMessage = "This doesn't seem to be a valid number, dude... retry!";
@@ -68,7 +69,9 @@ exports.helpMessage = "A bot for subscribe and download subtitles for your favou
     "\n\nUse Unsubscribe \uD83D\uDEAB for a list of your active subscriptions. You can also delete the subscriptions." +
     "\n\n You can also change bot Language \uD83C\uDDEE\uD83C\uDDF9 and  Donate \uD83D\uDCB0 us a beer." +
     "\n\nUse Help \uD83C\uDD98 for seeing this help message any time you want." +
-    "\n\nFollow us on: ";
+    "\n\nFollow us on:" +
+    "\n\nInstagram @subtitlesbottelegram" +
+    "\n\nFacebook @subtitlesalertbot";
 
 exports.notACommand = function (userInput) {
     return userInput != this.getCommand &&
@@ -103,9 +106,6 @@ exports.isEmpty = function (obj) {
     return true;
 }
 
-exports.buildLinkMessage = function (link) {
-    return 'There it is! If you want more subtitles of this episode please visit: www.addic7ed.com' + link;
-}
 
 exports.getUserSession = function (sessions, msg) {
     let userSession = sessions.find(function (session) {
