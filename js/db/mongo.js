@@ -74,12 +74,11 @@ exports.connectToDatabase = function () {
 }
 
 exports.subscribe = function (session, bot, from) {
-    //Logger.logEvent("alert", [], session);
+    Logger.logEvent("alert", [], session);
     var alertsToStore = [];
     var alertsIdList = [];
     if (session.choosenSeriesAlert.show._links.nextepisode) {
         var nextepisodePromise = TvMaze.getNextEpisodeInformation(session.choosenSeriesAlert.show._links.nextepisode.href);
-
         nextepisodePromise.then(function (nextepisode) {
             session.chosenLanguagesAlert.forEach(function (languageElement, index) {
                 var alertToStore = new Alert({
@@ -114,8 +113,16 @@ exports.subscribe = function (session, bot, from) {
             });
         });
     } else {
-        bot.sendMessage(from.id, nextEpisodeNotAvailableMessage);
-        Common.resetValues(session);
+        var previousEpisode = TvMaze.getNextEpisodeInformation(session.choosenSeriesAlert.show._links.previousepisode.href);
+        previousEpisode.then(function(previousEpisode){
+            if(previousEpisode){
+                bot.sendMessage(from.id, Common.seasonOverMessage(previousEpisode.season,session.choosenSeriesAlert.show.name));                        
+            }else{
+                bot.sendMessage(from.id, Common.nextEpisodeNotAvailableMessage);            
+            }
+            Common.resetValues(session);
+        });
+        
     }
 }
 
@@ -159,6 +166,7 @@ exports.getAlertsFromUser = function (id, bot, session) {
         }
     });
 }
+
 
 function deleteAlertIfNoUserSubscribed(alert) {
     const alertId = alert._id.toString();

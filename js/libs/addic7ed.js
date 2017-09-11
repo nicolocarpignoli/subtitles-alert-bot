@@ -21,7 +21,7 @@ exports.addic7edGetSubtitle = function (session, languages, bot, chat, sessionsL
 }
 
 function getSingleEpisodeSubs (session, languages = [], bot, chat, sessionsList, episode, sendAmbiguousMessage) {
-    //Logger.logEvent("get", languages, session);
+    Logger.logEvent("get", languages, session);
     addic7edApi.search(session.choosenSeries.show.name, session.choosenSeason,
         episode, languages).then(function (subtitlesList) {
             var subInfo = subtitlesList[0];
@@ -30,7 +30,7 @@ function getSingleEpisodeSubs (session, languages = [], bot, chat, sessionsList,
                 addic7edApi.download(subInfo, filename).then(function () {
                     fs.access(filename, function (err) {
                         if (!err) {
-                            console.log('Subtitles file saved.');
+                            //console.log('Subtitles file saved.');
                             Common.removeSession(sessionsList, session);
                             bot.sendMessage(chat, Common.buildLinkMessage(subInfo.link));
                             bot.sendDocument(chat, filename).then(function () {
@@ -44,25 +44,25 @@ function getSingleEpisodeSubs (session, languages = [], bot, chat, sessionsList,
                         }
                     });
                  }).catch(function (err) {
-                    console.log("error downloading subs");
+                    console.log("error downloading subs", err);
                 });
             }
             else
                 bot.sendMessage(chat, Common.subtitleNotFoundInAddic7edMessage);
          }).catch(function (err) {
-            console.log("error searching subs - ", session);
+            console.log("error searching subs - ", err);
         });
 }
 
 exports.addic7edGetSubtitleAlert = function (alert, job, bot, doneJobInterval) {
     addic7edApi.search(alert.show_name, alert.nextepisode_season, alert.nextepisode_episode, alert.language).then(function (subtitlesList) {
-        var subInfo = subtitlesList[0];
+        var subInfo = subtitlesList != undefined && subtitlesList.length > 0 ? subtitlesList[0] : undefined;
         if (subInfo != undefined) {
             var filename = alert.show_name + '_S' + alert.nextepisode_season + '_E' + alert.nextepisode_episode + "_" + alert.language + '.srt';
             addic7edApi.download(subInfo, filename).then(function () {
                 fs.access(filename, function (err) {
                     if (!err) {
-                        console.log('Subtitles file saved.');
+                        //console.log('Subtitles file saved.');
                         Mongo.User.find({ alerts: alert._doc._id.toString() }, function (err, users) {
                             users.forEach(function (user) {
                                 var userDoc = user._doc;
@@ -84,13 +84,13 @@ exports.addic7edGetSubtitleAlert = function (alert, job, bot, doneJobInterval) {
                     }
                 });
              }).catch(function (err) {
-                console.log("error download subs - ", alert);
+                console.log("error download subs - ", err);
             });
         } else {
             job.attrs.data.hasToBeRemoved = false;
             doneJobInterval();
         }
      }).catch(function (err) {
-        console.log("error searching subs - ", alert);
+        console.log("error searching subs - ", err);
     });
 }
