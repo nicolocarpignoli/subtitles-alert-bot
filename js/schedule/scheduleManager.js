@@ -99,15 +99,24 @@ var formatDate = function (date) {
 }
 
 var activateStoredSchedules = function (alert, bot, outdated) {
+    var agenda = new Agenda({ mongo: Mongo.getMongoConnection() });   
     if(alert == null) return;
     var date = outdated ? formatDate() : alert.nextepisode_airdate;
-    scheduleFunctionGivenTime(alert.show_name + '_' + alert.language + '_giventime', date, alert, function (jobDate, doneJobDate) {
-        scheduleFunctionInterval(alert.show_name + '_' + alert.language + '_interval', intervalSchedule, alert, function (jobInterval, doneJobInterval) {
-            Addic7ed.addic7edGetSubtitleAlert(alert, jobInterval, bot, doneJobInterval);
-        }, { hasToBeRemoved: false });
-        doneJobDate();
+    agenda.jobs({name: alert.show_name + "_" + alert.language + "_giventime"}, function(err, jobsGiven) {
+        agenda.jobs({name: alert.show_name + "_" + alert.language + "_interval"}, function(err, jobsInterv) {
+            if(jobsGiven.length + jobsInterv.length == 0){
+                scheduleFunctionGivenTime(alert.show_name + '_' + alert.language + '_giventime', date, alert, function (jobDate, doneJobDate) {
+                    scheduleFunctionInterval(alert.show_name + '_' + alert.language + '_interval', intervalSchedule, alert, function (jobInterval, doneJobInterval) {
+                        Addic7ed.addic7edGetSubtitleAlert(alert, jobInterval, bot, doneJobInterval);
+                    }, { hasToBeRemoved: false });
+                    doneJobDate();
+                });
+            }
+        });
     });
+    
 }
+
 
 var updateNextRunDate = function (job, newDate) {
     job.nextRunAt = formatDate(newDate);
