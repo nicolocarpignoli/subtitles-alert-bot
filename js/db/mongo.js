@@ -141,12 +141,21 @@ function subscribeUser(alertsList, session, bot, from) {
                 Common.resetValues(session);
             });
         } else {
-            user._doc.alerts.addToSet(alertsList);
-            user.save(function () {
-                bot.sendMessage(from.id, Common.successSubscribeMessage(session.choosenSeriesAlert.show.name));
-                Common.resetValues(session);
+            var actualList = [];
+            alertsList.forEach(function(element) {
+                if(user._doc.alerts.indexOf(element) == -1) {
+                    actualList.push(element);
+                }
             });
-
+            if(actualList.length < alertsList.length) bot.sendMessage(from.id, Common.jobAlreadyExistMessage);
+            if(actualList.length > 0){
+                user._doc.alerts.addToSet(actualList);
+                bot.sendMessage(from.id, Common.subscribingToMessage);                
+                user.save(function () {
+                    bot.sendMessage(from.id, Common.successSubscribeMessage(session.choosenSeriesAlert.show.name));
+                    Common.resetValues(session);
+                });
+            }
         }
     });
 }
