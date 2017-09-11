@@ -32,6 +32,14 @@ bot.onText(/\/help/, (msg, match) => {
         BotGui.generateKeyboardOptions());
 });
 
+bot.onText(Common.HELPRegExp, (msg, match) => {
+    var session = Common.getUserSession(sessions, msg.chat);
+    Common.resetValues(session);
+    bot.sendMessage(msg.chat.id, Common.helpMessage,
+        BotGui.generateKeyboardOptions());
+    Common.pushInSessions(sessions, session);
+});
+
 bot.onText(Common.GETregExp, (msg, match) => {
     var session = Common.getUserSession(sessions, msg.chat);
     Common.resetValues(session);
@@ -48,6 +56,14 @@ bot.onText(Common.STARTregExp, (msg, match) => {
     Common.pushInSessions(sessions, session);
 })
 
+bot.onText(Common.SHOWregExp, (msg, match) => {
+    var session = Common.getUserSession(sessions, msg.chat);
+    Common.resetValues(session);
+    Common.pushInSessions(sessions, session);
+    var alerts = Mongo.getAlertsFromUser(msg.chat.id, bot, session);
+})
+
+
 bot.onText(Common.STOPregExp, (msg, match) => {
     var session = Common.getUserSession(sessions, msg.chat);
     Common.resetValues(session);
@@ -59,6 +75,7 @@ bot.onText(Common.STOPregExp, (msg, match) => {
 bot.on('callback_query', (msg) => {
     var session = Common.getUserSession(sessions, msg.from);
     var userInput = msg.data;
+    bot.answerCallbackQuery(msg.id,[]);
     if (Common.notACommand(userInput) && session.choosingSeries && !Common.isEmpty(session.ambiguousSeries)) {
         var seriesObj = session.ambiguousSeries.find(function (elem) {
             return elem.show.name === userInput;
