@@ -104,7 +104,6 @@ bot.on('callback_query', (msg) => {
             bot.sendMessage(msg.from.id, Common.chooseAtLeastALanguageMessage, BotGui.generatesLanguageInlineKeyboard());
         } else {
             session.choosingLanguageAlert = false;
-            bot.sendMessage(msg.from.id, Common.subscribingToMessage);
             Mongo.subscribe(session, bot, msg.from);
         }
     }
