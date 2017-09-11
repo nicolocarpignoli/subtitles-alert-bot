@@ -26,6 +26,7 @@ exports.whichLanguagesAlertMessage = function (series)
 { return "Ok you choose " + series + "! Please send me a language for your subtitles. You can send more than one language and click 'Done' at the end!"; }
 exports.languageAlreadyPresentMessage = "It seems you have already inserted this language, dude! Try with another one!";
 
+exports.buildLinkMessage = function (link) { return 'There it is! If you want more subtitles of this episode please visit: www.addic7ed.com' + link;}
 exports.failedSeriesMessage = "Sorry, no shows found with that name \u2639\uFE0F Please try with another great tv-show title";
 exports.ambiguousSeriesMessage = "Mmh ambiguous! \uD83E\uDD14 Which of these? (If none of these is the show you are looking for, try again with a more precise name)"
 exports.notANumberMessage = "This doesn't seem to be a valid number, dude... retry!";
@@ -39,34 +40,48 @@ exports.chooseAtLeastALanguageMessage = "Hey, you have to choose at least one la
 exports.subscribingToMessage = "Ok, I'm gonna subscribe you! Please wait a sec \u270F\uFE0F \uD83D\uDDD3";
 exports.addLanguageMessage = "Ok gotcha! Send me another language or click on 'Done' to subscribe";
 exports.nextEpisodeNotAvailableMessage = "Too early for a subscription for this show. I haven't got enough informations yet! Try again on the next weeks!";
+exports.seasonOverMessage = function(season, show) { return "Hey, season " + season + " of " + show + " is over! It's too early for a " +
+    "subscription for the next season! Please use Get subtitles \uD83D\uDCE5 functionality for season " + season + " subtitles!"};
 exports.areYouSureRemoveAlert = function (series) {return "Are you sure you want to remove your alert for "+ series +"?"}
 exports.notValidIntervalGetMessage = "Please retry with a valid interval in the form of 'first-last' without spaces!"
 exports.deletedAlertMessage = "Subscription successfully deleted!";
 exports.revertDeleteMessage = "Wise choice! I'll keep your subscription active";
 
 exports.getCommand = "Get subtitles \uD83D\uDCE5";
+exports.showCommand = "Show subscriptions \uD83D\uDDD3";
 exports.startAlertCommand = "Subscribe \uD83D\uDCE2";
 exports.stopAlertCommand = "Unsubscribe \uD83D\uDEAB";
+exports.languageCommand = "Language \uD83C\uDDEE\uD83C\uDDF9";
+exports.donateCommand = "Donate \uD83D\uDCB0";
+exports.helpCommand = "Help \uD83C\uDD98";
 
 exports.doneLanguageCallback = "doneLanguageCallback";
 
+exports.SHOWregExp = new RegExp(this.showCommand)
 exports.GETregExp = new RegExp(this.getCommand);
 exports.STARTregExp = new RegExp(this.startAlertCommand);
 exports.STOPregExp = new RegExp(this.stopAlertCommand);
-
+exports.HELPRegExp = new RegExp(this.helpCommand);
+exports.DONATERegExp = new RegExp(this.donateCommand);
+exports.LANGUAGERegExp = new RegExp(this.languageCommand);
 
 exports.helpMessage = "A bot for subscribe and download subtitles for your favourite tv shows.\n\nUse Get subtitles \uD83D\uDCE5 for instant download of a single subtitles file, or" +
     " download a set of subtitles choosing an interval with 'first-last' episode numbers without spaces" +
     "\n\nUse Subscribe \uD83D\uDCE2 to start a subscription to subtitles for a tv show. Just relax and as soon as they're out you will receive your subtitles on your phone" +
     "\n\nUse Unsubscribe \uD83D\uDEAB for a list of your active subscriptions. You can also delete the subscriptions." +
-    "\n\nType /help for seeing this help message any time you want." +
-    "\n\nFollow us on: ";
+    "\n\n You can also change bot Language \uD83C\uDDEE\uD83C\uDDF9 and  Donate \uD83D\uDCB0 us a beer." +
+    "\n\nUse Help \uD83C\uDD98 for seeing this help message any time you want." +
+    "\n\nFollow us on:" +
+    "\n\nInstagram @subtitlesbottelegram" +
+    "\n\nFacebook @subtitlesalertbot";
 
 exports.notACommand = function (userInput) {
     return userInput != this.getCommand &&
         userInput != this.startAlertCommand &&
         userInput != this.stopAlertCommand &&
-        userInput != "/help";
+        userInput != this.helpCommand &&
+        userInput != this.donateCommand &&
+        userInput != this.languageCommand;
     }
 
 exports.isValidNumber = function (str) {
@@ -95,9 +110,6 @@ exports.isEmpty = function (obj) {
     return true;
 }
 
-exports.buildLinkMessage = function (link) {
-    return 'There it is! If you want more subtitles of this episode please visit: www.addic7ed.com' + link;
-}
 
 exports.getUserSession = function (sessions, msg) {
     let userSession = sessions.find(function (session) {
