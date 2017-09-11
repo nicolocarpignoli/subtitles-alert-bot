@@ -66,23 +66,25 @@ var scheduleFunctionInterval = function (jobName, interval, alert, func, data) {
         if (job.attrs.data.hasToBeRemoved) {
             var getShowPromise = TvMaze.getShowInfosById(job.alert.showId);
             getShowPromise.then(function (show) {
-                const nextEpisodeLink = show._links.nextepisode.href;
-                if (show.status != 'Running') {
-                    Mongo.deleteAlert(job.alert._id.toString());
-                    Mongo.deleteAlertFromAllUsers(job.alert);
-                    agenda.cancel({ name: job.attrs.name }, function (err, numRemoved) {
-                        //console.log("Removed %s jobs with name %s", numRemoved, job.attrs.name);
-                    });
-                } else {
-                    if (nextEpisodeLink) {
-                        var nextEpisodePromise = TvMaze.getNextEpisodeInformation(nextEpisodeLink);
-                        nextEpisodePromise.then(function (nextEp) {
-                            var tokens = job.attrs.name.split("_");
-                            resetJob(tokens, job, nextEp);
+                if(show && show._links && show._links.nextepisode){
+                    const nextEpisodeLink = show._links.nextepisode.href;
+                    if (show.status != 'Running') {
+                        Mongo.deleteAlert(job.alert._id.toString());
+                        Mongo.deleteAlertFromAllUsers(job.alert);
+                        agenda.cancel({ name: job.attrs.name }, function (err, numRemoved) {
+                            //console.log("Removed %s jobs with name %s", numRemoved, job.attrs.name);
                         });
                     } else {
-                        bot.sendMessage(userDoc.chatId, Common.noNextEpisodeYetMessage);
-                        // TODO Job Pending task su trello (#29)
+                        if (nextEpisodeLink) {
+                            var nextEpisodePromise = TvMaze.getNextEpisodeInformation(nextEpisodeLink);
+                            nextEpisodePromise.then(function (nextEp) {
+                                var tokens = job.attrs.name.split("_");
+                                resetJob(tokens, job, nextEp);
+                            });
+                        } else {
+                            bot.sendMessage(userDoc.chatId, Common.noNextEpisodeYetMessage);
+                            // TODO Job Pending task su trello (#29)
+                        }
                     }
                 }
             });
@@ -97,6 +99,7 @@ var formatDate = function (date) {
 }
 
 var activateStoredSchedules = function (alert, bot, outdated) {
+    if(alert == null) return;
     var date = outdated ? formatDate() : alert.nextepisode_airdate;
     scheduleFunctionGivenTime(alert.show_name + '_' + alert.language + '_giventime', date, alert, function (jobDate, doneJobDate) {
         scheduleFunctionInterval(alert.show_name + '_' + alert.language + '_interval', intervalSchedule, alert, function (jobInterval, doneJobInterval) {

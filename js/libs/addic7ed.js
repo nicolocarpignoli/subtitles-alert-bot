@@ -63,24 +63,26 @@ exports.addic7edGetSubtitleAlert = function (alert, job, bot, doneJobInterval) {
                 fs.access(filename, function (err) {
                     if (!err) {
                         //console.log('Subtitles file saved.');
-                        Mongo.User.find({ alerts: alert._doc._id.toString() }, function (err, users) {
-                            users.forEach(function (user) {
-                                var userDoc = user._doc;
-                                bot.sendMessage(userDoc.chatId, Common.newEpisodeAlertMessage(userDoc.first_name, alert._doc.show_name));
-                                bot.sendMessage(userDoc.chatId, Common.buildLinkMessage(subInfo.link));
-                                bot.sendDocument(userDoc.chatId, filename).then(function () {
-                                    console.log("File sent to user " + userDoc.first_name);
+                        if(alert && alert._doc && alert._doc._id){
+                            Mongo.User.find({ alerts: alert._doc._id.toString() }, function (err, users) {
+                                users.forEach(function (user) {
+                                    var userDoc = user._doc;
+                                    bot.sendMessage(userDoc.chatId, Common.newEpisodeAlertMessage(userDoc.first_name, alert._doc.show_name));
+                                    bot.sendMessage(userDoc.chatId, Common.buildLinkMessage(subInfo.link));
+                                    bot.sendDocument(userDoc.chatId, filename).then(function () {
+                                        console.log("File sent to user " + userDoc.first_name);
+                                    });
+                                    if (Common.isAmbiguousTitle(alert._doc.show_name)) {
+                                        bot.sendMessage(userDoc.chatId, Common.ambigousSubtitleMessage);
+                                    }
                                 });
-                                if (Common.isAmbiguousTitle(alert._doc.show_name)) {
-                                    bot.sendMessage(userDoc.chatId, Common.ambigousSubtitleMessage);
-                                }
+                                job.attrs.data.hasToBeRemoved = true;
+                                fs.unlinkSync(filename, function(err){
+                                    if(err) console.log("error, file not deleted");
+                                });
+                                doneJobInterval();
                             });
-                            job.attrs.data.hasToBeRemoved = true;
-                            fs.unlinkSync(filename, function(err){
-                                if(err) console.log("error, file not deleted");
-                            });
-                            doneJobInterval();
-                        });
+                        }
                     }
                 });
              }).catch(function (err) {
