@@ -106,8 +106,7 @@ exports.handleStartAlertLogic = function (userInput, session, sessions, msg, mat
                     if (response[0].show.status !== Common.runningState) {
                         bot.sendMessage(msg.chat.id, Common.seriesNotRunningMessage(response[0].show.name));
                     } else {
-                        bot.sendMessage(msg.chat.id, Common.whichLanguagesAlertMessage(response[0].show.name),
-                            BotGui.generatesLanguageInlineKeyboard());
+                        bot.sendMessage(msg.chat.id, Common.whichLanguagesAlertMessage(response[0].show.name));
                         Common.resetValues(session);
                         session.choosingLanguageAlert = true;
                         session.choosenSeriesAlert = response[0];
@@ -122,7 +121,7 @@ exports.handleStartAlertLogic = function (userInput, session, sessions, msg, mat
             }
         });
     }
-    if (Common.notACommand(userInput) && session.choosingLanguageAlert) {
+    if (Common.notACommand(userInput) && session.choosingLanguageAlert && userInput.toLowerCase() != Common.okDonelanguageCommand) {
         var languageKey = Object.keys(Model.languages).find(function (key) {
             return key.length == 3 && (key.toUpperCase() === userInput.toUpperCase() ||
                 Model.languages[key]["native"][0].toUpperCase() === userInput.toUpperCase() ||
@@ -133,13 +132,13 @@ exports.handleStartAlertLogic = function (userInput, session, sessions, msg, mat
             if (!Common.languageAlreadyPresent(session.chosenLanguagesAlert, languageKey)) {
                 Common.getLanguageFromKey(languageKey);
                 session.chosenLanguagesAlert.push(languageKey);
-                bot.sendMessage(msg.chat.id, Common.addLanguageMessage, BotGui.generatesLanguageInlineKeyboard());
+                bot.sendMessage(msg.chat.id, Common.addLanguageMessage);
             } else {
-                bot.sendMessage(msg.chat.id, Common.languageAlreadyPresentMessage, BotGui.generatesLanguageInlineKeyboard());
+                bot.sendMessage(msg.chat.id, Common.languageAlreadyPresentMessage);
             }
         }
         else
-            bot.sendMessage(msg.chat.id, Common.languageNotFoundMessage, BotGui.generatesLanguageInlineKeyboard());
+            bot.sendMessage(msg.chat.id, Common.languageNotFoundMessage);
     }
 }
 
@@ -151,4 +150,15 @@ exports.handleDeleteLogic = function (msg, userInput, session, sessions, bot) {
 
     Common.resetValues(session);
     Common.pushInSessions(sessions, session);
+}
+
+exports.handleLanguageConfirmation = function (userInput, session, msg, bot){
+    if (Common.notACommand(userInput) && session.choosingLanguageAlert && userInput.toLowerCase() == Common.okDonelanguageCommand) {
+        if (session.chosenLanguagesAlert.length == 0) {
+            bot.sendMessage(msg.from.id, Common.chooseAtLeastALanguageMessage);
+        } else {
+            session.choosingLanguageAlert = false;
+            Mongo.subscribe(session, bot, msg.from);
+        }
+    }
 }
