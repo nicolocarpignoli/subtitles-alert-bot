@@ -91,22 +91,14 @@ bot.on('callback_query', (msg) => {
         if (seriesObj.show.status !== Common.runningState) {
             bot.sendMessage(msg.from.id, Common.seriesNotRunningMessage(seriesObj.show.name));
         } else {
-            bot.sendMessage(msg.from.id, Common.whichLanguagesAlertMessage(seriesObj.show.name),
-                BotGui.generatesLanguageInlineKeyboard());
+            bot.sendMessage(msg.from.id, Common.whichLanguagesAlertMessage(seriesObj.show.name));
             Common.resetValues(session);
             session.choosingLanguageAlert = true;
             session.choosenSeriesAlert = seriesObj;
             Common.pushInSessions(sessions, session);
         }
     }
-    if (Common.notACommand(userInput) && session.choosingLanguageAlert && userInput == Common.doneLanguageCallback) {
-        if (session.chosenLanguagesAlert.length == 0) {
-            bot.sendMessage(msg.from.id, Common.chooseAtLeastALanguageMessage, BotGui.generatesLanguageInlineKeyboard());
-        } else {
-            session.choosingLanguageAlert = false;
-            Mongo.subscribe(session, bot, msg.from);
-        }
-    }
+   
     if (Common.notACommand(userInput) && session.deletingAlert && userInput.indexOf("_") > -1) {
         // if exist remove jobs named "showname_language_interval/giventime"
         var seriesName = userInput.length > 1 ? userInput.substring(0, userInput.indexOf('_')) : null;
@@ -128,6 +120,7 @@ bot.onText(/(.*?)/, (msg, match) => {
     var session = Common.getUserSession(sessions, msg.chat);
     Core.handleGetLogic(userInput, session, sessions, msg, match, bot);
     Core.handleStartAlertLogic(userInput, session, sessions, msg, match, bot);
+    Core.handleLanguageConfirmation(userInput, session, msg, bot);
 });
 
 exports.getBotInstance = function () {

@@ -24,7 +24,7 @@ exports.whichSeriesAlertMessage = function (firstName) { return "Ok " + firstNam
 exports.seriesNotRunningMessage = function (series)
 { return "Hey dude I really think " + series + " is ended! If you want to get subtitles of it please try the 'Get subtitles \uD83D\uDCE5' functionality or try another show!" }
 exports.whichLanguagesAlertMessage = function (series)
-{ return "Ok you choose " + series + "! Please send me a language for your subtitles. You can send more than one language and click 'Done' at the end!"; }
+{ return "Ok you choose " + series + "! Please send me a language for your subtitles or type 'ok' if you have done!"; }
 exports.languageAlreadyPresentMessage = "It seems you have already inserted this language, dude! Try with another one!";
 
 exports.buildLinkMessage = function (link) { return 'There it is! If you want more subtitles of this episode please visit: www.addic7ed.com' + link;}
@@ -39,7 +39,7 @@ exports.LoadingSubtitleMessage = "Great! I'm fetching for your subtitle now mate
 exports.ambigousSubtitleMessage = "Hey, watch out! Probably you chose a very ambiguous tv-show title and our system found the only match it had!";
 exports.chooseAtLeastALanguageMessage = "Hey, you have to choose at least one language for your subscription! Try again and send me a valid language!";
 exports.subscribingToMessage = "Ok, I'm gonna subscribe you! Please wait a sec \u270F\uFE0F \uD83D\uDDD3";
-exports.addLanguageMessage = "Ok gotcha! Send me another language or click on 'Done' to subscribe";
+exports.addLanguageMessage = "Ok gotcha! Send me another language or type 'ok' to subscribe";
 exports.nextEpisodeNotAvailableMessage = "Too early for a subscription for this show. I haven't got enough informations yet! Try again on the next weeks!";
 exports.seasonOverMessage = function(season, show) { return "Hey, season " + season + " of " + show + " is over! It's too early for a " +
     "subscription for the next season! Please use Get subtitles \uD83D\uDCE5 functionality for season " + season + " subtitles!"};
@@ -55,8 +55,7 @@ exports.stopAlertCommand = "Unsubscribe \uD83D\uDEAB";
 exports.languageCommand = "Language \uD83C\uDDEE\uD83C\uDDF9";
 exports.donateCommand = "Donate \uD83D\uDCB0";
 exports.helpCommand = "Help \uD83C\uDD98";
-
-exports.doneLanguageCallback = "doneLanguageCallback";
+exports.okDonelanguageCommand = 'ok';
 
 exports.SHOWregExp = new RegExp(this.showCommand)
 exports.GETregExp = new RegExp(this.getCommand);
@@ -82,7 +81,7 @@ exports.notACommand = function (userInput) {
         userInput != this.stopAlertCommand &&
         userInput != this.helpCommand &&
         userInput != this.donateCommand &&
-        userInput != this.languageCommand;
+        userInput != this.languageCommand
     }
 
 exports.isValidNumber = function (str) {

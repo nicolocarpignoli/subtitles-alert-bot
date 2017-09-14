@@ -32,22 +32,6 @@ exports.generateSeriesInlineKeyboard = function (options){
     };
 };
 
-exports.generatesLanguageInlineKeyboard = function (options){
-    let inlineOptions = [
-        [
-        {
-            text: "Done", 
-            callback_data: Common.doneLanguageCallback
-        }]
-    ];
-    return {
-        "parse_mode": "Markdown",
-        "reply_markup": {
-            "inline_keyboard": inlineOptions
-        }
-    };
-};
-
 exports.generateAlertsInlineKeyboard = function (alerts){
     let inlineOptions = [];
     alerts.forEach(function(element) {
