@@ -20,7 +20,7 @@ exports.whichSeriesAlertMessage = function (firstName) { return "Ok " + firstNam
 exports.seriesNotRunningMessage = function (series)
 { return "Hey amico credo che " + series + " sia conclusa! Se vuoi questi sottotitoli prova la funzione 'Download subs \uD83D\uDCE5' oppure prova a sottoscriverti ad una serie in corso!" }
 exports.whichLanguagesAlertMessage = function (series)
-{ return "Ok hai scelto " + series + "! Scegli uno o più lingue per i sottotitoli. Puoi inviarmi ogni lingua e cliccare su 'Fatto' per concludere!"; }
+{ return "Ok hai scelto " + series + "! Scegli uno o più lingue per i sottotitoli e inviami 'ok' per concludere!"; }
 exports.languageAlreadyPresentMessage = "Sembra tu abbia già scelto questa lingua, prova con un'altra!";
 
 exports.failedSeriesMessage = "Mi spiace, non conosco serie con questo nome \u2639\uFE0F Per favore riprova!";
@@ -34,7 +34,7 @@ exports.LoadingSubtitleMessage = "Ottimo! Sto cercando.. \uD83D\uDCE5";
 exports.ambigousSubtitleMessage = "Hey, attento! Potresti aver cercato una serie-tv con un titolo molto ambiguo e il nostro sistema ti ha inviato l'unico match che ha!";
 exports.chooseAtLeastALanguageMessage = "Hey, devi scegliere almeno una lingua! Riprova!";
 exports.subscribingToMessage = "Ok, ti sto sottoscrivendo! Un attimo di pazienza \u270F\uFE0F \uD83D\uDDD3";
-exports.addLanguageMessage = "Ricevuto! Inserisci un'altra lingua o premi su 'Fatto' per sottoscriverti!";
+exports.addLanguageMessage = "Ricevuto! Inserisci un'altra lingua o inviami 'ok' per sottoscriverti!";
 exports.nextEpisodeNotAvailableMessage = "Mi sembra troppo presto per sottoscriverti per questa serie! Non ho ancora abbastanza informazioni.. Riprova fra qualche settimana!";
 exports.areYouSureRemoveAlert = function (series) {return "Sei sicuro? Vuoi davvero rimuovere la sottoscrizione per "+ series +"?"}
 exports.notValidIntervalGetMessage = "Per favore riprova con un intervallo valido nella forma 'numeroPrimoSottotitolo-numeroUltimoSottotitolo'! Attento a non inserire spazi!"
@@ -47,8 +47,6 @@ exports.stopAlertCommand = "Disiscrivi \uD83D\uDEAB";
 exports.languageCommand = "Lingue";
 exports.donateCommand = "Donazioni";
 exports.helpCommand = "Help";
-
-exports.doneLanguageCallback = "doneLanguageCallback";
 
 exports.GETregExp = new RegExp(this.getCommand);
 exports.STARTregExp = new RegExp(this.startAlertCommand);
