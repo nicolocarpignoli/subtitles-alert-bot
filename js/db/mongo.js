@@ -225,17 +225,6 @@ exports.deleteAlertFromAllUsers = function (alert) {
     });
 }
 
-exports.setUserLanguage = function (session, id, code){
-    User.findById(Mongoose.Types.ObjectId(id), function (err, user){
-        if(user){
-            session.userLanguage = user._doc.userLanguage;
-        }else{
-            session.userLanguage = Common.parseLanguage(code);
-        }
-        return session;
-    });
-}
-
 
 exports.Alert = Alert;
 exports.User = User;

@@ -47,11 +47,11 @@ exports.getUserSession = function (sessions, msg) {
     }) || new Session();
     userSession.chatId = chat.id;
     userSession.firstName = chat.first_name;
-    return Mongo.setUserLanguage(userSession, chat.id, msg.language_code);
+    return userSession;
 }
 
 exports.parseLanguage = function(languageCode){
-    return Languages.languages[languageCode.split("-")[0]]["native"];
+    return Languages.languages[languageCode.split("-")[0]]["native"][0];
 }
 
 exports.pushInSessions = function (sessions, session) {
