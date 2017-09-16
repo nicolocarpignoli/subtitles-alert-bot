@@ -2,6 +2,7 @@ var TelegramBot = require('node-telegram-bot-api');
 var Addic7ed = require('./libs/addic7ed.js');
 var BotGui = require('./gui/keyboards.js');
 var Common = require('./common.js');
+var Translate = require('./translations.js');
 var TvMaze = require('./libs/tvMaze.js');
 var Session = require('./models/session.js');
 var Mongo = require('./db/mongo.js');
@@ -21,43 +22,43 @@ Mongo.connectToDatabase();
 
 
 bot.onText(/\/start/, (msg, match) => {
-    var session = Common.getUserSession(sessions, msg.chat);
+    var session = Common.getUserSession(sessions, msg);
     Common.resetValues(session);
-    if (!session.choosingSeries) bot.sendMessage(msg.chat.id, Common.instructionsMessage,
+    if (!session.choosingSeries) bot.sendMessage(msg.chat.id, Translate.instructionsMessage[session.userLanguage],
         BotGui.generateKeyboardOptions());
 });
 
 bot.onText(/\/help/, (msg, match) => {
-    bot.sendMessage(msg.chat.id, Common.helpMessage,
+    bot.sendMessage(msg.chat.id, Translate.helpMessage[session.userLanguage],
         BotGui.generateKeyboardOptions());
 });
 
 bot.onText(Common.HELPRegExp, (msg, match) => {
-    var session = Common.getUserSession(sessions, msg.chat);
+    var session = Common.getUserSession(sessions, msg);
     Common.resetValues(session);
-    bot.sendMessage(msg.chat.id, Common.helpMessage,
+    bot.sendMessage(msg.chat.id, Translate.helpMessage[session.userLanguage],
         BotGui.generateKeyboardOptions());
     Common.pushInSessions(sessions, session);
 });
 
 bot.onText(Common.GETregExp, (msg, match) => {
-    var session = Common.getUserSession(sessions, msg.chat);
+    var session = Common.getUserSession(sessions, msg);
     Common.resetValues(session);
-    bot.sendMessage(msg.chat.id, Common.whichSeriesMessage(msg.chat.first_name));
+    bot.sendMessage(msg.chat.id, Translate.whichSeriesMessage[session.userLanguage](msg.chat.first_name));
     session.choosingSeries = true;
     Common.pushInSessions(sessions, session);
 })
 
 bot.onText(Common.STARTregExp, (msg, match) => {
-    var session = Common.getUserSession(sessions, msg.chat);
+    var session = Common.getUserSession(sessions, msg);
     Common.resetValues(session);
-    bot.sendMessage(msg.chat.id, Common.whichSeriesAlertMessage(msg.chat.first_name));
+    bot.sendMessage(msg.chat.id, Translate.whichSeriesAlertMessage[session.userLanguage](msg.chat.first_name));
     session.choosingSeriesAlert = true;
     Common.pushInSessions(sessions, session);
 })
 
 bot.onText(Common.SHOWregExp, (msg, match) => {
-    var session = Common.getUserSession(sessions, msg.chat);
+    var session = Common.getUserSession(sessions, msg);
     Common.resetValues(session);
     Common.pushInSessions(sessions, session);
     var alerts = Mongo.getAlertsFromUser(msg.chat.id, bot, session);
@@ -65,7 +66,7 @@ bot.onText(Common.SHOWregExp, (msg, match) => {
 
 
 bot.onText(Common.STOPregExp, (msg, match) => {
-    var session = Common.getUserSession(sessions, msg.chat);
+    var session = Common.getUserSession(sessions, msg);
     Common.resetValues(session);
     session.deletingAlert = true;
     Common.pushInSessions(sessions, session);
@@ -73,7 +74,7 @@ bot.onText(Common.STOPregExp, (msg, match) => {
 })
 
 bot.on('callback_query', (msg) => {
-    var session = Common.getUserSession(sessions, msg.from);
+    var session = Common.getUserSession(sessions, msg);
     var userInput = msg.data;
     bot.answerCallbackQuery(msg.id,[]);
     if (Common.notACommand(userInput) && session.choosingSeries && !Common.isEmpty(session.ambiguousSeries)) {
@@ -81,7 +82,7 @@ bot.on('callback_query', (msg) => {
             return elem.show.name === userInput;
         });
         Common.handleChosenSeries(seriesObj, session, sessions);
-        bot.sendMessage(msg.from.id, Common.whichAmbigousSeasonMessage(userInput));
+        bot.sendMessage(msg.from.id, Translate.whichAmbigousSeasonMessage[session.userLanguage](userInput));
     }
     if (Common.notACommand(userInput) && session.choosingSeriesAlert && !Common.isEmpty(session.ambiguousSeriesAlert)) {
         var seriesObj = session.ambiguousSeriesAlert.find(function (elem) {
@@ -89,9 +90,9 @@ bot.on('callback_query', (msg) => {
         });
         Common.handleChosenSeriesAlert(seriesObj, session, sessions);
         if (seriesObj.show.status !== Common.runningState) {
-            bot.sendMessage(msg.from.id, Common.seriesNotRunningMessage(seriesObj.show.name));
+            bot.sendMessage(msg.from.id, Translate.seriesNotRunningMessage[session.userLanguage](seriesObj.show.name));
         } else {
-            bot.sendMessage(msg.from.id, Common.whichLanguagesAlertMessage(seriesObj.show.name));
+            bot.sendMessage(msg.from.id, Translate.whichLanguagesAlertMessage[session.userLanguage](seriesObj.show.name));
             Common.resetValues(session);
             session.choosingLanguageAlert = true;
             session.choosenSeriesAlert = seriesObj;
@@ -107,7 +108,7 @@ bot.on('callback_query', (msg) => {
         if (seriesName != null) {
             session.deletingAlert = false;
             session.confirmDelete = true;
-            bot.sendMessage(msg.from.id, Common.areYouSureRemoveAlert(seriesName), BotGui.generatesConfirmInlineKeyboard());
+            bot.sendMessage(msg.from.id, Translate.areYouSureRemoveAlert[session.userLanguage](seriesName), BotGui.generatesConfirmInlineKeyboard());
         }
     }
     if (Common.notACommand(userInput) && session.confirmDelete && (userInput == Common.revertCallback || userInput == Common.confirmCallback)) {
@@ -117,7 +118,7 @@ bot.on('callback_query', (msg) => {
 
 bot.onText(/(.*?)/, (msg, match) => {
     var userInput = match.input;
-    var session = Common.getUserSession(sessions, msg.chat);
+    var session = Common.getUserSession(sessions, msg);
     Core.handleGetLogic(userInput, session, sessions, msg, match, bot);
     Core.handleStartAlertLogic(userInput, session, sessions, msg, match, bot);
     Core.handleLanguageConfirmation(userInput, session, msg, bot);

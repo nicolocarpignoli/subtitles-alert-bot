@@ -1,6 +1,7 @@
 function Session() {
     //get
-    this.firstName = "";
+    this.userLanguage = "",
+    this.firstName = "",
     this.chatId = "",
     this.choosingSeries = false,
     this.choosingSeason = false,
