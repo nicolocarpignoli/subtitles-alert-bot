@@ -28,7 +28,8 @@ var User = Mongoose.model('User', new Schema({
     ids: String,
     chatId: Number,
     first_name: String,
-    alerts: Array
+    alerts: Array,
+    userLanguage: String
 }));
 var Language = Mongoose.model('Language', new Schema({
     code: String,
@@ -221,6 +222,17 @@ exports.deleteAlertFromAllUsers = function (alert) {
         }
         else
             deleteAlertIfNoUserSubscribed(alert);
+    });
+}
+
+exports.setUserLanguage = function (session, id, code){
+    User.findById(Mongoose.Types.ObjectId(id), function (err, user){
+        if(user){
+            session.userLanguage = user._doc.userLanguage;
+        }else{
+            session.userLanguage = Common.parseLanguage(code);
+        }
+        return session;
     });
 }
 
