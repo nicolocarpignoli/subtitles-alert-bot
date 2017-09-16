@@ -7,6 +7,7 @@ var TvMaze = require('./libs/tvMaze.js');
 var Session = require('./models/session.js');
 var Mongo = require('./db/mongo.js');
 var Core = require('./core.js');
+var Mongoose = require('mongoose');
 var ScheduleManager = require('./schedule/scheduleManager.js')
 
 var telegramBotToken = '398340624:AAH3rtCzaX9Y2fDU0ssRrK4vhRVh1PpZA0w';
@@ -20,12 +21,21 @@ console.log("Starting bot...");
 Mongo.connectToDatabase();
 
 
-
 bot.onText(/\/start/, (msg, match) => {
     var session = Common.getUserSession(sessions, msg);
-    Common.resetValues(session);
-    if (!session.choosingSeries) bot.sendMessage(msg.chat.id, Translate.instructionsMessage[session.userLanguage],
-        BotGui.generateKeyboardOptions());
+    console.log("QUESTA LINGUA LEGGO: ", msg.from.language_code);
+    Mongo.User.findById(Mongoose.Types.ObjectId(msg.chat.id), function (err, user){
+        if(user){
+            session.userLanguage = user._doc.userLanguage;
+        }else{
+            session.userLanguage = Common.parseLanguage(msg.from.language_code);
+        }
+        Common.resetValues(session);
+        console.log(Translate.instructionsMessage[session.userLanguage]);
+        if (!session.choosingSeries) bot.sendMessage(msg.chat.id, Translate.instructionsMessage[session.userLanguage],
+            BotGui.generateKeyboardOptions(session.userLanguage));
+    });
+    
 });
 
 bot.onText(/\/help/, (msg, match) => {

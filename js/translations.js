@@ -73,12 +73,6 @@ exports.helpCommand = {
 
 exports.okDonelanguageCommand = 'ok';
 
-exports.getCommand = "Download subs \uD83D\uDCE5";
-exports.startAlertCommand = "Sottoscrivi \uD83D\uDCE2";
-exports.stopAlertCommand = "Disiscrivi \uD83D\uDEAB";
-exports.languageCommand = "Lingue";
-exports.donateCommand = "Donazioni";
-exports.helpCommand = "Help";
 
 
 exports.helpMessage = {

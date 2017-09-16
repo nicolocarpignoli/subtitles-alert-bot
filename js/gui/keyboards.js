@@ -1,13 +1,14 @@
 var Common = require('./../common.js');
+var Translate = require('../translations.js');
 
-exports.generateKeyboardOptions = function () {
+exports.generateKeyboardOptions = function (language) {
     return  {
         "parse_mode": "Markdown",
         "reply_markup": {
             "keyboard": [
-            [{ text: Common.getCommand}, {text: Common.startAlertCommand}],
-            [{text: Common.showCommand},{ text:Common.stopAlertCommand}],
-            [{text: Common.languageCommand},{text: Common.helpCommand },{text: Common.donateCommand }],
+            [{ text: Translate.getCommand[language]}, {text: Translate.startAlertCommand[language]}],
+            [{text: Translate.showCommand[language]},{ text:Translate.stopAlertCommand[language]}],
+            [{text: Translate.languageCommand[language]},{text: Translate.helpCommand[language] },{text: Translate.donateCommand[language] }],
             ],
             "resize_keyboard": true
         }
@@ -57,11 +58,11 @@ exports.generatesConfirmInlineKeyboard = function (){
         [
         {
             text: "Yes", 
-            callback_data: Common.confirmCallback
+            callback_data: Translate.confirmCallback
         },
         {
             text: "No", 
-            callback_data: Common.revertCallback            
+            callback_data: Translate.revertCallback            
         }]
     ];
     return {
