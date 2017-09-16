@@ -2,6 +2,7 @@ var TelegramBot = require('node-telegram-bot-api');
 var Addic7ed = require('./libs/addic7ed.js');
 var BotGui = require('./gui/keyboards.js');
 var Common = require('./common.js');
+var Translate = require('./translations.js');
 var TvMaze = require('./libs/tvMaze.js');
 var telegramBotToken = '398340624:AAH3rtCzaX9Y2fDU0ssRrK4vhRVh1PpZA0w';
 var Session = require('./models/session.js');
@@ -15,16 +16,16 @@ exports.handleGetLogic = function (userInput, session, sessions, msg, match, bot
         promise.then(function (response) {
             switch (response.length) {
                 case 0:
-                    bot.sendMessage(msg.chat.id, Common.failedSeriesMessage);
+                    bot.sendMessage(msg.chat.id, Translate.failedSeriesMessage[session.userLanguage]);
                     Common.pushInSessions(sessions, session);
                     break;
                 case 1:
-                    bot.sendMessage(msg.chat.id, Common.whichSeasonMessage(response[0].show.name));
+                    bot.sendMessage(msg.chat.id, Translate.whichSeasonMessage[session.userLanguage](response[0].show.name));
                     Common.handleChosenSeries(response[0], session, sessions);
                     break;
                 default:
                     session.ambiguousSeries = response;
-                    bot.sendMessage(msg.chat.id, Common.ambiguousSeriesMessage,
+                    bot.sendMessage(msg.chat.id, Translate.ambiguousSeriesMessage[session.userLanguage],
                         BotGui.generateSeriesInlineKeyboard(response));
                     break;
             }
