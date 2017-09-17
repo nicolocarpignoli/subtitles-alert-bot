@@ -4,13 +4,13 @@ var Language = require('./models/language.js');
 var Translate = require('./translations.js');
 var Mongo = require('./db/mongo.js');
 
-exports.notACommand = function (userInput) {
-    return userInput != Translate.getCommand &&
-        userInput != Translate.startAlertCommand &&
-        userInput != Translate.stopAlertCommand &&
-        userInput != Translate.helpCommand &&
-        userInput != Translate.donateCommand &&
-        userInput != Translate.languageCommand
+exports.notACommand = function (userInput,session) {
+    return userInput != Translate.getCommand[session.userLanguage] &&
+        userInput != Translate.startAlertCommand[session.userLanguage] &&
+        userInput != Translate.stopAlertCommand[session.userLanguage] &&
+        userInput != Translate.helpCommand[session.userLanguage] &&
+        userInput != Translate.donateCommand[session.userLanguage] &&
+        userInput != Translate.languageCommand[session.userLanguage]
     }
 
 exports.isValidNumber = function (str) {
@@ -43,7 +43,7 @@ exports.isEmpty = function (obj) {
 exports.getUserSession = function (sessions, msg, translations) {
     var chat = msg.chat ? msg.chat : msg.from;
     let userSession = sessions.find(function (session) {
-        return session.chatId === chat;
+        return session.chatId === chat.id;
     }) || new Session();
     userSession.chatId = chat.id;
     userSession.firstName = chat.first_name;

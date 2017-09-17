@@ -48,7 +48,7 @@ exports.getSettings = function (translations) {
         if(users && users.length > 0)
             users.forEach(function(user) {
                 if(user.userLanguage){
-                    translations[user.userLanguage].push(user._doc.id);
+                    translations[user.userLanguage].push(user._doc._id);
                 }
             });
     });
@@ -146,7 +146,8 @@ function subscribeUser(alertsList, session, bot, from) {
             var newUser = new User({
                 chatId: from.id,
                 first_name: from.first_name,
-                alerts: alertsList
+                alerts: alertsList,
+                userLanguage: ""
             });
             User.create(newUser, function (err, value) {
                 if (err) console.log("error saving new user");
@@ -240,15 +241,27 @@ exports.deleteAlertFromAllUsers = function (alert) {
 exports.setUserLanguage = function(session, bot, userInput){
     let index = Translate.translations[session.userLanguage].indexOf(session.chatId);
     Translate.translations[session.userLanguage].splice(index,1);
-    Translate.translations[session.userInput].push(session.chatId);
+    Translate.translations[userInput].push(session.chatId);
     session.userLanguage = userInput;
+    var userToStore;
     User.findOne({ chatId: session.chatId }, function (err, user) {
         if (!err && user ) {
-            let userToStore = user._doc;
+            userToStore = user._doc;
             userToStore.userLanguage = userInput;
             User.findOneAndUpdate({ chatId: session.chatId}, userToStore, { new: true, upsert: true },function(err,storedUser){
-                bot.sendMessage(session.chatId, Translate.chosenUserLanguage[userToStore.userLanguage], BotGui.generateKeyboardOptions(userToStore.userLanguage));
+                bot.sendMessage(session.chatId, Translate.chosenUserLanguage[userToStore.userLanguage](userToStore.userLanguage), BotGui.generateKeyboardOptions(userToStore.userLanguage));
             });
+        }else{
+            var newUser = new User({
+                chatId: session.chatId,
+                first_name: session.firstName,
+                alerts: [],
+                userLanguage: userInput
+            });
+            User.create(newUser, function (err, value) {
+                if (err) console.log("error saving new user");
+                bot.sendMessage(session.chatId, Translate.chosenUserLanguage[userInput](userInput), BotGui.generateKeyboardOptions(userInput));
+            }); 
         }
     });
 }
