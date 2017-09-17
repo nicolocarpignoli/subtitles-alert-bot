@@ -10,7 +10,7 @@ exports.notACommand = function (userInput) {
         userInput != Translate.stopAlertCommand &&
         userInput != Translate.helpCommand &&
         userInput != Translate.donateCommand &&
-        userInput != this.languageCommand
+        userInput != Translate.languageCommand
     }
 
 exports.isValidNumber = function (str) {

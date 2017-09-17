@@ -64,7 +64,6 @@ bot.onText(Translate.SHOWregExp, (msg, match) => {
     var alerts = Mongo.getAlertsFromUser(msg.chat.id, bot, session);
 })
 
-
 bot.onText(Translate.STOPregExp, (msg, match) => {
     var session = Common.getUserSession(sessions, msg, Translate.translations);
     Common.resetValues(session);
@@ -109,10 +108,12 @@ bot.on('callback_query', (msg) => {
         }
     }
 
-    // if(Common.notACommand(userInput) && session.choosingUserLanguage){
-    //     Common.resetValues(session);
-    //     session.
-    // }
+    if(Common.notACommand(userInput) && session.choosingUserLanguage){
+        Common.resetValues(session);
+        session.choosingUserLanguage = false;        
+        Common.pushInSessions(sessions, session);
+        Mongo.setUserLanguage(session, bot, userInput);
+    }
    
     if (Common.notACommand(userInput) && session.deletingAlert && userInput.indexOf("_") > -1) {
         // if exist remove jobs named "showname_language_interval/giventime"
