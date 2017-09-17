@@ -1,6 +1,9 @@
 var Languages = require('./models/languages.js'); 
 var Mongo = require('./db/mongo.js');
 
+exports.translations = {"English" : [], "Italiano" : []};
+
+
 exports.instructionsMessage = { "English": "Welcome, my tv-addicted friend! What do you want me to do today?", "Italiano": "Benvenuto! Cosa posso fare oggi per te?"}
 exports.whichSeriesMessage = { "English": function (firstName) { return "Ok " + firstName + "! Which show do you want me to search for?"}, "Italiano": function (firstName) { return "Ok " + firstName + "! Quale serie vuoi che cerchi?"; }}
 exports.whichSeasonMessage = { "English": function (series) { return "Good, you choose " + series + "! Which season do you desire?"}, "Italiano": function (series) { return "Ottimo, hai scelto " + series + "! Quale stagione?"; }}
