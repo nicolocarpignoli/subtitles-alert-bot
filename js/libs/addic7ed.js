@@ -6,6 +6,7 @@ var Mongo = require('../db/mongo.js');
 var ScheduleManager = require('../schedule/scheduleManager.js');
 var TvMaze = require('../libs/tvMaze.js');
 var Logger = require('../log/logger.js');
+var Translate = require('../translations.js');
 
 exports.addic7edGetSubtitle = function (session, languages, bot, chat, sessionsList) {
     if(session.choosenEpisode.indexOf('-')===-1){
