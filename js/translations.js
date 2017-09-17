@@ -16,8 +16,8 @@ exports.successSubscribeMessage = { "English": function (series) { return  "You 
 exports.newEpisodeAlertMessage = { "English": function (firstName, showName) { return  "Hey " + firstName + ", subtitles for the last episode of " + showName + " are out! Check these out!"}, 
     "Italiano": function (firstName, showName) { return  "Hey " + firstName + ", i sottotitoli per il nuovo episodio di " + showName + " sono pronti! Eccoli qua!"}}
 exports.showAlertsMessage = { "English": "This list shows your active subscriptions right now:", "Italiano": "Questa è la lista delle tue attuali sottoscrizioni:"}
-exports.confirmCallback = { "English": "yes", "Italiano": "sì"}
-exports.revertCallback = { "English": "no", "Italiano": "no"}
+exports.confirmCallback = { "English": "Yes", "Italiano": "Sì"}
+exports.revertCallback = { "English": "No", "Italiano": "No"}
 //TODO questo messaggio di noNextEpisodeYetMessage andrà tolto quando avremo fatto la feature #29 su trello
 exports.noNextEpisodeYetMessage = { "English": "Hey, it seems that this season it's over or maybe not and I cannot see the future for this show yet!", 
     "Italiano": "Hey, sembra che la stagione sia conclusa...oppure no! In tal caso, purtroppo non posso indovinare che ne sarà di questa serie!"}
@@ -28,7 +28,7 @@ exports.jobAlreadyExistMessage =  { "English": "Hey, it seems you are already su
 exports.whichSeriesAlertMessage = { "English": function (firstName) { return "Ok " + firstName + "! Which show do you want to subscribe to?" }, 
     "Italiano": function (firstName) { return "Ok " + firstName + "! A quale serie vuoi sottoscriverti?"}}
 exports.seriesNotRunningMessage = { "English": function (series) { return "Hey dude I really think " + series + " is ended! If you want to get subtitles of it please try the 'Get subtitles \uD83D\uDCE5' functionality or try another show!"}, 
-    "Italiano": function (series){ return "Hey amico credo che " + series + " sia conclusa! Se vuoi questi sottotitoli prova la funzione 'Download subs \uD83D\uDCE5' oppure prova a sottoscriverti ad una serie in corso!" } }
+    "Italiano": function (series){ return "Hey amico credo che " + series + " sia conclusa! Se vuoi questi sottotitoli prova la funzione Download subs \uD83D\uDCE5 oppure prova a sottoscriverti ad una serie in corso!" } }
 exports.whichLanguagesAlertMessage = { "English": function (series){ return "Ok you choose " + series + "! Please send me a language for your subtitles or type 'ok' if you have done!"} , 
     "Italiano": function (series){ return "Ok hai scelto " + series + "! Scegli uno o più lingue per i sottotitoli e inviami 'ok' per concludere!" }}
 exports.languageAlreadyPresentMessage = { "English": "It seems you have already inserted this language, dude! Try with another one!", "Italiano": "Sembra tu abbia già scelto questa lingua, prova con un'altra!"}
@@ -38,10 +38,10 @@ exports.buildLinkMessage = { "English": function (link) { return 'There it is! I
 exports.failedSeriesMessage = { "English": "Sorry, no shows found with that name \u2639\uFE0F Please try with another great tv-show title", "Italiano": "Mi spiace, non conosco serie con questo nome \u2639\uFE0F Per favore riprova!"}
 exports.ambiguousSeriesMessage = { "English": "Mmh ambiguous! \uD83E\uDD14 Which of these? (If none of these is the show you are looking for, try again with a more precise name)", "Italiano": "Mmh ambiguo! \uD83E\uDD14 Quale di queste? (Se ciò che cerchi non è nell'elenco, prova con un nome più preciso)"}
 exports.notANumberMessage = { "English": "This doesn't seem to be a valid number, dude... retry!", "Italiano": "Questo non mi sembra un numero valido...riprova amico!"}
-exports.seasonNotFoundMessage = { "English": "Season not found or not out yet. Retry or restart 'Get subtitles \uD83D\uDCE5'!", "Italiano": "La stagione non è stata trovata o non è disponibile. Riprova o riparti con 'Download subs \uD83D\uDCE5'!" }
-exports.episodeNotFoundMessage = { "English": "Episode doesn't exist or not found. Retry or restart 'Get subtitles \uD83D\uDCE5'!", "Italiano": "L'episodio non è stato trovato o non è disponibile. Riprova o riparti con 'Download subs \uD83D\uDCE5'!"}
+exports.seasonNotFoundMessage = { "English": "Season not found or not out yet. Retry or restart 'Get subtitles \uD83D\uDCE5'!", "Italiano": "La stagione non è stata trovata o non è disponibile. Riprova o riparti con Download subs \uD83D\uDCE5!" }
+exports.episodeNotFoundMessage = { "English": "Episode doesn't exist or not found. Retry or restart 'Get subtitles \uD83D\uDCE5'!", "Italiano": "L'episodio non è stato trovato o non è disponibile. Riprova o riparti con Download subs \uD83D\uDCE5!"}
 exports.languageNotFoundMessage = { "English": "Sorry, language not found! Try typing your language as three-letter code, international form or native form!", "Italiano": "Mi spiace ma non ho trovato questa lingua! Prova a digitare la lingua come codice a tre lettere o in forma estesa!"}
-exports.subtitleNotFoundInAddic7edMessage = { "English": "Oh noes! I can't find your subtitles in our magic system! I guess nobody has subbed this yet... try again with a different language or a new request!", "Italiano": "Mi spiace ma non ho trovato questa lingua! Prova a digitare la lingua come codice a tre lettere o in forma estesa!"}
+exports.subtitleNotFoundInAddic7edMessage = { "English": "Oh noes! I can't find your subtitles in my magic system! I guess nobody has subbed this yet... try again with a different language or a new request!", "Italiano": "Oh no! Il sottotitolo non è disponibile! Probabilmente nessuno lo ha ancora realizzato.. Riprova o riparti con Download subs \uD83D\uDCE5!"}
 exports.LoadingSubtitleMessage = { "English": "Great! I'm fetching for your subtitle now mate \uD83D\uDCE5", "Italiano": "Ottimo, sto cercando i tuoi sottotitoli, attendi un momento.. \uD83D\uDCE5"}
 exports.ambigousSubtitleMessage = { "English": "Hey, watch out! Probably you chose a very ambiguous tv-show title and our system found the only match it had!", "Italiano": "Hey, attento! Potresti aver cercato una serie-tv con un titolo molto ambiguo e il nostro sistema ti ha inviato l'unico match che ha!"}
 exports.chooseAtLeastALanguageMessage = { "English": "Hey, you have to choose at least one language for your subscription! Try again and send me a valid language!", "Italiano": "Hey, devi scegliere almeno una lingua! Riprova!"}
@@ -51,7 +51,7 @@ exports.nextEpisodeNotAvailableMessage = { "English": "Too early for a subscript
 exports.seasonOverMessage = { "English": function(season, show) { return "Hey, season " + season + " of " + show + " is over! It's too early for a " +
     "subscription for the next season! Please use Get subtitles \uD83D\uDCE5 functionality for season " + season + " subtitles!"}, 
     "Italiano": function(season, show) { return "Hey, la stagione " + season + " di " + show + " è conclusa! E' troppo presto per " +
-    "sottoscriverti alla nuova stagione! Usa Download sottotitoli \uD83D\uDCE5 per avere i sottotitoli della stagione " + season + "!"},}
+    "sottoscriverti alla nuova stagione! Usa Download subs \uD83D\uDCE5 per avere i sottotitoli della stagione " + season + "!"},}
 exports.areYouSureRemoveAlert = { "English": function (series) {return "Are you sure you want to remove your alert for "+ series +"?"}, "Italiano": function (series) {return "Sei sicuro? Vuoi davvero rimuovere la sottoscrizione per "+ series +"?"}}
 exports.notValidIntervalGetMessage = { "English": "Please retry with a valid interval in the form of 'first-last' without spaces or with the keyword 'all' for all subtitles of a specified season!", 
     "Italiano": "Per favore riprova con un intervallo valido nella forma 'primo-ultimo' episodio (senza spazi) oppure con la parola 'all' per avere tutte le puntate della stagione che hai scelto!"}

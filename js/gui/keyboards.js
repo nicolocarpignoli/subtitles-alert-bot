@@ -75,11 +75,11 @@ exports.generatesConfirmInlineKeyboard = function (session){
     let inlineOptions = [
         [
         {
-            text: "Yes", 
+            text: Translate.confirmCallback[session.userLanguage], 
             callback_data: Translate.confirmCallback[session.userLanguage]
         },
         {
-            text: "No", 
+            text: Translate.revertCallback[session.userLanguage] , 
             callback_data: Translate.revertCallback[session.userLanguage]        
         }]
     ];
