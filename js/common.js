@@ -40,13 +40,18 @@ exports.isEmpty = function (obj) {
 }
 
 
-exports.getUserSession = function (sessions, msg) {
+exports.getUserSession = function (sessions, msg, translations) {
     var chat = msg.chat ? msg.chat : msg.from;
     let userSession = sessions.find(function (session) {
         return session.chatId === chat;
     }) || new Session();
     userSession.chatId = chat.id;
     userSession.firstName = chat.first_name;
+    Object.keys(translations).forEach(function(key,index) {
+        translations[key].forEach(function(userId) {
+            if(userId === chat.id) userSession.userLanguage = key;
+        });
+    });
     return userSession;
 }
 

@@ -19,23 +19,13 @@ var sessions = [];
 var bot = new TelegramBot(telegramBotToken, { polling: true });
 console.log("Starting bot...");
 Mongo.connectToDatabase();
-
+Mongo.getSettings(Translate.translations);
 
 bot.onText(/\/start/, (msg, match) => {
-    var session = Common.getUserSession(sessions, msg);
-    console.log("QUESTA LINGUA LEGGO: ", msg.from.language_code);
-    Mongo.User.findById(Mongoose.Types.ObjectId(msg.chat.id), function (err, user){
-        if(user){
-            session.userLanguage = user._doc.userLanguage;
-        }else{
-            session.userLanguage = Common.parseLanguage(msg.from.language_code);
-        }
-        Common.resetValues(session);
-        console.log(Translate.instructionsMessage[session.userLanguage]);
-        if (!session.choosingSeries) bot.sendMessage(msg.chat.id, Translate.instructionsMessage[session.userLanguage],
-            BotGui.generateKeyboardOptions(session.userLanguage));
-    });
-    
+    var session = Common.getUserSession(sessions, msg, translations);
+    Common.resetValues(session);
+    if (!session.choosingSeries) bot.sendMessage(msg.chat.id, Translate.instructionsMessage[session.userLanguage],
+        BotGui.generateKeyboardOptions(session.userLanguage));
 });
 
 bot.onText(/\/help/, (msg, match) => {
@@ -44,7 +34,7 @@ bot.onText(/\/help/, (msg, match) => {
 });
 
 bot.onText(Common.HELPRegExp, (msg, match) => {
-    var session = Common.getUserSession(sessions, msg);
+    var session = Common.getUserSession(sessions, msg, translations);
     Common.resetValues(session);
     bot.sendMessage(msg.chat.id, Translate.helpMessage[session.userLanguage],
         BotGui.generateKeyboardOptions());
@@ -52,7 +42,7 @@ bot.onText(Common.HELPRegExp, (msg, match) => {
 });
 
 bot.onText(Common.GETregExp, (msg, match) => {
-    var session = Common.getUserSession(sessions, msg);
+    var session = Common.getUserSession(sessions, msg, translations);
     Common.resetValues(session);
     bot.sendMessage(msg.chat.id, Translate.whichSeriesMessage[session.userLanguage](msg.chat.first_name));
     session.choosingSeries = true;
@@ -68,7 +58,7 @@ bot.onText(Common.STARTregExp, (msg, match) => {
 })
 
 bot.onText(Common.SHOWregExp, (msg, match) => {
-    var session = Common.getUserSession(sessions, msg);
+    var session = Common.getUserSession(sessions, msg, translations);
     Common.resetValues(session);
     Common.pushInSessions(sessions, session);
     var alerts = Mongo.getAlertsFromUser(msg.chat.id, bot, session);
@@ -84,7 +74,7 @@ bot.onText(Common.STOPregExp, (msg, match) => {
 })
 
 bot.on('callback_query', (msg) => {
-    var session = Common.getUserSession(sessions, msg);
+    var session = Common.getUserSession(sessions, msg, translations);
     var userInput = msg.data;
     bot.answerCallbackQuery(msg.id,[]);
     if (Common.notACommand(userInput) && session.choosingSeries && !Common.isEmpty(session.ambiguousSeries)) {
@@ -128,7 +118,7 @@ bot.on('callback_query', (msg) => {
 
 bot.onText(/(.*?)/, (msg, match) => {
     var userInput = match.input;
-    var session = Common.getUserSession(sessions, msg);
+    var session = Common.getUserSession(sessions, msg, translations);
     Core.handleGetLogic(userInput, session, sessions, msg, match, bot);
     Core.handleStartAlertLogic(userInput, session, sessions, msg, match, bot);
     Core.handleLanguageConfirmation(userInput, session, msg, bot);
