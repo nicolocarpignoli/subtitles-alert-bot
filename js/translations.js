@@ -57,6 +57,8 @@ exports.notValidIntervalGetMessage = { "English": "Please retry with a valid int
     "Italiano": "Per favore riprova con un intervallo valido nella forma 'primo-ultimo' episodio (senza spazi) oppure con la parola 'all' per avere tutte le puntate della stagione che hai scelto!"}
 exports.deletedAlertMessage = { "English": "Subscription successfully deleted!", "Italiano": "Fatto, sottoscrizione eliminata!"}
 exports.revertDeleteMessage = { "English": "Wise choice! I'll keep your subscription active", "Italiano": "Saggia scelta, manterrò le tue sottoscrizioni intatte!"}
+exports.whichUserLanguageMessage = {"English" : "Here you can choose my language! Choose the one that you understand better!", "Italiano": "Qua puoi scegliere la lingua che parlerò con te. Scegli quella che preferisci!"}
+
 
 exports.getCommand = { 
     "English" : "Get subtitles \uD83D\uDCE5", "Italiano":"Download subs \uD83D\uDCE5"}

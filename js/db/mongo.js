@@ -43,7 +43,7 @@ exports.getMongoConnection = function () {
     return db;
 }
 
-exports.getSettings() = function (translations) {
+exports.getSettings = function (translations) {
     User.find({}, function (err, users){
         if(users && users.length > 0)
             users.forEach(function(user) {
@@ -183,7 +183,7 @@ exports.getAlertsFromUser = function (id, bot, session) {
             });
         }
         else {
-            bot.sendMessage(id, Translate.noAlertMessage[session.userLanguage], BotGui.generateKeyboardOptions());
+            bot.sendMessage(id, Translate.noAlertMessage[session.userLanguage], BotGui.generateKeyboardOptions(session.userLanguage));
             Common.resetValues(session);
         }
     });
@@ -200,7 +200,7 @@ function deleteAlertIfNoUserSubscribed(alert) {
     });
 }
 
-exports.deleteAlertFromSingleUser = function (chatId, alert, userId, bot) {
+exports.deleteAlertFromSingleUser = function (chatId, alert, userId, bot, session) {
     var tokens = alert.split("_");
     Alert.findOne({ show_name: tokens[0], language: tokens[1] }, function (err, foundAlert) {
         if (!err && foundAlert != null) {
@@ -208,7 +208,7 @@ exports.deleteAlertFromSingleUser = function (chatId, alert, userId, bot) {
                 if (err) console.log("Error in updating alerts list of user. " + err);
                 else {
                     console.log("Removed active alert: " + foundAlert._doc._id);
-                    bot.sendMessage(chatId, Translate.deletedAlertMessage[session.userLanguage], BotGui.generateKeyboardOptions());
+                    bot.sendMessage(chatId, Translate.deletedAlertMessage[session.userLanguage], BotGui.generateKeyboardOptions(session.userLanguage));
                 }
                 deleteAlertIfNoUserSubscribed(foundAlert._doc);
             });
