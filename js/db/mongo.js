@@ -237,6 +237,22 @@ exports.deleteAlertFromAllUsers = function (alert) {
     });
 }
 
+exports.setUserLanguage = function(session, bot, userInput){
+    let index = Translate.translations[session.userLanguage].indexOf(session.chatId);
+    Translate.translations[session.userLanguage].splice(index,1);
+    Translate.translations[session.userInput].push(session.chatId);
+    session.userLanguage = userInput;
+    User.findOne({ chatId: session.chatId }, function (err, user) {
+        if (!err && user ) {
+            let userToStore = user._doc;
+            userToStore.userLanguage = userInput;
+            User.findOneAndUpdate({ chatId: session.chatId}, userToStore, { new: true, upsert: true },function(err,storedUser){
+                bot.sendMessage(session.chatId, Translate.chosenUserLanguage[userToStore.userLanguage], BotGui.generateKeyboardOptions(userToStore.userLanguage));
+            });
+        }
+    });
+}
+
 
 exports.Alert = Alert;
 exports.User = User;

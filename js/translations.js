@@ -58,6 +58,8 @@ exports.notValidIntervalGetMessage = { "English": "Please retry with a valid int
 exports.deletedAlertMessage = { "English": "Subscription successfully deleted!", "Italiano": "Fatto, sottoscrizione eliminata!"}
 exports.revertDeleteMessage = { "English": "Wise choice! I'll keep your subscription active", "Italiano": "Saggia scelta, manterrò le tue sottoscrizioni intatte!"}
 exports.whichUserLanguageMessage = {"English" : "Here you can choose my language! Choose the one that you understand better!", "Italiano": "Qua puoi scegliere la lingua che parlerò con te. Scegli quella che preferisci!"}
+exports.chosenUserLanguage = { "English": function (language) {return "Ok, I will speak in " + language + " with you!"}, 
+    "Italiano": function (language) {return "Bene, parlerò in " + language + " con te!"}}
 
 
 exports.getCommand = { 
@@ -75,18 +77,15 @@ exports.donateCommand = {
 exports.helpCommand = { 
     "English" : "Help \uD83C\uDD98", "Italiano": "Help \uD83C\uDD98"}
 
-
 exports.okDonelanguageCommand = 'ok';
-
-
 
 exports.helpMessage = {
     "Italiano": "Subtitles Alert Bot è un bot per scaricare e sottoscriverti a sottotitoli per le tue serie-tv preferite.\n\nUsa Download subs \uD83D\uDCE5 per il download istantaneo di un singolo sottotitolo, oppure" +
         " scarica un insieme di sottotitoli definendo un intervallo nella forma 'numeroPrimoSottotitolo-numeroUltimoSottotitolo', senza spazi, oppure tutti i sottotitoli di una specifica stagione con la parola chiave 'all'" +
         "\n\nUsa Sottoscrivi \uD83D\uDCE2 per sottoscriverti ad una serie-tv. Rilassati e il bot ti invierà comodamente sul telefono i sottotitoli appena saranno pronti" +
-        "\n\n Usa Mostra sottoscrizioni" +
-        "\n\nUsa Disiscrivi \uD83D\uDEAB per l'elenco delle tue sottoscrizioni attive. Puoi anche eliminare quelle che non desideri più" +
-        "\n\nDigita /help per rivedere questo messaggio ogni volta che vuoi." +
+        "\n\nUsa Mostra sottoscrizioni \uD83D\uDDD3 per visualizzare la lista delle tue sottoscrizioni attive" +
+        "\n\nUsa Disiscrivi \uD83D\uDEAB per eliminare le sottoscrizioni che non desideri più" +
+        "\n\nUsa Help \uD83C\uDD98 per rivedere questo messaggio ogni volta che vuoi." +
         "\n\nSeguici su: " +
         "\n\nInstagram https://www.instagram.com/subtitlesbottelegram/" +
         "\n\nFacebook https://www.facebook.com/subtitlesalertbot/",
@@ -95,17 +94,28 @@ exports.helpMessage = {
         "\n\nUse Subscribe \uD83D\uDCE2 to start a subscription to subtitles for a tv show. Just relax and as soon as they're out you will receive your subtitles on your phone" +
         "\n\nUse Show subscriptions \uD83D\uDDD3 for the list of your active subscriptions" +
         "\n\nUse Unsubscribe \uD83D\uDEAB to delete the subscriptions." + 
-        "\n\n You can also change bot Language \uD83C\uDDEE\uD83C\uDDF9 and  Donate \uD83D\uDCB0 us a beer." +
+        "\n\n You can also change bot Language \uD83C\uDDEE\uD83C\uDDF9 and Donate \uD83D\uDCB0 us a beer." +
         "\n\nUse Help \uD83C\uDD98 for seeing this help message any time you want." +
         "\n\nFollow us on:" +
         "\n\nInstagram https://www.instagram.com/subtitlesbottelegram/" +
         "\n\nFacebook https://www.facebook.com/subtitlesalertbot/"
 };
 
-exports.SHOWregExp = new RegExp(this.showCommand)
-exports.GETregExp = new RegExp(this.getCommand);
-exports.STARTregExp = new RegExp(this.startAlertCommand);
-exports.STOPregExp = new RegExp(this.stopAlertCommand);
-exports.HELPRegExp = new RegExp(this.helpCommand);
-exports.DONATERegExp = new RegExp(this.donateCommand);
-exports.LANGUAGERegExp = new RegExp(this.languageCommand);
+exports.generateRegExp = function(command){
+    let regExp = "";
+    Object.keys(command).forEach(function(key,index){
+        regExp += command[key] + "|";
+    });
+    regExp = regExp.substring(0, regExp.length-1);
+    return new RegExp(regExp);
+}
+
+exports.SHOWregExp = this.generateRegExp(this.showCommand)
+exports.GETregExp = this.generateRegExp(this.getCommand);
+exports.STARTregExp = this.generateRegExp(this.startAlertCommand);
+exports.STOPregExp = this.generateRegExp(this.stopAlertCommand);
+exports.HELPRegExp = this.generateRegExp(this.helpCommand);
+exports.DONATERegExp = this.generateRegExp(this.donateCommand);
+exports.LANGUAGERegExp = this.generateRegExp(this.languageCommand);
+
+
