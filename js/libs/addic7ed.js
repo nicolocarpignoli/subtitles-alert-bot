@@ -31,7 +31,7 @@ function getSingleEpisodeSubs (session, languages = [], bot, chat, sessionsList,
                     fs.access(filename, function (err) {
                         if (!err) {
                             //console.log('Subtitles file saved.');
-                            Common.removeSession(sessionsList, session);
+                            //Common.removeSession(sessionsList, session);
                             bot.sendMessage(chat, Common.buildLinkMessage(subInfo.link));
                             bot.sendDocument(chat, filename).then(function () {
                                 fs.unlinkSync(filename, function(err){

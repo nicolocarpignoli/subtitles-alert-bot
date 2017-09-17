@@ -43,6 +43,18 @@ exports.getMongoConnection = function () {
     return db;
 }
 
+exports.getSettings() = function (translations) {
+    User.find({}, function (err, users){
+        if(users && users.length > 0)
+            users.forEach(function(user) {
+                if(user.userLanguage){
+                    translations[user.userLanguage].push(user._doc.id);
+                }
+            });
+    });
+}
+
+
 exports.connectToDatabase = function () {
     if (Conf.mongoHost == "") {
         var server = Tunnel(Conf.mongoConfig, function (error, server) {
