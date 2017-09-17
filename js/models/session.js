@@ -3,6 +3,7 @@ function Session() {
     this.userLanguage = "",
     this.firstName = "",
     this.chatId = "",
+    this.choosingUserLanguage = false,
     this.choosingSeries = false,
     this.choosingSeason = false,
     this.choosingEpisode = false,
