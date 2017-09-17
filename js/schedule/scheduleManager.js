@@ -4,6 +4,7 @@ var Addic7ed = require('../libs/addic7ed.js');
 var Conf = require('../conf.js');
 var Main = require('../main.js');
 var TvMaze = require('../libs/tvMaze.js');
+var Translate = require('../translations.js');
 
 var pendingShowInterval = '1 month';
 var intervalSchedule = '*/15 * * * *'; //every 15 minutes
@@ -82,7 +83,7 @@ var scheduleFunctionInterval = function (jobName, interval, alert, func, data) {
                                 resetJob(tokens, job, nextEp);
                             });
                         } else {
-                            bot.sendMessage(userDoc.chatId, Common.noNextEpisodeYetMessage);
+                            bot.sendMessage(userDoc.chatId, Translate.noNextEpisodeYetMessage[session.userLanguage]);
                             // TODO Job Pending task su trello (#29)
                         }
                     }
