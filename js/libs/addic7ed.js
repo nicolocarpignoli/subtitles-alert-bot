@@ -32,14 +32,14 @@ function getSingleEpisodeSubs (session, languages = [], bot, chat, sessionsList,
                         if (!err) {
                             //console.log('Subtitles file saved.');
                             //Common.removeSession(sessionsList, session);
-                            bot.sendMessage(chat, Common.buildLinkMessage(subInfo.link));
+                            bot.sendMessage(chat, Translate.buildLinkMessage[session.userLanguage](subInfo.link));
                             bot.sendDocument(chat, filename).then(function () {
                                 fs.unlinkSync(filename, function(err){
                                     if(err) console.log("error, file not deleted");
                                 });
                             });
                             if (sendAmbiguousMessage && session.choosenSeries.show.name.indexOf("(") > -1 && session.choosenSeries.show.name.indexOf(")") > -1) {
-                                bot.sendMessage(chat, Common.ambigousSubtitleMessage);
+                                bot.sendMessage(chat, Translate.ambigousSubtitleMessage[session.userLanguage]);
                             }
                         }
                     });
@@ -48,7 +48,7 @@ function getSingleEpisodeSubs (session, languages = [], bot, chat, sessionsList,
                 });
             }
             else
-                bot.sendMessage(chat, Common.subtitleNotFoundInAddic7edMessage);
+                bot.sendMessage(chat, Translate.subtitleNotFoundInAddic7edMessage[session.userLanguage]);
          }).catch(function (err) {
             console.log("error searching subs - ", err);
         });
@@ -67,13 +67,13 @@ exports.addic7edGetSubtitleAlert = function (alert, job, bot, doneJobInterval) {
                             Mongo.User.find({ alerts: alert._doc._id.toString() }, function (err, users) {
                                 users.forEach(function (user) {
                                     var userDoc = user._doc;
-                                    bot.sendMessage(userDoc.chatId, Common.newEpisodeAlertMessage(userDoc.first_name, alert._doc.show_name));
-                                    bot.sendMessage(userDoc.chatId, Common.buildLinkMessage(subInfo.link));
+                                    bot.sendMessage(userDoc.chatId, Translate.newEpisodeAlertMessage[session.userLanguage](userDoc.first_name, alert._doc.show_name));
+                                    bot.sendMessage(userDoc.chatId, Translate.buildLinkMessage[session.userLanguage](subInfo.link));
                                     bot.sendDocument(userDoc.chatId, filename).then(function () {
                                         console.log("File sent to user " + userDoc.first_name);
                                     });
                                     if (Common.isAmbiguousTitle(alert._doc.show_name)) {
-                                        bot.sendMessage(userDoc.chatId, Common.ambigousSubtitleMessage);
+                                        bot.sendMessage(userDoc.chatId, Translate.ambigousSubtitleMessage[session.userLanguage]);
                                     }
                                 });
                                 job.attrs.data.hasToBeRemoved = true;

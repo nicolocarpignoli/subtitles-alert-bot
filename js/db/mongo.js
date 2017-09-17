@@ -7,7 +7,7 @@ var Common = require('../common.js');
 var ScheduleManager = require('../schedule/scheduleManager.js');
 var Logger = require('../log/logger.js');
 var BotGui = require('../gui/keyboards.js');
-
+var Translate = require('../translations.js');
 
 var db = undefined;
 var Schema = Mongoose.Schema;
@@ -129,9 +129,9 @@ exports.subscribe = function (session, bot, from) {
         var previousEpisode = TvMaze.getNextEpisodeInformation(session.choosenSeriesAlert.show._links.previousepisode.href);
         previousEpisode.then(function(previousEpisode){
             if(previousEpisode){
-                bot.sendMessage(from.id, Common.seasonOverMessage(previousEpisode.season,session.choosenSeriesAlert.show.name));                        
+                bot.sendMessage(from.id, Translate.seasonOverMessage[session.userLanguage](previousEpisode.season,session.choosenSeriesAlert.show.name));                        
             }else{
-                bot.sendMessage(from.id, Common.nextEpisodeNotAvailableMessage);            
+                bot.sendMessage(from.id, Translate.nextEpisodeNotAvailableMessage[session.userLanguage]);            
             }
             Common.resetValues(session);
         });
@@ -150,7 +150,7 @@ function subscribeUser(alertsList, session, bot, from) {
             });
             User.create(newUser, function (err, value) {
                 if (err) console.log("error saving new user");
-                bot.sendMessage(from.id, Common.successSubscribeMessage(session.choosenSeriesAlert.show.name));
+                bot.sendMessage(from.id, Translate.successSubscribeMessage[session.userLanguage](session.choosenSeriesAlert.show.name));
                 Common.resetValues(session);
             });
         } else {
@@ -160,12 +160,12 @@ function subscribeUser(alertsList, session, bot, from) {
                     actualList.push(element);
                 }
             });
-            if(actualList.length < alertsList.length) bot.sendMessage(from.id, Common.jobAlreadyExistMessage);
+            if(actualList.length < alertsList.length) bot.sendMessage(from.id, Translate.jobAlreadyExistMessage[session.userLanguage]);
             if(actualList.length > 0){
                 user._doc.alerts.addToSet(actualList);
-                bot.sendMessage(from.id, Common.subscribingToMessage);                
+                bot.sendMessage(from.id, Translate.subscribingToMessage[session.userLanguage]);                
                 user.save(function () {
-                    bot.sendMessage(from.id, Common.successSubscribeMessage(session.choosenSeriesAlert.show.name));
+                    bot.sendMessage(from.id, Translate.successSubscribeMessage[session.userLanguage](session.choosenSeriesAlert.show.name));
                     Common.resetValues(session);
                 });
             }
@@ -179,11 +179,11 @@ exports.getAlertsFromUser = function (id, bot, session) {
             let alertsId = user._doc.alerts.map(function (alert) { return new Mongoose.Types.ObjectId(alert); });
             Alert.find({ _id: { $in: alertsId } }, function (err, alerts) {
                 if (!err && alerts && alerts.length > 0)
-                    bot.sendMessage(id, Common.showAlertsMessage, BotGui.generateAlertsInlineKeyboard(alerts));
+                    bot.sendMessage(id, Translate.showAlertsMessage[session.userLanguage], BotGui.generateAlertsInlineKeyboard(alerts));
             });
         }
         else {
-            bot.sendMessage(id, Common.noAlertMessage, BotGui.generateKeyboardOptions());
+            bot.sendMessage(id, Translate.noAlertMessage[session.userLanguage], BotGui.generateKeyboardOptions());
             Common.resetValues(session);
         }
     });
@@ -208,7 +208,7 @@ exports.deleteAlertFromSingleUser = function (chatId, alert, userId, bot) {
                 if (err) console.log("Error in updating alerts list of user. " + err);
                 else {
                     console.log("Removed active alert: " + foundAlert._doc._id);
-                    bot.sendMessage(chatId, Common.deletedAlertMessage, BotGui.generateKeyboardOptions());
+                    bot.sendMessage(chatId, Translate.deletedAlertMessage[session.userLanguage], BotGui.generateKeyboardOptions());
                 }
                 deleteAlertIfNoUserSubscribed(foundAlert._doc);
             });

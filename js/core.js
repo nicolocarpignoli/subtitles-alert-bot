@@ -34,44 +34,44 @@ exports.handleGetLogic = function (userInput, session, sessions, msg, match, bot
 
     else if (Common.notACommand(userInput) && session.choosingSeason) {
         if (!Common.isValidNumber(userInput)) {
-            bot.sendMessage(msg.chat.id, Common.notANumberMessage);
+            bot.sendMessage(msg.chat.id, Translate.notANumberMessage[session.userLanguage]);
             return;
         }
         else {
             let promise = TvMaze.checkSeasonValidity(session.choosenSeries.show.id, userInput);
             promise.then(function (response) {
                 if (response === false)
-                    bot.sendMessage(msg.chat.id, Common.seasonNotFoundMessage);
+                    bot.sendMessage(msg.chat.id, Translate.seasonNotFoundMessage[session.userLanguage]);
                 else {
                     session.choosenSeason = userInput;
                     Common.resetValues(session);
                     session.choosingEpisode = true;
                     Common.pushInSessions(sessions, session);
-                    bot.sendMessage(msg.chat.id, Common.whichEpisodeMessage);
+                    bot.sendMessage(msg.chat.id, Translate.whichEpisodeMessage[session.userLanguage]);
                 }
             });
         }
     }
     else if (Common.notACommand(userInput) && session.choosingEpisode) {
         if (!Common.isValidNumber(userInput) && !Common.isValidInterval(userInput)) {
-            bot.sendMessage(msg.chat.id, Common.notANumberMessage);
+            bot.sendMessage(msg.chat.id, Translate.notANumberMessage[session.userLanguage]);
             return;
         }
         else {
             let promise = TvMaze.checkEpisodeValidity(session.choosenSeries.show.id, session.choosenSeason, userInput);
             if(promise == "wrongInterval"){
-                bot.sendMessage(msg.chat.id, Common.notValidIntervalGetMessage);
+                bot.sendMessage(msg.chat.id, Translate.notValidIntervalGetMessage[session.userLanguage]);
                 return;
             }
             promise.then(function (response) {
                 if (response !== true)
-                    bot.sendMessage(msg.chat.id, Common.episodeNotFoundMessage);
+                    bot.sendMessage(msg.chat.id, Translate.episodeNotFoundMessage[session.userLanguage]);
                 else {
                     session.choosenEpisode = userInput;
                     Common.resetValues(session);
                     session.choosingLanguage = true;
                     Common.pushInSessions(sessions, session);
-                    bot.sendMessage(msg.chat.id, Common.whichLanguageMessage);
+                    bot.sendMessage(msg.chat.id, Translate.whichLanguageMessage[session.userLanguage]);
                 }
             });
         }
@@ -86,28 +86,28 @@ exports.handleGetLogic = function (userInput, session, sessions, msg, match, bot
 
         if (languageKey) {
             session.chosenLanguage = languageKey;
-            bot.sendMessage(msg.chat.id, Common.LoadingSubtitleMessage);
+            bot.sendMessage(msg.chat.id, Translate.LoadingSubtitleMessage[session.userLanguage]);
             Addic7ed.addic7edGetSubtitle(session, session.chosenLanguage, bot, msg.chat.id, sessions);
         }
         else
-            bot.sendMessage(msg.chat.id, Common.languageNotFoundMessage);
+            bot.sendMessage(msg.chat.id, Translate.languageNotFoundMessage[session.userLanguage]);
     }
 }
 
 exports.handleStartAlertLogic = function (userInput, session, sessions, msg, match, bot) {
-    if (Common.notACommand(userInput) && session.choosingSeriesAlert) {
+    if (Translate.notACommand(userInput) && session.choosingSeriesAlert) {
         let promise = TvMaze.checkSeriesValidity(userInput);
         promise.then(function (response) {
             switch (response.length) {
                 case 0:
-                    bot.sendMessage(msg.chat.id, Common.failedSeriesMessage);
+                    bot.sendMessage(msg.chat.id, Translate.failedSeriesMessage[session.userLanguage]);
                     Common.pushInSessions(sessions, session);
                     break;
                 case 1:
-                    if (response[0].show.status !== Common.runningState) {
-                        bot.sendMessage(msg.chat.id, Common.seriesNotRunningMessage(response[0].show.name));
+                    if (response[0].show.status !== Translate.runningState) {
+                        bot.sendMessage(msg.chat.id, Translate.seriesNotRunningMessage[session.userLanguage](response[0].show.name));
                     } else {
-                        bot.sendMessage(msg.chat.id, Common.whichLanguagesAlertMessage(response[0].show.name));
+                        bot.sendMessage(msg.chat.id, Translate.whichLanguagesAlertMessage[session.userLanguage](response[0].show.name));
                         Common.resetValues(session);
                         session.choosingLanguageAlert = true;
                         session.choosenSeriesAlert = response[0];
@@ -116,13 +116,13 @@ exports.handleStartAlertLogic = function (userInput, session, sessions, msg, mat
                     break;
                 default:
                     session.ambiguousSeriesAlert = response;
-                    bot.sendMessage(msg.chat.id, Common.ambiguousSeriesMessage,
+                    bot.sendMessage(msg.chat.id, Translate.ambiguousSeriesMessage[session.userLanguage],
                         BotGui.generateSeriesInlineKeyboard(response));
                     break;
             }
         });
     }
-    if (Common.notACommand(userInput) && session.choosingLanguageAlert && userInput.toLowerCase() != Common.okDonelanguageCommand) {
+    if (Common.notACommand(userInput) && session.choosingLanguageAlert && userInput.toLowerCase() != Translate.okDonelanguageCommand) {
         var languageKey = Object.keys(Model.languages).find(function (key) {
             return key.length == 3 && (key.toUpperCase() === userInput.toUpperCase() ||
                 Model.languages[key]["native"][0].toUpperCase() === userInput.toUpperCase() ||
@@ -133,19 +133,19 @@ exports.handleStartAlertLogic = function (userInput, session, sessions, msg, mat
             if (!Common.languageAlreadyPresent(session.chosenLanguagesAlert, languageKey)) {
                 Common.getLanguageFromKey(languageKey);
                 session.chosenLanguagesAlert.push(languageKey);
-                bot.sendMessage(msg.chat.id, Common.addLanguageMessage);
+                bot.sendMessage(msg.chat.id, Translate.addLanguageMessage[session.userLanguage]);
             } else {
-                bot.sendMessage(msg.chat.id, Common.languageAlreadyPresentMessage);
+                bot.sendMessage(msg.chat.id, Translate.languageAlreadyPresentMessage[session.userLanguage]);
             }
         }
         else
-            bot.sendMessage(msg.chat.id, Common.languageNotFoundMessage);
+            bot.sendMessage(msg.chat.id, Translate.languageNotFoundMessage);
     }
 }
 
 exports.handleDeleteLogic = function (msg, userInput, session, sessions, bot) {
-    if (userInput == Common.revertCallback)
-        bot.sendMessage(msg.from.id, Common.revertDeleteMessage, BotGui.generateKeyboardOptions());
+    if (userInput == Translate.revertCallback)
+        bot.sendMessage(msg.from.id, Translate.revertDeleteMessage[session.userLanguage], BotGui.generateKeyboardOptions());
     else
         Mongo.deleteAlertFromSingleUser(msg.from.id, session.alertToDelete, session.chatId, bot);
 
@@ -154,9 +154,9 @@ exports.handleDeleteLogic = function (msg, userInput, session, sessions, bot) {
 }
 
 exports.handleLanguageConfirmation = function (userInput, session, msg, bot){
-    if (Common.notACommand(userInput) && session.choosingLanguageAlert && userInput.toLowerCase() == Common.okDonelanguageCommand) {
+    if (Common.notACommand(userInput) && session.choosingLanguageAlert && userInput.toLowerCase() == Translate.okDonelanguageCommand) {
         if (session.chosenLanguagesAlert.length == 0) {
-            bot.sendMessage(msg.from.id, Common.chooseAtLeastALanguageMessage);
+            bot.sendMessage(msg.from.id, Translate.chooseAtLeastALanguageMessage[session.userLanguage]);
         } else {
             session.choosingLanguageAlert = false;
             Mongo.subscribe(session, bot, msg.from);
