@@ -52,6 +52,10 @@ exports.getUserSession = function (sessions, msg, translations) {
             if(userId === chat.id) userSession.userLanguage = key;
         });
     });
+    if(!userSession.userLanguage) {
+        userSession.userLanguage = this.parseLanguage(msg.from.language_code);
+        translations[userSession.userLanguage].push(chat.id);
+    }
     return userSession;
 }
 
