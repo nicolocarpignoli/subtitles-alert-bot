@@ -95,7 +95,7 @@ exports.handleGetLogic = function (userInput, session, sessions, msg, match, bot
 }
 
 exports.handleStartAlertLogic = function (userInput, session, sessions, msg, match, bot) {
-    if (Translate.notACommand(userInput) && session.choosingSeriesAlert) {
+    if (Common.notACommand(userInput) && session.choosingSeriesAlert) {
         let promise = TvMaze.checkSeriesValidity(userInput);
         promise.then(function (response) {
             switch (response.length) {
@@ -145,9 +145,9 @@ exports.handleStartAlertLogic = function (userInput, session, sessions, msg, mat
 
 exports.handleDeleteLogic = function (msg, userInput, session, sessions, bot) {
     if (userInput == Translate.revertCallback)
-        bot.sendMessage(msg.from.id, Translate.revertDeleteMessage[session.userLanguage], BotGui.generateKeyboardOptions());
+        bot.sendMessage(msg.from.id, Translate.revertDeleteMessage[session.userLanguage], BotGui.generateKeyboardOptions(session.userLanguage));
     else
-        Mongo.deleteAlertFromSingleUser(msg.from.id, session.alertToDelete, session.chatId, bot);
+        Mongo.deleteAlertFromSingleUser(msg.from.id, session.alertToDelete, session.chatId, bot, session);
 
     Common.resetValues(session);
     Common.pushInSessions(sessions, session);

@@ -15,6 +15,24 @@ exports.generateKeyboardOptions = function (language) {
     };
 }
 
+exports.generateLanguagesInlineKeyboard = function (){
+    let inlineOptions = [];
+    Object.keys(Translate.translations).forEach(function(key,index) {
+        inlineOptions.push([
+                {
+                    text: key, 
+                    callback_data: key
+                }
+            ]);
+    }, this);
+    return {
+        "parse_mode": "Markdown",
+        "reply_markup": {
+            "inline_keyboard": inlineOptions
+        }
+    };
+};
+
 exports.generateSeriesInlineKeyboard = function (options){
     let inlineOptions = [];
     options.forEach(function(element) {
@@ -53,16 +71,16 @@ exports.generateAlertsInlineKeyboard = function (alerts){
     };
 };
 
-exports.generatesConfirmInlineKeyboard = function (){
+exports.generatesConfirmInlineKeyboard = function (session){
     let inlineOptions = [
         [
         {
             text: "Yes", 
-            callback_data: Translate.confirmCallback
+            callback_data: Translate.confirmCallback[session.userLanguage]
         },
         {
             text: "No", 
-            callback_data: Translate.revertCallback            
+            callback_data: Translate.revertCallback[session.userLanguage]        
         }]
     ];
     return {
