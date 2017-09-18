@@ -163,3 +163,7 @@ exports.handleLanguageConfirmation = function (userInput, session, msg, bot){
         }
     }
 }
+
+exports.handleDonateLogic = function(userInput, session, sessions, msg, match, bot){
+    //TODO
+}
