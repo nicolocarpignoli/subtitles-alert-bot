@@ -11,7 +11,7 @@ var Core = require('./core.js');
 var Model = require('./models/languages.js');
 
 exports.handleGetLogic = function (userInput, session, sessions, msg, match, bot) {
-    if (Common.notACommand(userInput, session) && session.choosingSeries) {
+    if (Common.notACommand(userInput) && session.choosingSeries) {
         let promise = TvMaze.checkSeriesValidity(userInput);
         promise.then(function (response) {
             switch (response.length) {
@@ -32,7 +32,7 @@ exports.handleGetLogic = function (userInput, session, sessions, msg, match, bot
         });
     }
 
-    else if (Common.notACommand(userInput,session) && session.choosingSeason) {
+    else if (Common.notACommand(userInput) && session.choosingSeason) {
         if (!Common.isValidNumber(userInput)) {
             bot.sendMessage(msg.chat.id, Translate.notANumberMessage[session.userLanguage]);
             return;
@@ -52,7 +52,7 @@ exports.handleGetLogic = function (userInput, session, sessions, msg, match, bot
             });
         }
     }
-    else if (Common.notACommand(userInput,session) && session.choosingEpisode) {
+    else if (Common.notACommand(userInput) && session.choosingEpisode) {
         if (!Common.isValidNumber(userInput) && !Common.isValidInterval(userInput)) {
             bot.sendMessage(msg.chat.id, Translate.notANumberMessage[session.userLanguage]);
             return;
@@ -76,7 +76,7 @@ exports.handleGetLogic = function (userInput, session, sessions, msg, match, bot
             });
         }
     }
-    else if (Common.notACommand(userInput,session) && session.choosingLanguage) {
+    else if (Common.notACommand(userInput) && session.choosingLanguage) {
         // accepted "native" version, "int" version and 3 chars version (e.g. "italiano", "italian" or "ita")
         var languageKey = Object.keys(Model.languages).find(function (key) {
             return key.length == 3 && (key.toUpperCase() === userInput.toUpperCase() ||
@@ -95,7 +95,7 @@ exports.handleGetLogic = function (userInput, session, sessions, msg, match, bot
 }
 
 exports.handleStartAlertLogic = function (userInput, session, sessions, msg, match, bot) {
-    if (Common.notACommand(userInput,session) && session.choosingSeriesAlert) {
+    if (Common.notACommand(userInput) && session.choosingSeriesAlert) {
         let promise = TvMaze.checkSeriesValidity(userInput);
         promise.then(function (response) {
             switch (response.length) {
@@ -122,7 +122,7 @@ exports.handleStartAlertLogic = function (userInput, session, sessions, msg, mat
             }
         });
     }
-    if (Common.notACommand(userInput,session) && session.choosingLanguageAlert && userInput.toLowerCase() != Translate.okDonelanguageCommand) {
+    if (Common.notACommand(userInput) && session.choosingLanguageAlert && userInput.toLowerCase() != Translate.okDonelanguageCommand) {
         var languageKey = Object.keys(Model.languages).find(function (key) {
             return key.length == 3 && (key.toUpperCase() === userInput.toUpperCase() ||
                 Model.languages[key]["native"][0].toUpperCase() === userInput.toUpperCase() ||
@@ -154,7 +154,7 @@ exports.handleDeleteLogic = function (msg, userInput, session, sessions, bot) {
 }
 
 exports.handleLanguageConfirmation = function (userInput, session, msg, bot){
-    if (Common.notACommand(userInput,session) && session.choosingLanguageAlert && userInput.toLowerCase() == Translate.okDonelanguageCommand) {
+    if (Common.notACommand(userInput) && session.choosingLanguageAlert && userInput.toLowerCase() == Translate.okDonelanguageCommand) {
         if (session.chosenLanguagesAlert.length == 0) {
             bot.sendMessage(msg.from.id, Translate.chooseAtLeastALanguageMessage[session.userLanguage]);
         } else {
