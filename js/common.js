@@ -4,14 +4,22 @@ var Language = require('./models/language.js');
 var Translate = require('./translations.js');
 var Mongo = require('./db/mongo.js');
 
-exports.notACommand = function (userInput,session) {
-    return userInput != Translate.getCommand[session.userLanguage] &&
-        userInput != Translate.startAlertCommand[session.userLanguage] &&
-        userInput != Translate.stopAlertCommand[session.userLanguage] &&
-        userInput != Translate.helpCommand[session.userLanguage] &&
-        userInput != Translate.donateCommand[session.userLanguage] &&
-        userInput != Translate.languageCommand[session.userLanguage]
-    }
+exports.notACommand = function (userInput) {
+    return !checkDifferentFromAllLanguages(Translate.getCommand, userInput) &&
+        !checkDifferentFromAllLanguages(Translate.startAlertCommand, userInput) &&
+        !checkDifferentFromAllLanguages(Translate.stopAlertCommand, userInput) &&
+        !checkDifferentFromAllLanguages(Translate.helpCommand, userInput) &&
+        !checkDifferentFromAllLanguages(Translate.donateCommand, userInput) &&
+        !checkDifferentFromAllLanguages(Translate.languageCommand, userInput)
+}
+
+checkDifferentFromAllLanguages = function(command, userInput) {
+    let hasOccurence = false;
+    Object.keys(command).forEach(function(key,index) {
+        if(command[key] == userInput) hasOccurence = true;
+    });
+    return hasOccurence;
+}
 
 exports.isValidNumber = function (str) {
     return isValidNumber(str);
