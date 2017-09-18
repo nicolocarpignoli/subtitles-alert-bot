@@ -65,7 +65,7 @@ exports.chosenUserLanguage = { "English": function (language) {return "Ok, I wil
 exports.getCommand = { 
     "English" : "Get subtitles \uD83D\uDCE5", "Italiano":"Download subs \uD83D\uDCE5"}
 exports.showCommand = { 
-    "English" : "Show subscriptions \uD83D\uDDD3", "Italiano": "Mostra sottoscrizioni \uD83D\uDDD3"}
+    "English" : "Show \uD83D\uDDD3", "Italiano": "Mostra \uD83D\uDDD3"}
 exports.startAlertCommand = { 
     "English" : "Subscribe \uD83D\uDCE2", "Italiano": "Sottoscrivi \uD83D\uDCE2"}
 exports.stopAlertCommand = { 
@@ -100,6 +100,14 @@ exports.helpMessage = {
         "\n\nInstagram https://www.instagram.com/subtitlesbottelegram/" +
         "\n\nFacebook https://www.facebook.com/subtitlesalertbot/"
 };
+
+exports.donateACoffe = {"English": "Pay me a coffe \u2615\uFE0F", "Italiano":"Regalami un caffè \u2615\uFE0F"}
+exports.donateABeer = {"English": "Pay me beer \uD83C\uDF7A", "Italiano":"Regalami una birra \uD83C\uDF7A"}
+exports.donateAPizza = {"English": "Pay me pizza \uD83C\uDF55", "Italiano":"Regalami una pizza \uD83C\uDF55"}
+exports.donateMessage = {"English": "Here you can choose how much to donate to me! You can choose from the menu or specify a custom amount sending me a message!",
+    "Italiano":"Qui è dove puoi donarmi qualcosa! Puoi offrirmi qualcosa dal menu che ti mostro oppure specificare un importo a tua scelta inviandomelo come messaggio!"}
+exports.thanksDonationMessage = {"English": "Thanks for you generous offer man! \uD83D\uDE04 \uD83D\uDE04", 
+    "Italano":"Hey amico grazie davvero per la tua generosa offerta! \uD83D\uDE04 \uD83D\uDE04"}
 
 exports.generateRegExp = function(command){
     let regExp = "";

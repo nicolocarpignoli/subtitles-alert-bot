@@ -57,6 +57,14 @@ bot.onText(Translate.STARTregExp, (msg, match) => {
     Common.pushInSessions(sessions, session);
 })
 
+bot.onText(Translate.DONATERegExp, (msg, match) => {
+    var session = Common.getUserSession(sessions, msg, Translate.translations);
+    Common.resetValues(session);
+    bot.sendMessage(msg.chat.id, Translate.donateMessage[session.userLanguage], BotGui.generateDonationInlineKeyboard(session));
+    session.donating = true;
+    Common.pushInSessions(sessions, session);
+})
+
 bot.onText(Translate.SHOWregExp, (msg, match) => {
     var session = Common.getUserSession(sessions, msg, Translate.translations);
     Common.resetValues(session);
@@ -113,6 +121,12 @@ bot.on('callback_query', (msg) => {
         session.choosingUserLanguage = false;        
         Common.pushInSessions(sessions, session);
         Mongo.setUserLanguage(session, bot, userInput);
+    }
+    if(Common.notACommand(userInput) && session.isDonating){
+        Common.resetValues(session);
+        session.isDonating = false;        
+        Common.pushInSessions(sessions, session);
+        Core.handleDonateLogic(userInput, session, sessions, msg, match, bot);
     }
    
     if (Common.notACommand(userInput) && session.deletingAlert && userInput.indexOf("_") > -1) {

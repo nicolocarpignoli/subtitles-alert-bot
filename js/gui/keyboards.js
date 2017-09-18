@@ -15,6 +15,30 @@ exports.generateKeyboardOptions = function (language) {
     };
 }
 
+exports.generateDonationInlineKeyboard = function (session){
+    let inlineOptions = [
+        [
+        {
+            text: Translate.donateACoffe[session.userLanguage], 
+            callback_data: Translate.donateACoffe[session.userLanguage]
+        }],
+        [{
+            text: Translate.donateABeer[session.userLanguage] , 
+            callback_data: Translate.donateABeer[session.userLanguage]      
+        }],
+        [{
+            text: Translate.donateAPizza[session.userLanguage], 
+            callback_data: Translate.donateAPizza[session.userLanguage]
+        }]
+    ];
+    return {
+        "parse_mode": "Markdown",
+        "reply_markup": {
+            "inline_keyboard": inlineOptions
+        }
+    };
+};
+
 exports.generateLanguagesInlineKeyboard = function (){
     let inlineOptions = [];
     Object.keys(Translate.translations).forEach(function(key,index) {

@@ -22,6 +22,7 @@ function Session() {
     this.deletingAlert = false
     this.confirmDelete = false
     this.alertToDelete = "";
+    this.donating = false;
 }
 
 module.exports = Session;
