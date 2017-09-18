@@ -85,14 +85,14 @@ bot.on('callback_query', (msg) => {
     var session = Common.getUserSession(sessions, msg, Translate.translations);
     var userInput = msg.data;
     bot.answerCallbackQuery(msg.id,[]);
-    if (Common.notACommand(userInput,session) && session.choosingSeries && !Common.isEmpty(session.ambiguousSeries)) {
+    if (Common.notACommand(userInput) && session.choosingSeries && !Common.isEmpty(session.ambiguousSeries)) {
         var seriesObj = session.ambiguousSeries.find(function (elem) {
             return elem.show.name === userInput;
         });
         Common.handleChosenSeries(seriesObj, session, sessions);
         bot.sendMessage(msg.from.id, Translate.whichAmbigousSeasonMessage[session.userLanguage](userInput));
     }
-    if (Common.notACommand(userInput,session) && session.choosingSeriesAlert && !Common.isEmpty(session.ambiguousSeriesAlert)) {
+    if (Common.notACommand(userInput) && session.choosingSeriesAlert && !Common.isEmpty(session.ambiguousSeriesAlert)) {
         var seriesObj = session.ambiguousSeriesAlert.find(function (elem) {
             return elem.show.name === userInput;
         });
@@ -108,14 +108,14 @@ bot.on('callback_query', (msg) => {
         }
     }
 
-    if(Common.notACommand(userInput,session) && session.choosingUserLanguage){
+    if(Common.notACommand(userInput) && session.choosingUserLanguage){
         Common.resetValues(session);
         session.choosingUserLanguage = false;        
         Common.pushInSessions(sessions, session);
         Mongo.setUserLanguage(session, bot, userInput);
     }
    
-    if (Common.notACommand(userInput,session) && session.deletingAlert && userInput.indexOf("_") > -1) {
+    if (Common.notACommand(userInput) && session.deletingAlert && userInput.indexOf("_") > -1) {
         // if exist remove jobs named "showname_language_interval/giventime"
         var seriesName = userInput.length > 1 ? userInput.substring(0, userInput.indexOf('_')) : null;
         session.alertToDelete = userInput;
@@ -126,7 +126,7 @@ bot.on('callback_query', (msg) => {
             bot.sendMessage(msg.from.id, Translate.areYouSureRemoveAlert[session.userLanguage](seriesName), BotGui.generatesConfirmInlineKeyboard(session));
         }
     }
-    if (Common.notACommand(userInput,session) && session.confirmDelete && (userInput == Translate.revertCallback[session.userLanguage] || userInput == Translate.confirmCallback[session.userLanguage])) {
+    if (Common.notACommand(userInput) && session.confirmDelete && (userInput == Translate.revertCallback[session.userLanguage] || userInput == Translate.confirmCallback[session.userLanguage])) {
         Core.handleDeleteLogic(msg, userInput, session, sessions, bot);
     }
 });
