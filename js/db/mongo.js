@@ -30,6 +30,8 @@ var User = Mongoose.model('User', new Schema({
     first_name: String,
     alerts: Array,
     userLanguage: String
+}, {
+    _id: false
 }));
 var Language = Mongoose.model('Language', new Schema({
     code: String,
@@ -48,7 +50,7 @@ exports.getSettings = function (translations) {
         if(users && users.length > 0)
             users.forEach(function(user) {
                 if(user.userLanguage){
-                    translations[user.userLanguage].push(user._doc._id);
+                    translations[user.userLanguage].push(user._doc.chatId);
                 }
             });
     });
@@ -248,6 +250,8 @@ exports.setUserLanguage = function(session, bot, userInput){
         if (!err && user ) {
             userToStore = user._doc;
             userToStore.userLanguage = userInput;
+            delete userToStore._id;
+            delete userToStore.__v;
             User.findOneAndUpdate({ chatId: session.chatId}, userToStore, { new: true, upsert: true },function(err,storedUser){
                 bot.sendMessage(session.chatId, Translate.chosenUserLanguage[userToStore.userLanguage](userToStore.userLanguage), BotGui.generateKeyboardOptions(userToStore.userLanguage));
             });
