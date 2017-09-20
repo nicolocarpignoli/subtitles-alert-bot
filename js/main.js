@@ -134,6 +134,9 @@ bot.on('callback_query', (msg) => {
 bot.onText(/(.*?)/, (msg, match) => {
     var userInput = match.input;
     var session = Common.getUserSession(sessions, msg, Translate.translations);
+    if(Common.notACommand(userInput)){
+        bot.sendMessage(msg.from.id, Translate.badInteractionMessage[session.userLanguage],  BotGui.generateKeyboardOptions(session.userLanguage));
+    }
     Core.handleGetLogic(userInput, session, sessions, msg, match, bot);
     Core.handleStartAlertLogic(userInput, session, sessions, msg, match, bot);
     Core.handleLanguageConfirmation(userInput, session, msg, bot);
