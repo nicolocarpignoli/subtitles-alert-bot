@@ -58,6 +58,7 @@ exports.notValidIntervalGetMessage = { "English": "Please retry with a valid int
 exports.deletedAlertMessage = { "English": "Subscription successfully deleted!", "Italiano": "Fatto, sottoscrizione eliminata!"}
 exports.revertDeleteMessage = { "English": "Wise choice! I will keep your subscriptions active", "Italiano": "Saggia scelta, manterrò tutte le tue sottoscrizioni attive!"}
 exports.whichUserLanguageMessage = {"English" : "Here you can choose my language! Choose the one that you understand better!", "Italiano": "Qua puoi scegliere la lingua che parlerò con te. Scegli quella che preferisci!"}
+exports.badInteractionMessage = {"English" : "Please use the button for interacting with me, I'm not ready for a natural language conversation...for now ", "Italiano": "Puoi usare i bottoni per interagire con me, non sono pronto per un dialogo diretto...per ora"}
 exports.chosenUserLanguage = { "English": function (language) {return "Ok, I will speak in " + language + " with you!"}, 
     "Italiano": function (language) {return "Bene, parlerò in " + language + " con te!"}}
 
