@@ -47,6 +47,18 @@ exports.isEmpty = function (obj) {
     return true;
 }
 
+exports.checkSessionEmpty = function(session){
+    return !session.choosingUserLanguage 
+        && !session.choosingSeries 
+        && !session.choosingSeason 
+        && !session.choosingEpisode
+        && !session.choosingLanguage 
+        && !session.choosingSeriesAlert 
+        && !session.choosingLanguageAlert 
+        && !session.deletingAlert
+        && !session.confirmDelete;
+}
+
 
 exports.getUserSession = function (sessions, msg, translations) {
     var chat = msg.chat ? msg.chat : msg.from;
