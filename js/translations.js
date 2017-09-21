@@ -60,8 +60,8 @@ exports.revertDeleteMessage = { "English": "Wise choice! I'll keep your subscrip
 exports.whichUserLanguageMessage = {"English" : "Here you can choose my language! Choose the one that you understand better!", "Italiano": "Qua puoi scegliere la lingua che parlerò con te. Scegli quella che preferisci!"}
 exports.chosenUserLanguage = { "English": function (language) {return "Ok, I will speak in " + language + " with you!"}, 
     "Italiano": function (language) {return "Bene, parlerò in " + language + " con te!"}}
-exports.donateLanguage = {"English" : "You can donate us a coffe, a beer, a pizza or whatever you want just clicking on this link! Thank you in advance for your generousity! http://nicolocarpignoli.com/?p=455", 
-    "Italiano": "Puoi donarci un caffè, una pizza, una birra o quello che vuoi seguendo questo link! Grazie in anticipo per la tua generosità! http://nicolocarpignoli.com/?p=455"}
+exports.donateMessage = {"English" : "You can donate us a coffe, a beer, a pizza or whatever you want just clicking on this link! \n\nThank you in advance for your generousity! \n\nhttp://nicolocarpignoli.com/?p=455", 
+    "Italiano": "Puoi donarci un caffè, una pizza, una birra o quello che vuoi seguendo questo link! \n\nGrazie in anticipo per la tua generosità! \n\nhttp://nicolocarpignoli.com/?p=455"}
 
 
 exports.getCommand = { 
@@ -103,13 +103,6 @@ exports.helpMessage = {
         "\n\nFacebook https://www.facebook.com/subtitlesalertbot/"
 };
 
-exports.donateACoffe = {"English": "Pay me a coffe \u2615\uFE0F", "Italiano":"Regalami un caffè \u2615\uFE0F"}
-exports.donateABeer = {"English": "Pay me beer \uD83C\uDF7A", "Italiano":"Regalami una birra \uD83C\uDF7A"}
-exports.donateAPizza = {"English": "Pay me pizza \uD83C\uDF55", "Italiano":"Regalami una pizza \uD83C\uDF55"}
-exports.donateMessage = {"English": "Here you can choose how much to donate to me! You can choose from the menu or specify a custom amount sending me a message!",
-    "Italiano":"Qui è dove puoi donarmi qualcosa! Puoi offrirmi qualcosa dal menu che ti mostro oppure specificare un importo a tua scelta inviandomelo come messaggio!"}
-exports.thanksDonationMessage = {"English": "Thanks for you generous offer man! \uD83D\uDE04 \uD83D\uDE04", 
-    "Italano":"Hey amico grazie davvero per la tua generosa offerta! \uD83D\uDE04 \uD83D\uDE04"}
 
 exports.generateRegExp = function(command){
     let regExp = "";
