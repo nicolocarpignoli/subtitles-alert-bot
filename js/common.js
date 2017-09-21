@@ -47,7 +47,6 @@ exports.isEmpty = function (obj) {
     return true;
 }
 
-
 exports.getUserSession = function (sessions, msg, translations) {
     var chat = msg.chat ? msg.chat : msg.from;
     let userSession = sessions.find(function (session) {
