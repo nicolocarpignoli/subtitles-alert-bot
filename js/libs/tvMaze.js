@@ -4,16 +4,6 @@ var Promise = require('promise')
 var Common = require('../common.js');
 
 
-function buildNumberOfEpisodesOptions(seriesId){
-    const options = {
-        uri: "http://api.tvmaze.com/shows/" + seriesId + "/episodes",
-        headers: { 'User-Agent': 'Request-Promise' },
-        json: true,
-        simple: false
-    }
-    return options;
-}
-
 function buildSeriesRequestOptions(seriesName) {
     const options = {
         uri: "http://api.tvmaze.com/search/shows",
@@ -141,16 +131,6 @@ exports.checkSeriesValidity = function (seriesName) {
 }
 
 
-getNumberOfEpisodes = function(seriesId, seasonNumber){
-    let options = buildNumberOfEpisodesOptions(seriesId);
-    return rp(options)
-        .then(function (episodes) {
-            return episodes.length;
-        })
-        .catch(function (err) {
-            console.log("Oh noes! :( Got an error fetching series... ");
-        });
-}
 
 // returns true if requested season is in seasons range and is already out
 exports.checkSeasonValidity = function (seriesId, seasonRequest) {
@@ -166,7 +146,7 @@ exports.checkSeasonValidity = function (seriesId, seasonRequest) {
 }
 
 exports.checkEpisodeValidity = function (seriesId, seasonNumber, episodeRequest) {
-    if (episodeRequest.indexOf('-') === -1) {
+    if (episodeRequest.indexOf('-') === -1 && episodeRequest.indexOf(Common.allString) === -1) {
         return rp(buildEpisodeRequestOptions(seriesId, seasonNumber, episodeRequest))
             .then(function (episode) {
                 return episode.status !== "404";
@@ -176,8 +156,18 @@ exports.checkEpisodeValidity = function (seriesId, seasonNumber, episodeRequest)
                 return err.error;
             });
     }else if(episodeRequest.indexOf(Common.allString) !== -1){
-        this.getNumberOfEpisodes(seriesId,seasonNumber);
+        let promise = Common.getNumberOfEpisodes(seriesId,seasonNumber);
         //TODO to use here recursiveCAllFunction or similiar
+        return promise.then(function (response) { 
+            if (response != null){   
+                var start = 1;
+                var end = +response;
+                console.log("Numero di episodi = "+ end);
+                var responses = [];
+                return recursiveCallFunction(start, end, seriesId, seasonNumber, responses);
+            }
+        });
+        
     } 
     else {
         var start = +episodeRequest.substr(0, episodeRequest.indexOf('-'));

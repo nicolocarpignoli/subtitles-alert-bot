@@ -1,7 +1,7 @@
 var Session = require('./models/session.js');
 var Languages = require('./models/languages.js'); 
 var Language = require('./models/language.js'); 
-
+var rp = require('request-promise');
 
 exports.instructionsMessage = "Welcome, my tv-addicted friend! What do you want me to do today?"
 exports.whichSeriesMessage = function (firstName) { return "Ok " + firstName + "! Which show do you want me to search for?"; }
@@ -138,6 +138,27 @@ exports.isAmbiguousTitle = function(name){
     }else{
         return false;
     }
+}
+
+function buildNumberOfEpisodesOptions(seriesId){
+    const options = {
+        uri: "http://api.tvmaze.com/shows/" + seriesId + "/episodes",
+        headers: { 'User-Agent': 'Request-Promise' },
+        json: true,
+        simple: false
+    }
+    return options;
+}
+
+exports.getNumberOfEpisodes = function (seriesId, seasonNumber){
+    let options = buildNumberOfEpisodesOptions(seriesId);
+    return rp(options)
+        .then(function (episodes) {
+            return episodes.filter(episode => episode.season == seasonNumber).length;
+        })
+        .catch(function (err) {
+            console.log("Oh noes! :( Got an error fetching series... ");
+        });
 }
 
 exports.resetValues = function (session) {

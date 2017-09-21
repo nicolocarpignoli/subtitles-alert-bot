@@ -8,26 +8,36 @@ var TvMaze = require('../libs/tvMaze.js');
 var Logger = require('../log/logger.js');
 
 exports.addic7edGetSubtitle = function (session, languages, bot, chat, sessionsList) {
-    if(session.numberOfEp != undefined){
-        for (i = 0; i < session.numberOfEp; i++){
+    if (session.numberOfEp != undefined) {
+        for (i = 0; i < session.numberOfEp; i++) {
             getSingleEpisodeSubs(session, languages, bot, chat, sessionsList, i, true);
         }
-    }else if(session.choosenEpisode.indexOf('-')===-1){
+    } else if (session.choosenEpisode.indexOf('-') === -1 && session.choosenEpisode.indexOf(Common.allString) === -1) {
         getSingleEpisodeSubs(session, languages, bot, chat, sessionsList, session.choosenEpisode, true)
-    }else if(session.choosenEpisode.indexOf(Common.allString)!==-1){
-        TvMaze.checkNumberOfEpisodes(session.choosenSeason, session.choosenSeries);
-        //getAllSeasonSubtitles
-    }else{
+    } else if (session.choosenEpisode.indexOf(Common.allString) !== -1) {
+        let promise = Common.getNumberOfEpisodes(session.choosenSeason, session.choosenSeries);
+        //TODO to use here recursiveCAllFunction or similiar
+        return promise.then(function (response) {
+            if (response != null) {
+                var start = 1;
+                var end = +response;
+                while (start <= end) {
+                    getSingleEpisodeSubs(session, languages, bot, chat, sessionsList, start, start == end),
+                    start++;
+                }
+            }
+        });
+    } else {
         var start = +session.choosenEpisode.substr(0, session.choosenEpisode.indexOf('-'));
         var end = +session.choosenEpisode.substr(session.choosenEpisode.indexOf('-') + 1, session.choosenEpisode.length);
-        while (start <= end){
+        while (start <= end) {
             getSingleEpisodeSubs(session, languages, bot, chat, sessionsList, start, start == end),
-            start++;
+                start++;
         }
     }
 }
 
-function getSingleEpisodeSubs (session, languages = [], bot, chat, sessionsList, episode, sendAmbiguousMessage) {
+function getSingleEpisodeSubs(session, languages = [], bot, chat, sessionsList, episode, sendAmbiguousMessage) {
     //Logger.logEvent("get", languages, session);
     addic7edApi.search(session.choosenSeries.show.name, session.choosenSeason,
         episode, languages).then(function (subtitlesList) {
@@ -47,16 +57,16 @@ function getSingleEpisodeSubs (session, languages = [], bot, chat, sessionsList,
                                 bot.sendMessage(chat, Common.ambigousSubtitleMessage);
                             }
                         }
-                    }).catch(function(err){
+                    }).catch(function (err) {
                         console.log("file not found");
                     });
-                 }).catch(function (err) {
+                }).catch(function (err) {
                     console.log("error downloading subs - ", session);
                 });
             }
             else
                 bot.sendMessage(chat, Common.subtitleNotFoundInAddic7edMessage);
-         }).catch(function (err) {
+        }).catch(function (err) {
             console.log("error searching subs - ", session);
         });
 }
@@ -87,17 +97,17 @@ exports.addic7edGetSubtitleAlert = function (alert, job, bot, doneJobInterval) {
                             doneJobInterval();
                         });
                     }
-                }).catch(function(err){
+                }).catch(function (err) {
                     console.log("file not found");
                 });
-             }).catch(function (err) {
+            }).catch(function (err) {
                 console.log("error download subs - ", alert);
             });
         } else {
             job.attrs.data.hasToBeRemoved = false;
             doneJobInterval();
         }
-     }).catch(function (err) {
+    }).catch(function (err) {
         console.log("error searching subs - ", alert);
     });
 }
