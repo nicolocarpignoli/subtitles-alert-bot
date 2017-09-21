@@ -60,6 +60,8 @@ exports.revertDeleteMessage = { "English": "Wise choice! I'll keep your subscrip
 exports.whichUserLanguageMessage = {"English" : "Here you can choose my language! Choose the one that you understand better!", "Italiano": "Qua puoi scegliere la lingua che parlerò con te. Scegli quella che preferisci!"}
 exports.chosenUserLanguage = { "English": function (language) {return "Ok, I will speak in " + language + " with you!"}, 
     "Italiano": function (language) {return "Bene, parlerò in " + language + " con te!"}}
+exports.donateLanguage = {"English" : "You can donate us a coffe, a beer, a pizza or whatever you want just clicking on this link! Thank you in advance for your generousity! http://nicolocarpignoli.com/?p=455", 
+    "Italiano": "Puoi donarci un caffè, una pizza, una birra o quello che vuoi seguendo questo link! Grazie in anticipo per la tua generosità! http://nicolocarpignoli.com/?p=455"}
 
 
 exports.getCommand = { 
