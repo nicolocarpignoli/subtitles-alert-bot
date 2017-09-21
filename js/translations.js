@@ -56,8 +56,9 @@ exports.areYouSureRemoveAlert = { "English": function (series) {return "Are you 
 exports.notValidIntervalGetMessage = { "English": "Please retry with a valid interval in the form of 'first-last' without spaces or with the keyword 'all' for all subtitles of a specified season!", 
     "Italiano": "Per favore riprova con un intervallo valido nella forma 'primo-ultimo' episodio (senza spazi) oppure con la parola 'all' per avere tutte le puntate della stagione che hai scelto!"}
 exports.deletedAlertMessage = { "English": "Subscription successfully deleted!", "Italiano": "Fatto, sottoscrizione eliminata!"}
-exports.revertDeleteMessage = { "English": "Wise choice! I'll keep your subscription active", "Italiano": "Saggia scelta, manterrò le tue sottoscrizioni intatte!"}
+exports.revertDeleteMessage = { "English": "Wise choice! I will keep your subscriptions active", "Italiano": "Saggia scelta, manterrò tutte le tue sottoscrizioni attive!"}
 exports.whichUserLanguageMessage = {"English" : "Here you can choose my language! Choose the one that you understand better!", "Italiano": "Qua puoi scegliere la lingua che parlerò con te. Scegli quella che preferisci!"}
+exports.badInteractionMessage = {"English" : "Please use the button for interacting with me, I'm not ready for a natural language conversation...for now ", "Italiano": "Puoi usare i bottoni per interagire con me, non sono pronto per un dialogo diretto...per ora"}
 exports.chosenUserLanguage = { "English": function (language) {return "Ok, I will speak in " + language + " with you!"}, 
     "Italiano": function (language) {return "Bene, parlerò in " + language + " con te!"}}
 exports.donateMessage = {"English" : "You can donate us a coffe, a beer, a pizza or whatever you want just clicking on this link! \n\nThank you in advance for your generousity! \n\nhttp://nicolocarpignoli.com/?p=455", 
@@ -82,8 +83,8 @@ exports.helpCommand = {
 exports.okDonelanguageCommand = 'ok';
 
 exports.helpMessage = {
-    "Italiano": "Subtitles Alert Bot è un bot per scaricare e sottoscriverti a sottotitoli per le tue serie-tv preferite.\n\nUsa Download subs \uD83D\uDCE5 per il download istantaneo di un singolo sottotitolo, oppure" +
-        " scarica un insieme di sottotitoli definendo un intervallo nella forma 'numeroPrimoSottotitolo-numeroUltimoSottotitolo', senza spazi, oppure tutti i sottotitoli di una specifica stagione con la parola chiave 'all'" +
+    "Italiano": "Subtitles Alert Bot è un bot per scaricare e sottoscriverti a sottotitoli per le tue serie-tv preferite.\n\nUsa Download subs \uD83D\uDCE5 per il download istantaneo di un singolo sottotitolo," +
+        " scarica un insieme di sottotitoli definendo un intervallo nella forma 'numeroPrimoSottotitolo-numeroUltimoSottotitolo', senza spazi oppure tutti i sottotitoli di una specifica stagione con la parola chiave 'all'" +
         "\n\nUsa Sottoscrivi \uD83D\uDCE2 per sottoscriverti ad una serie-tv. Rilassati e il bot ti invierà comodamente sul telefono i sottotitoli appena saranno pronti" +
         "\n\nUsa Mostra sottoscrizioni \uD83D\uDDD3 per visualizzare la lista delle tue sottoscrizioni attive" +
         "\n\nUsa Disiscrivi \uD83D\uDEAB per eliminare le sottoscrizioni che non desideri più" +
@@ -96,7 +97,7 @@ exports.helpMessage = {
         "\n\nUse Subscribe \uD83D\uDCE2 to start a subscription to subtitles for a tv show. Just relax and as soon as they're out you will receive your subtitles on your phone" +
         "\n\nUse Show subscriptions \uD83D\uDDD3 for the list of your active subscriptions" +
         "\n\nUse Unsubscribe \uD83D\uDEAB to delete the subscriptions." + 
-        "\n\n You can also change bot Language \uD83C\uDDEE\uD83C\uDDF9 and Donate \uD83D\uDCB0 us a beer." +
+        "\n\n You can also change bot Language \uD83C\uDDEE\uD83C\uDDF9 and Donate \uD83D\uDCB0 if you like our bot!" +
         "\n\nUse Help \uD83C\uDD98 for seeing this help message any time you want." +
         "\n\nFollow us on:" +
         "\n\nInstagram https://www.instagram.com/subtitlesbottelegram/" +
