@@ -118,7 +118,6 @@ exports.resetValues = function (session) {
         session.ambiguousSeriesAlert = {}
     session.chosenLanguagesAlert = []
     session.deletingAlert = false
-    session.donating = false;
 }
 
 exports.handleChosenSeries = function (chosenSeries, session, sessions) {
