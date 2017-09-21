@@ -60,8 +60,7 @@ bot.onText(Translate.STARTregExp, (msg, match) => {
 bot.onText(Translate.DONATERegExp, (msg, match) => {
     var session = Common.getUserSession(sessions, msg, Translate.translations);
     Common.resetValues(session);
-    bot.sendMessage(msg.chat.id, Translate.donateMessage[session.userLanguage], BotGui.generateDonationInlineKeyboard(session));
-    session.donating = true;
+    bot.sendMessage(msg.chat.id, Translate.donateMessage[session.userLanguage], BotGui.generateKeyboardOptions(session.userLanguage));
     Common.pushInSessions(sessions, session);
 })
 
