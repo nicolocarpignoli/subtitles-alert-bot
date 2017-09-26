@@ -68,6 +68,7 @@ exports.addic7edGetSubtitleAlert = function (alert, job, bot, doneJobInterval) {
                             Mongo.User.find({ alerts: alert._doc._id.toString() }, function (err, users) {
                                 users.forEach(function (user) {
                                     var userDoc = user._doc;
+                                    if(!userDoc || !userDoc.userLanguage) userDoc.userLanguage = "English";
                                     bot.sendMessage(userDoc.chatId, Translate.newEpisodeAlertMessage[userDoc.userLanguage](userDoc.first_name, alert._doc.show_name));
                                     bot.sendMessage(userDoc.chatId, Translate.buildLinkMessage[userDoc.userLanguage](subInfo.link));
                                     bot.sendDocument(userDoc.chatId, filename).then(function () {
