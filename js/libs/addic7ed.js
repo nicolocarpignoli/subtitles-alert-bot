@@ -68,13 +68,13 @@ exports.addic7edGetSubtitleAlert = function (alert, job, bot, doneJobInterval) {
                             Mongo.User.find({ alerts: alert._doc._id.toString() }, function (err, users) {
                                 users.forEach(function (user) {
                                     var userDoc = user._doc;
-                                    bot.sendMessage(userDoc.chatId, Translate.newEpisodeAlertMessage[session.userLanguage](userDoc.first_name, alert._doc.show_name));
-                                    bot.sendMessage(userDoc.chatId, Translate.buildLinkMessage[session.userLanguage](subInfo.link));
+                                    bot.sendMessage(userDoc.chatId, Translate.newEpisodeAlertMessage[userDoc.userLanguage](userDoc.first_name, alert._doc.show_name));
+                                    bot.sendMessage(userDoc.chatId, Translate.buildLinkMessage[userDoc.userLanguage](subInfo.link));
                                     bot.sendDocument(userDoc.chatId, filename).then(function () {
                                         console.log("File sent to user " + userDoc.first_name);
                                     });
                                     if (Common.isAmbiguousTitle(alert._doc.show_name)) {
-                                        bot.sendMessage(userDoc.chatId, Translate.ambigousSubtitleMessage[session.userLanguage]);
+                                        bot.sendMessage(userDoc.chatId, Translate.ambigousSubtitleMessage[userDoc.userLanguage]);
                                     }
                                 });
                                 job.attrs.data.hasToBeRemoved = true;
