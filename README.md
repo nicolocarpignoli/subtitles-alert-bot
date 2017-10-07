@@ -15,9 +15,33 @@ More about Telegram Bots: (https://core.telegram.org/bots)
 
 ### Features
 
+With Subtitles Alert Bot you can:
+
+:inbox_tray: Download subtitles (for a specific episode or a set of episode). You will get the ".srt" file and a link to other subtitles for every episode release available.
+
+:speaker: Subscribe to subtitles. You can subscribe to a specific tv show for one or more subtitles' languages. Just relax and as soon as your subtitles are out you will receive them.
+
+:calendar: Show your active subscriptions.
+
+:no_entry_sign: Unsubscribe from tv shows.
+
+Other minor functionalities such as: :it: changing bot language (Italian and English available for now), :moneybag: Donate and :sos: show the Help message.
+
+
+
 ### Screenshots
 
 ### Technology
+
+Based on `Node.js` our bot uses several open-source libraries listed here. Our source for subtitles is (www.addic7ed.com) and (http://www.tvmaze.com/api) is the endpoint for retrieving updated informations about tv shows.
+
+(https://github.com/yagop/node-telegram-bot-api)
+(https://github.com/agenda/agenda)
+(https://github.com/same31/addic7ed-api)
+(http://mongoosejs.com)
+(https://github.com/request/request-promise)
+
+If you want to run a version of this bot a nice and suggested cheap server can be a RaspberryPi. We use it and it works like charm. Feel free to ask us for help on setting up.
 
 ### How can I contribute?
 
