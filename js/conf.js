@@ -1,12 +1,12 @@
 var Env = require('./env.js');
 
 exports.mongoConfig = {
-        username: 'pi',
-        host: '2.234.125.63',
+        username: '',
+        host: '',
         agent: process.env.SSH_AUTH_SOCK,
         port: 22,
         dstPort: 6666,
-        password: 'mango932cortisone',
+        password: '',
         localPort: 27017
 };
 
