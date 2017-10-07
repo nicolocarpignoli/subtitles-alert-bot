@@ -13,10 +13,14 @@ A Telegram bot for download and subscribe to tv show subtittles.
 
 ### Technology
 
-### Usage
+### How can I Contribute?
+
+#### Setting up
 
 ### Issue tracker and new features
 
-### Public roadmap
+#### Public roadmap
+
+### About the authors
 
 ### License
