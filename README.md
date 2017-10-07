@@ -56,4 +56,10 @@ Public roadmap for Subtitles Alert Bot can be found [here](https://trello.com/b/
 
 ### About the authors
 
+...
+...
+...
+
+Logo is courtesy of [Mariusz Nawrocki](http://facebook.com/mvnieq)
+
 ### License
