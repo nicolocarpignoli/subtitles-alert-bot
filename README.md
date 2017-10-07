@@ -11,7 +11,7 @@ Subtitles Alert Bot is a Telegram Bot that let you download and subscribe to sub
 
 For its purpose we recommend to use the bot with [Telegram Desktop Client](https://desktop.telegram.org) or [Telegram Web](https://web.telegram.org/).
 
-More about Telegram Bots: (https://core.telegram.org/bots)
+More about Telegram Bots: https://core.telegram.org/bots
 
 ### Features
 
@@ -33,15 +33,16 @@ Other minor functionalities such as: :it: changing bot language (Italian and Eng
 
 ### Technology
 
-Based on `Node.js` our bot uses several open-source libraries listed here. Our source for subtitles is (www.addic7ed.com) and (http://www.tvmaze.com/api) is the endpoint for retrieving updated informations about tv shows.
+Based on `Node.js` our bot uses several open-source libraries listed here. Our source of subtitles is www.addic7ed.com and http://www.tvmaze.com/api is the endpoint for retrieve updated informations about tv shows.
 
-(https://github.com/yagop/node-telegram-bot-api)
-(https://github.com/agenda/agenda)
-(https://github.com/same31/addic7ed-api)
-(http://mongoosejs.com)
-(https://github.com/request/request-promise)
+Thanks to:
+- https://github.com/yagop/node-telegram-bot-api
+- https://github.com/agenda/agenda
+- https://github.com/same31/addic7ed-api
+- http://mongoosejs.com
+- https://github.com/request/request-promise
 
-If you want to run a version of this bot a nice and suggested cheap server can be a RaspberryPi. We use it and it works like charm. Feel free to ask us for help on setting up.
+If you want to run a version of this bot a nice and suggested cheap server is a RaspberryPi. We use it and it works like charm. Feel free to ask us for help on setting up.
 
 ### How can I contribute?
 
