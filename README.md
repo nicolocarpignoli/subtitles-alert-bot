@@ -51,11 +51,11 @@ In the [Issue](https://github.com/nicolocarpignoli/subtitles-alert-bot/issues) s
 #### Setting up
 
 - To run a local version of Subtitles Alert Bot you have first to [obtain a token](https://core.telegram.org/bots#3-how-do-i-create-a-bot) from Telegram
-- Set the `telegramBotToken` variable in `js/main.js` to the created `token`
-- We used `MongoDB`as database. You first have to [install it and run it] (https://docs.mongodb.com/manual/installation/)
+- Set the `telegramBotToken` variable in `js/main.js` to the new `token`
+- We used `MongoDB`as database. You first have to [install it and run it](https://docs.mongodb.com/manual/installation/)
 - Configure your MongoDB local connection in `js/conf.js` (on `dbName` set your database name - `subtitlesAlertBot` as default).
 - Run the bot instance:  `sudo node main.js`
-- You're free to use any Telegram client you like and search for your bot instance name. Start the conversation with `/start`
+- You're free to use any Telegram client you like and search for your bot instance name. Start the conversation sending `/start` to the bot chat.
 
 
 ### Issue tracker and new features to develop
@@ -78,4 +78,3 @@ Public roadmap for Subtitles Alert Bot can be found [here](https://trello.com/b/
 
 Logo is courtesy of [Mariusz Nawrocki](http://facebook.com/mvnieq)
 
-### License
