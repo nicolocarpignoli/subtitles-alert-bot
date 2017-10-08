@@ -29,6 +29,9 @@ Other minor functionalities such as: :it: changing bot language (Italian and Eng
 
 ### Screenshots
 
+[![Logo](http://nicolocarpignoli.com/wp-content/uploads/2017/10/Schermata-2017-10-08-alle-23.12.42.png
+)]
+
 
 ### Technology
 
