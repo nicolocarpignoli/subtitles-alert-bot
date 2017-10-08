@@ -7,8 +7,7 @@ var TvMaze = require('../libs/tvMaze.js');
 var Translate = require('../translations.js');
 
 var pendingShowInterval = '1 month';
-var intervalSchedule = '*/15 * * * *'; //every 15 minutes
-//var intervalSchedule = '30 seconds'; //test
+var intervalSchedule = '*/15 * * * *';  //every 15 minutes
 var connectionString;
 var usable = false;
 var agenda = null;
@@ -38,14 +37,10 @@ var scheduleFunctionGivenTime = function (jobName, date, alert, func, data) {
     });
     agenda.on("ready", function () {
         agenda.schedule(formatDate(date), jobName, data);
-        //agenda.schedule(new Date(Date.now() + 5000), jobName, data); //test
         agenda.start();
-        //console.log("Job %s scheduled with nextRunAt %s", jobName, date);
     })
     agenda.on('complete', function (job) {
-        //console.log('Job %s finished', job.attrs.name);
         agenda.cancel({ name: job.attrs.name }, function (err, numRemoved) {
-            //console.log("%s jobs removed named %s", numRemoved, job.attrs.name);
         });
     });
 }
@@ -63,7 +58,6 @@ var scheduleFunctionInterval = function (jobName, interval, alert, func, data) {
         agenda.start();
     });
     agenda.on('complete', function (job) {
-        //console.log('Job %s finished', job.attrs.name);
         if (job.attrs.data.hasToBeRemoved) {
             var getShowPromise = TvMaze.getShowInfosById(job.alert.showId);
             getShowPromise.then(function (show) {
@@ -73,7 +67,6 @@ var scheduleFunctionInterval = function (jobName, interval, alert, func, data) {
                         Mongo.deleteAlert(job.alert._id.toString());
                         Mongo.deleteAlertFromAllUsers(job.alert);
                         agenda.cancel({ name: job.attrs.name }, function (err, numRemoved) {
-                            //console.log("Removed %s jobs with name %s", numRemoved, job.attrs.name);
                         });
                     } else {
                         if (nextEpisodeLink) {
@@ -84,7 +77,6 @@ var scheduleFunctionInterval = function (jobName, interval, alert, func, data) {
                             });
                         } else {
                             bot.sendMessage(userDoc.chatId, Translate.noNextEpisodeYetMessage[session.userLanguage]);
-                            // TODO Job Pending task su trello (#29)
                         }
                     }
                 }
@@ -115,7 +107,6 @@ var activateStoredSchedules = function (alert, bot, outdated) {
             }
         });
     });
-    
 }
 
 
@@ -130,7 +121,6 @@ var updateNextRunDate = function (job, newDate) {
 var cancelJob = function (jobName) {
     var agenda = new Agenda({ mongo: Mongo.getMongoConnection() });    
     agenda.cancel({ name: jobName }, function (err, numRemoved) {
-        //console.log("Removed %s jobs with name %s", numRemoved, jobName);
     });
 }
 
@@ -139,7 +129,6 @@ var resetJob = function ( tokens, job, nextEp) {
     var jobName = nextEp != undefined ? job.attrs.name : job.name;
     var agenda = new Agenda({ mongo: Mongo.getMongoConnection() });    
     agenda.cancel({ name: jobName }, function (err, numRemoved) {
-        //console.log("RESRET JOB: Removed %s jobs with name %s", numRemoved, jobName);
         Mongo.Alert.findOne({ show_name: tokens[0], language: tokens[1] }, function (err, jobAlert) {
             if(nextEp != undefined){
                 var newAlert = { 

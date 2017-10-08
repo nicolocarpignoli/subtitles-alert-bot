@@ -31,8 +31,6 @@ function getSingleEpisodeSubs (session, languages = [], bot, chat, sessionsList,
                 addic7edApi.download(subInfo, filename).then(function () {
                     fs.access(filename, function (err) {
                         if (!err) {
-                            //console.log('Subtitles file saved.');
-                            //Common.removeSession(sessionsList, session);
                             bot.sendMessage(chat, Translate.buildLinkMessage[session.userLanguage](subInfo.link));
                             bot.sendDocument(chat, filename).then(function () {
                                 fs.unlinkSync(filename, function(err){
@@ -63,7 +61,6 @@ exports.addic7edGetSubtitleAlert = function (alert, job, bot, doneJobInterval) {
             addic7edApi.download(subInfo, filename).then(function () {
                 fs.access(filename, function (err) {
                     if (!err) {
-                        //console.log('Subtitles file saved.');
                         if(alert && alert._doc && alert._doc._id){
                             Mongo.User.find({ alerts: alert._doc._id.toString() }, function (err, users) {
                                 users.forEach(function (user) {

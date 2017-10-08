@@ -72,12 +72,10 @@ function checkCorrectResults(list, token) {
     list.forEach(function (element) {
         if (regExp.test(element.show.name)) filteredList.push(element);
     }, this);
-    //console.log(filteredList);
     return filteredList;
 }
 
 function checkDuplicates(list) {
-    // TODO it can be refactored for sure
     var foundSeries = list;
     var list = list.map(function (item) { return item.show.name });
     var duplicates = {};
@@ -106,7 +104,6 @@ function checkDuplicates(list) {
         "hasDuplicates": hasDuplicates
     }
 }
-
 
 // returns an array with one element, six elements or empty array
 exports.checkSeriesValidity = function (seriesName) {

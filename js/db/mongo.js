@@ -56,7 +56,6 @@ exports.getSettings = function (translations) {
     });
 }
 
-
 exports.connectToDatabase = function () {
     if (Conf.mongoHost == "") {
         var server = Tunnel(Conf.mongoConfig, function (error, server) {
@@ -184,8 +183,7 @@ exports.getAlertsFromUser = function (id, bot, session) {
                 if (!err && alerts && alerts.length > 0)
                     bot.sendMessage(id, Translate.showAlertsMessage[session.userLanguage], BotGui.generateAlertsInlineKeyboard(alerts));
             });
-        }
-        else {
+        }else {
             bot.sendMessage(id, Translate.noAlertMessage[session.userLanguage], BotGui.generateKeyboardOptions(session.userLanguage));
             Common.resetValues(session);
         }

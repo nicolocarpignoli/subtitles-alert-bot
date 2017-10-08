@@ -4,10 +4,10 @@ exports.mongoConfig = {
         username: '',
         host: '',
         agent: process.env.SSH_AUTH_SOCK,
-        port: 22,
-        dstPort: 6666,
+        port: '',
+        dstPort: '',
         password: '',
-        localPort: 27017
+        localPort: ''
 };
 
 exports.dbName = 'subtitlesAlertBot';

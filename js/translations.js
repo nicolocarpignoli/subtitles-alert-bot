@@ -18,7 +18,6 @@ exports.newEpisodeAlertMessage = { "English": function (firstName, showName) { r
 exports.showAlertsMessage = { "English": "This list shows your active subscriptions right now:", "Italiano": "Questa è la lista delle tue attuali sottoscrizioni:"}
 exports.confirmCallback = { "English": "Yes", "Italiano": "Sì"}
 exports.revertCallback = { "English": "No", "Italiano": "No"}
-//TODO questo messaggio di noNextEpisodeYetMessage andrà tolto quando avremo fatto la feature #29 su trello
 exports.noNextEpisodeYetMessage = { "English": "Hey, it seems that this season it's over or maybe not and I cannot see the future for this show yet!", 
     "Italiano": "Hey, sembra che la stagione sia conclusa...oppure no! In tal caso, purtroppo non posso indovinare che ne sarà di questa serie!"}
 exports.noAlertMessage = { "English": "It seems you have no active subscriptions right now... Try to add some!", "Italiano": "Sembra che tu non abbia sottoscrizioni attive al momento... Prova ad aggiungerne una!"}
@@ -103,7 +102,6 @@ exports.helpMessage = {
         "\n\nInstagram https://www.instagram.com/subtitlesbottelegram/" +
         "\n\nFacebook https://www.facebook.com/subtitlesalertbot/"
 };
-
 
 exports.generateRegExp = function(command){
     let regExp = "";
