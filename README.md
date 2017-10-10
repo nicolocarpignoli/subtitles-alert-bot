@@ -71,6 +71,11 @@ https://github.com/nicolocarpignoli/subtitles-alert-bot/issues
 Public roadmap for Subtitles Alert Bot can be found [here](https://trello.com/b/RUv5boOe). It's always up-to-date with last release.
 
 
+### Feel free to donate
+
+Our project is totally free and open-source. If you want to donate we will be very grateful and it will contribute to our project to mantain an always running version of Subtitles Alert Bot (you can found the official/first version of the bot as @SubtitlesAlertBot on Telegram) [Donate here](http://nicolocarpignoli.com/?p=455)
+
+
 ### About the authors
 
 - [![Logo](https://static.licdn.com/sc/h/9wcfzhuisnwhyauwp7t9xixy7)](https://www.linkedin.com/in/nicolò-carpignoli/) [![Logo](https://assets-cdn.github.com/favicon.ico)](https://github.com/nicolocarpignoli) [Nicolò Carpignoli](http://nicolocarpignoli.com) 
