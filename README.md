@@ -60,6 +60,10 @@ In the [Issue](https://github.com/nicolocarpignoli/subtitles-alert-bot/issues) s
 - Run the bot instance:  `sudo node main.js`
 - You're free to use any Telegram client you like and search for your bot instance name. Start the conversation sending `/start` to the bot chat.
 
+#### Database
+
+As database we used MongoDB. In js/db/mongo.js you can find our model. For full compatibility with existing code, please use the same data model.
+
 
 ### Issue tracker and new features to develop
 
