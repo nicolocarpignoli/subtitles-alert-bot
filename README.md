@@ -62,7 +62,7 @@ In the [Issue](https://github.com/nicolocarpignoli/subtitles-alert-bot/issues) s
 
 #### Database
 
-As database we used MongoDB. In js/db/mongo.js you can find our model. For full compatibility with existing code, please use the same data model.
+As database we used MongoDB. In `js/db/mongo.js` you can find our model. For full compatibility with existing code, please use the same data model.
 
 
 ### Issue tracker and new features to develop
