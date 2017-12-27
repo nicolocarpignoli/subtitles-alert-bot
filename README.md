@@ -91,3 +91,8 @@ Our project is totally free and open-source. If you want to donate we will be ve
 
 Logo is courtesy of [Mariusz Nawrocki](http://facebook.com/mvnieq)
 
+
+## License
+
+This project is released under MIT license as you can check in LICENSE.md file.
+
