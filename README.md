@@ -62,7 +62,7 @@ In the [Issue](https://github.com/nicolocarpignoli/subtitles-alert-bot/issues) s
 
 #### Database
 
-As database we used MongoDB. In `js/db/mongo.js` you can find our model. For full compatibility with existing code, please use the same data model.
+We used MongoDB. In `js/db/mongo.js` you can find our model. For full compatibility with existing code, please use the same data model.
 
 
 ### Issue tracker and new features to develop
@@ -77,7 +77,7 @@ Public roadmap for Subtitles Alert Bot can be found [here](https://trello.com/b/
 
 ### Feel free to donate  
 
-Our project is totally free and open-source. If you want to donate we will be very grateful and it will contribute to our project to mantain an always running version of Subtitles Alert Bot (you can found the official/first version of the bot as @SubtitlesAlertBot on Telegram) 
+Our project is totally free and open-source. If you want to donate we will be very grateful and it will contribute to our project to mantain an always running version of Subtitles Alert Bot (you can find the official and first version of the bot as @SubtitlesAlertBot on Telegram) 
 
 [![Logo](https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif)](http://nicolocarpignoli.com/?p=455)
 
