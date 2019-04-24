@@ -83,7 +83,7 @@ Our project is totally free and open-source. If you want to donate we will be ve
 
 ### About the authors
 
-- [![Logo](https://static.licdn.com/sc/h/9wcfzhuisnwhyauwp7t9xixy7)](https://www.linkedin.com/in/nicolò-carpignoli/) [![Logo](https://assets-cdn.github.com/favicon.ico)](https://github.com/nicolocarpignoli) [Nicolò Carpignoli](http://nicolocarpignoli.com) 
+- [![Logo](https://assets-cdn.github.com/favicon.ico)](https://github.com/nicolocarpignoli) Nicolò Carpignoli
 
 - [![Logo](https://static.licdn.com/sc/h/9wcfzhuisnwhyauwp7t9xixy7)](https://www.linkedin.com/in/dario-sacco-2530bbb0/) Dario Sacco 
 
