@@ -1,4 +1,4 @@
-A Telegram bot for download and subscribe to tv show subtitles.
+# A Telegram bot for download and subscribe to tv show subtitles.
 
 
 Subtitles Alert Bot is a Telegram Bot that let you download and subscribe to subtitles of your favourite tv shows. You can download subtitles for a specific episode or a set of subtitles, and manage your subscriptions. A subscription is referred to a specific tv show for one or more languages: once you have subscribed you will get your subtitles on your phone (also a direct link for others subtitles for all episode versions) without doing anything.
@@ -21,10 +21,6 @@ With Subtitles Alert Bot you can:
 :no_entry_sign: Unsubscribe from tv shows.
 
 Other minor functionalities such as: :it: changing bot language (Italian and English available for now), :moneybag: Donate and :sos: show the Help message.
-
-
-
-### Screenshots
 
 ### Technology
 
