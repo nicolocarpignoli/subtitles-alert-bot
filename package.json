@@ -8,7 +8,7 @@
     "agenda": "^0.9.1",
     "fs": "0.0.1-security",
     "mongodb": "^2.2.30",
-    "mongoose": "^4.11.3",
+    "mongoose": "^5.7.5",
     "node-telegram-bot-api": "^0.27.1",
     "promise": "^8.0.1",
     "request": "^2.81.0",
