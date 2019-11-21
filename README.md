@@ -1,6 +1,3 @@
-[![Logo](http://nicolocarpignoli.com/wp-content/uploads/2017/10/21557944_123740551614347_8743418650599523919_n-e1507316918840.png
-)](http://nicolocarpignoli.com)
-
 A Telegram bot for download and subscribe to tv show subtitles.
 
 
@@ -28,10 +25,6 @@ Other minor functionalities such as: :it: changing bot language (Italian and Eng
 
 
 ### Screenshots
-
-![Logo](http://nicolocarpignoli.com/wp-content/uploads/2017/10/Schermata-2017-10-08-alle-23.12.42.png
-)
-
 
 ### Technology
 
